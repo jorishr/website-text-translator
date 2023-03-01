@@ -21,9 +21,9 @@
   },
   "direction": {
     "direction": "",
-    "default": "json to html",
-    "jsonToHtml": "json to html",
-    "htmlToJson": "html to json"
+    "default": "json2html",
+    "jsonToHtml": "json2html",
+    "htmlToJson": "html2json"
   },
   "exclude": {
     "classesToExclude": [],

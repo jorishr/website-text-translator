@@ -62,10 +62,10 @@ function setAttr(data, target, key, id) {
   const elem = attrElems.find((elem) => {
     return elem.getAttribute(id) === key;
   });
-  if (direction === "json over html") {
+  if (direction === "json2html") {
     elem.setAttribute(name, data.langData[key]);
   }
-  if (direction === "html over json") {
+  if (direction === "html2json") {
     data.langData[key] = elem.getAttribute(name);
   }
   return data;
