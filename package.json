@@ -1,0 +1,30 @@
+{
+  "name": "html-text-translator",
+  "version": "0.1.0",
+  "description": "Automatically translate HTML files to multiple languages with Google Translate API, detect changes and store translations in JSON files.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jorishr/html-text-translator.git"
+  },
+  "keywords": [
+    "translation",
+    "translator",
+    "html",
+    "language",
+    "website"
+  ],
+  "author": "Joris Raymaekers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jorishr/html-text-translator/issues"
+  },
+  "homepage": "https://github.com/jorishr/html-text-translator#readme",
+  "dependencies": {
+    "@google-cloud/translate": "^7.2.0",
+    "node-html-parser": "^6.1.5"
+  }
+}

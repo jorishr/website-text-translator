@@ -1,0 +1,32 @@
+{
+  "id": {
+    "txtId": "data-txt_id",
+    "altId": "data-txt_id__alt",
+    "titleId": "data-txt_id__title",
+    "metaId": "data-txt_id__meta"
+  },
+  "offset": 100,
+  "languages": {
+    "base": "nl",
+    "targets": ["en", "es", "ca"]
+  },
+  "folders": {
+    "src": "./data/input",
+    "dest": "./data/output",
+    "backup": "./backup/"
+  },
+  "fileNames": {
+    "prefix": "txt_data_",
+    "baseJson": "txt_data_nl.json"
+  },
+  "direction": {
+    "direction": "",
+    "default": "json to html",
+    "jsonToHtml": "json to html",
+    "htmlToJson": "html to json"
+  },
+  "exclude": {
+    "classesToExclude": [],
+    "idsToExclude": []
+  }
+}
