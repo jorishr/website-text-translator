@@ -1,10 +1,13 @@
 import config from "./config.json" assert { type: "json" };
 import processTranslations from "./translate/index.js";
 import processBaseFiles from "./processBaseFiles.js";
+import backup from "./utils/backup.js";
 
 export default () => {
   const { src, dest } = config.folders;
   const targets = config.languages.targets;
+  const safeMode = config.safeMode;
+  if (safeMode) backup(src);
   const [data, keysToTranslate, keysToDelete, offset] = processBaseFiles(
     src,
     dest

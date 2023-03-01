@@ -1,0 +1,18 @@
+{
+  "100": "Traductor",
+  "101": "Hola, bienvenido a mi mundo multilingüe.",
+  "102": "Título",
+  "103": "Subtitular",
+  "104": "Primer párrafo con texto plano. Otra frase.",
+  "105": "Este es un nuevo párrafo sin txt-id. Ejecute el programa en modo de muestra (--sample) para agregar un txt-id.",
+  "106": "título del enlace",
+  "107": "texto alternativo de la imagen",
+  "108": "título de imagen",
+  "109": "Nuevo enlace con atributo de título",
+  "110": "Segundo parrafo",
+  "111": "elemento niños",
+  "112": "con",
+  "113": "párrafo con solo un lapso",
+  "114": "Ancla con lapso e imagen dentro",
+  "115": "imagen dentro del ancla"
+}

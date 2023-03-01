@@ -1,0 +1,18 @@
+{
+  "100": "Traductor",
+  "101": "Hola, benvinguts al meu món multilingüe.",
+  "102": "Títol",
+  "103": "Subtítol",
+  "104": "Primer paràgraf amb text pla. Una altra frase.",
+  "105": "Aquest és un paràgraf nou sense un txt-id. Executeu el programa en mode de mostra (--sample) per afegir un txt-id.",
+  "106": "títol de l'enllaç",
+  "107": "text alternatiu de la imatge",
+  "108": "títol de la img",
+  "109": "Enllaç nou amb l'atribut title",
+  "110": "Segon paràgraf",
+  "111": "element fills",
+  "112": "amb",
+  "113": "paràgraf amb només un tram",
+  "114": "Àncora amb llum i imatge a l'interior",
+  "115": "imatge dins de l'àncora"
+}

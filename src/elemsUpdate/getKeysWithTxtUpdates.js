@@ -9,7 +9,7 @@ export default (data, target) => {
     let id = "";
     switch (target) {
       case "txtElems":
-        idArr = eval(elem.getAttribute(txtId));
+        const idArr = eval(elem.getAttribute(txtId));
         const textNodes = elem.childNodes.filter(
           (node) => node.nodeType === 3 && node.textContent.trim().length > 0
         );

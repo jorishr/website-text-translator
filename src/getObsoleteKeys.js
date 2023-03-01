@@ -33,7 +33,7 @@ function checkTxtElems(docList, txtId, key) {
   //should only return elements that don't have the key in their txtId attribute array
   const txtElems = docList.querySelectorAll(`[${txtId}]`);
   const res = txtElems.filter((elem) => {
-    idArr = eval(elem.getAttribute(txtId));
+    const idArr = eval(elem.getAttribute(txtId));
     for (let i = 0; i < idArr.length; i++) {
       if (idArr[i].toString() === key) {
         return true;

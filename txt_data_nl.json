@@ -1,0 +1,18 @@
+{
+  "100": "Translator",
+  "101": "Hello, welcome to my multilingual world.",
+  "102": "Title",
+  "103": "Subtitle",
+  "104": "First paragraph with plain text. Another sentence.",
+  "105": "This is a new paragraph without a txt-id. Run the program in sample mode(--sample) to add a txt-id.",
+  "106": "link title",
+  "107": "image alt text",
+  "108": "img title",
+  "109": "New link with title attribute",
+  "110": "Second paragraph",
+  "111": "element children",
+  "112": "with",
+  "113": "paragraph with just a span",
+  "114": "Anchor with span and image inside",
+  "115": "image inside anchor"
+}

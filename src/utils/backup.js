@@ -3,7 +3,7 @@ import path from "path";
 import config from "../config.json" assert { type: "json" };
 //const config = JSON.parse(fs.readFileSync("./src/config.json"));
 
-export default function backup(src) {
+export default (src) => {
   const dest = config.folders.backup;
   console.log(
     `SAFE MODE ON:\nBacking up HTML and JSON files from ${src} to ${dest}...\n`
@@ -27,4 +27,4 @@ export default function backup(src) {
       fs.copyFileSync(`${src}/${file}`, `${dest}/${file}`);
     });
   }
-}
+};
