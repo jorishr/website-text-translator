@@ -42,10 +42,10 @@ function setText(data, target, key, txtId) {
   const textNodes = elem.childNodes.filter(
     (node) => node.nodeType === 3 && node.textContent.trim().length > 0
   );
-  if (direction === "json to html") {
+  if (direction === "json2html") {
     textNodes[childNodeIndex].textContent = data.langData[key];
   }
-  if (direction === "html to json") {
+  if (direction === "html2json") {
     data.langData[key] = textNodes[childNodeIndex].textContent
       .trim()
       .replace(/\s\s+/g, "");
