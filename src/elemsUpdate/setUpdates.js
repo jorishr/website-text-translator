@@ -56,7 +56,7 @@ function setText(data, target, key, txtId) {
 function setAttr(data, target, key, id) {
   const attrElems = data.htmlData[target];
   const direction = config.direction.direction || config.direction.default;
-  let name = id.split("__")[1]; //alt, title, meta
+  let name = id.split("__").at(-1); //alt, title, meta
   if (name === "meta") name = "content";
 
   const elem = attrElems.find((elem) => {

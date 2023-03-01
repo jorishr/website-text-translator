@@ -28,6 +28,8 @@ The program can run without the Google Translate API. Set the `noGoogle` option 
 
 ### Configuration
 
+- Changing text-id's: the default text-id is `data-txt_id`. Modifiers are used for attribute text: `data-txt_id__alt`, `data-txt__title`, `data-txt__placeholder`, etc.You can change these in the config file. However, be careful: the `data` prefix is required for the id to be part of HTML dataset attribute, and the `__` modifiers are used in the program to identify the type of text. If you change these, the program may no longer work as expected or throw an error that you will have to debug.
+
 ### First run
 
 ### How to load the translation files in your project

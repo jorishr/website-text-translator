@@ -1,40 +1,31 @@
 import config from "../config.json" assert { type: "json" };
 
 export default (data, offset) => {
+  console.log(`Start processing new HTML elements...\n`);
   const { txtId, altId, titleId, metaId } = config.id;
   const newElements = data.htmlData.newElements;
+  const newKeys = [];
   let counter = Number(Object.keys(data.langData).at(-1)) + 1 || offset;
   data["newKeys"] = [];
   if (newElements.length === 0) return data;
-  const newKeys = [];
-  console.log(`Start processing new HTML elements...\n`);
   for (let i = 0; i < newElements.length; i++) {
     if (newElements[i].hasAttribute("alt")) {
-      data.langData[counter] = newElements[i].getAttribute("alt");
-      newElements[i].setAttribute(altId, counter);
-      newKeys.push(counter.toString());
-      console.log(
-        `Added txt-id__alt ${counter} to ${newElements[i].tagName} element`
-      );
-      counter++;
+      const result = setAttr(newElements[i], data, counter, altId);
+      data = result.data;
+      counter = result.counter;
+      newKeys.push(result.newKey);
     }
     if (newElements[i].hasAttribute("title")) {
-      data.langData[counter] = newElements[i].getAttribute("title");
-      newElements[i].setAttribute(titleId, counter);
-      newKeys.push(counter.toString());
-      console.log(
-        `Added txt-id__title ${counter} to ${newElements[i].tagName} element`
-      );
-      counter++;
+      const result = setAttr(newElements[i], data, counter, titleId);
+      data = result.data;
+      counter = result.counter;
+      newKeys.push(result.newKey);
     }
     if (newElements[i].tagName === "META") {
-      data.langData[counter] = newElements[i].getAttribute("content");
-      newElements[i].setAttribute(metaId, counter);
-      newKeys.push(counter.toString());
-      console.log(
-        `Added txt-id__meta ${counter} to ${newElements[i].tagName} element`
-      );
-      counter++;
+      const result = setAttr(newElements[i], data, counter, metaId);
+      data = result.data;
+      counter = result.counter;
+      newKeys.push(result.newKey);
     }
     //run when there is just one child node and that node is a text node
     if (
@@ -75,3 +66,16 @@ export default (data, offset) => {
   data.newKeys.push(...newKeys);
   return data;
 };
+
+function setAttr(elem, data, counter, attrId) {
+  const type = attrId.split("__").at(-1); // alt, title, meta
+  const target = type;
+  const newKey = counter.toString();
+  if (type === "meta") target = "content";
+
+  data.langData[counter] = elem.getAttribute(target);
+  elem.setAttribute(target, newKey);
+  console.log(`Added txt-id__${type} ${newKey} to ${elem.tagName} element`);
+  counter++;
+  return { data, counter, newKey };
+}

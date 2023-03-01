@@ -6,56 +6,33 @@ export default (data, target) => {
   const keysToUpdate = [];
   console.log(`\nSearching for text changes in ${target}...\n`);
   elems.forEach((elem) => {
-    let id = "";
+    let key = null;
     switch (target) {
       case "txtElems":
-        const idArr = eval(elem.getAttribute(txtId));
-        const textNodes = elem.childNodes.filter(
-          (node) => node.nodeType === 3 && node.textContent.trim().length > 0
-        );
-        for (let i = 0; i < idArr.length; i++) {
-          if (
-            textNodes[i].textContent.trim().replace(/\s\s/g, "") !==
-            data.langData[idArr[i]]
-          ) {
-            console.log(`txt value for txt-id ${idArr[i]} has changed\n`);
-            keysToUpdate.push(idArr[i]);
-          }
+        const keyArr = hasTxtKeyChanged(elem, txtId, data);
+        if (keyArr.length > 0) {
+          keyArr.forEach((key) => keysToUpdate.push(key));
         }
         break;
       case "altAttrElems":
-        id = elem.getAttribute(altId);
-        if (
-          elem.getAttribute("alt").trim().replace(/\s\s/g, "") !==
-          data.langData[id]
-        ) {
-          console.log(`txt value for alt attribute txt-id ${id} has changed\n`);
-          keysToUpdate.push(id);
-        }
+        key = hasAttrKeyChanged(elem, altId, data);
+        if (key) keysToUpdate.push(key);
         break;
+
       case "titleAttrElems":
-        id = elem.getAttribute(titleId);
-        if (
-          elem.getAttribute("title").trim().replace(/\s\s/g, "") !==
-          data.langData[id]
-        ) {
-          console.log(
-            `txt value for title attribute txt-id ${id} has changed\n`
-          );
-          keysToUpdate.push(id);
-        }
+        key = hasAttrKeyChanged(elem, titleId, data);
+        if (key) keysToUpdate.push(key);
         break;
+
       case "metaElems":
-        id = elem.getAttribute(metaId);
-        if (
-          elem.getAttribute("content").trim().replace(/\s\s/g, "") !==
-          data.langData[id]
-        ) {
-          console.log(
-            `Content value for meta tag with txt-id ${id} has changed\n`
-          );
-          keysToUpdate.push(id);
-        }
+        key = hasAttrKeyChanged(elem, metaId, data);
+        if (key) keysToUpdate.push(key);
+        break;
+
+      case "metaElems":
+        key = hasAttrKeyChanged(elem, metaId, data);
+        if (key) keysToUpdate.push(key);
+        break;
     }
   });
   if (keysToUpdate.length === 0) {
@@ -63,3 +40,37 @@ export default (data, target) => {
   }
   return keysToUpdate;
 };
+
+function hasTxtKeyChanged(elem, txtId, data) {
+  const idArr = eval(elem.getAttribute(txtId));
+  const textNodes = elem.childNodes.filter(
+    (node) => node.nodeType === 3 && node.textContent.trim().length > 0
+  );
+  const result = [];
+  for (let i = 0; i < idArr.length; i++) {
+    if (
+      textNodes[i].textContent.trim().replace(/\s\s/g, "") !==
+      data.langData[idArr[i]]
+    ) {
+      console.log(`txt value for txt-id ${idArr[i]} has changed\n`);
+      result.push(idArr[i]);
+    }
+  }
+  return result;
+}
+
+function hasAttrKeyChanged(elem, attrId, data) {
+  const type = attrId.split("__").at(-1); // alt, title, meta
+
+  let target = type;
+  if (type === "meta") target = "content";
+
+  const id = elem.getAttribute(target);
+  if (
+    elem.getAttribute(target).trim().replace(/\s\s/g, "") !== data.langData[id]
+  ) {
+    console.log(`txt value for ${type} attribute txt-id ${id} has changed\n`);
+    return id;
+  }
+  return null;
+}

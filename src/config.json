@@ -6,6 +6,7 @@
     "metaId": "data-txt_id__meta"
   },
   "offset": 100,
+  "selectors": "head meta[name=description], head meta[name=keywords], head title, h1, h2, h3, h4, h5, h6, p, span, a, img, strong, em",
   "languages": {
     "base": "nl",
     "targets": ["en", "es", "ca"]
