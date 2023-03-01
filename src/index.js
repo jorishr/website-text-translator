@@ -17,9 +17,11 @@ export default () => {
     ...Object.keys(keysToTranslate.newKeys),
     ...keysToDelete,
   ];
-  if (keysToProcess.length === 0) {
+  if (config.noGoogle === true) {
+    console.log("Translations disabled in config file.\nAll done!\n");
+  } else if (keysToProcess.length === 0) {
     console.log(
-      "No changes found in base files. No translations needed. All done!\n"
+      "No changes found in base files. No translations needed.\nAll done!\n"
     );
   } else {
     processTranslations(

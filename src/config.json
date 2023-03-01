@@ -29,5 +29,6 @@
     "classesToExclude": [],
     "idsToExclude": []
   },
-  "safeMode": true
+  "safeMode": true,
+  "noGoogle": false
 }
