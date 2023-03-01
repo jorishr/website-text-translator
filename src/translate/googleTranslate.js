@@ -1,5 +1,7 @@
-import { Translate } from "@google-cloud/translate";
+import translateApi from "@google-cloud/translate";
 import chunkArray from "../utils/chunkArray.js";
+//console.log(Translate);
+const Translate = translateApi.v2.Translate;
 const translate = new Translate();
 
 export default async (data, target, type) => {

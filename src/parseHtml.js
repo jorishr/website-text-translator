@@ -1,8 +1,9 @@
 import config from "./config.json" assert { type: "json" };
-import parse from "node-html-parser";
-import findNewElements from "./elems_add/index.js";
+import parser from "node-html-parser";
+import findNewElements from "./elemsAdd/index.js";
+const parse = parser.parse;
 
-module.exports = function parseHtml(html) {
+export default (html) => {
   const root = parse(html);
   const { txtId, altId, titleId, metaId } = config.id;
   const txtElems = root.querySelectorAll(`[${txtId}]`);

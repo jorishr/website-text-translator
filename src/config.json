@@ -11,8 +11,8 @@
     "targets": ["en", "es", "ca"]
   },
   "folders": {
-    "src": "./data/input",
-    "dest": "./data/output",
+    "src": "./",
+    "dest": "./",
     "backup": "./backup/"
   },
   "fileNames": {

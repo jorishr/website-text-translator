@@ -5,8 +5,8 @@ import getHtmlData from "./utils/getHtmlData.js";
 import logResult from "./utils/logResult.js";
 import writeFile from "./utils/writeToFile.js";
 import parseHtml from "./parseHtml.js";
-import processUpdates from "./elems_update/index.js";
-import setNewElements from "./elems_add/_setNewElems.js";
+import processUpdates from "./elemsUpdate/index.js";
+import setNewElements from "./elemsAdd/setNewElems.js";
 import getObsoleteKeys from "./getObsoleteKeys.js";
 
 export default (src, dest) => {

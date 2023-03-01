@@ -1,6 +1,6 @@
 import config from "./config.json" assert { type: "json" };
 import processTranslations from "./translate/index.js";
-import processBaseFiles from "./processBaseFiles";
+import processBaseFiles from "./processBaseFiles.js";
 
 export default () => {
   const { src, dest } = config.folders;

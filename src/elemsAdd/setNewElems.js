@@ -1,4 +1,4 @@
-import config from "./config.json" assert { type: "json" };
+import config from "../config.json" assert { type: "json" };
 
 export default (data, offset) => {
   const { txtId, altId, titleId, metaId } = config.id;
