@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Automatically translate HTML files to multiple languages with Google Translate API, detect changes and store translations in JSON files.",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
