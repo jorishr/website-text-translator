@@ -1,3 +1,4 @@
+import path from "path";
 import config from "./config.json" assert { type: "json" };
 import getFileList from "./utils/getFileList.js";
 import getJsonData from "./utils/getJsonData.js";
@@ -10,8 +11,7 @@ import setNewElements from "./elemsAdd/setNewElems.js";
 import getObsoleteKeys from "./getObsoleteKeys.js";
 
 export default (src, dest) => {
-  const htmlFileList = getFileList(`${src}`, ".html");
-  console.log(`List of file(s) to process: ${htmlFileList}\n`);
+  const htmlFileList = findHtmlFiles(`${src}`, [".html"]);
   //load existing language data json
   const srcLangData = getJsonData(src, config.fileNames.baseJson) || {};
   const keysInLangData = Object.keys(srcLangData);
@@ -51,3 +51,18 @@ export default (src, dest) => {
   console.log(`\nDone processing HTML and JSON base files!\n\n`);
   return [updatedData, keysToTranslate, keysToDelete, offset];
 };
+
+function findHtmlFiles(src) {
+  const allFiles = getFileList(src);
+  const htmlFileList = allFiles.filter(
+    (elem) => path.extname(elem) === ".html"
+  );
+  if (htmlFileList.length === 0) {
+    console.log(
+      `Program terminated. No HTML file(s) found in folder\n\nHint:\n\tMake sure you have at least one HTML file in the source folder: ${src}\n\tOr change the folder path in the config file.\n`
+    );
+    process.exit();
+  }
+  console.log(`Found HTML file(s) to process:\n${htmlFileList}\n`);
+  return htmlFileList;
+}
