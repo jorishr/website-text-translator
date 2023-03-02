@@ -2,8 +2,10 @@ import config from "./config.json" assert { type: "json" };
 import processTranslations from "./translate/index.js";
 import processBaseFiles from "./processBaseFiles.js";
 import backup from "./utils/backup.js";
+import log from "./utils/log.js";
 
 export default () => {
+  log("infoStart", "header");
   const { src, dest } = config.folders;
   const targets = config.languages.targets;
   const safeMode = config.safeMode;
@@ -18,11 +20,11 @@ export default () => {
     ...keysToDelete,
   ];
   if (config.noGoogle === true) {
-    console.log("Translations disabled in config file.\nAll done!\n");
+    log("translateDisabled", "info");
+    log("infoEnd", "success");
   } else if (keysToProcess.length === 0) {
-    console.log(
-      "No changes found in base files. No translations needed.\nAll done!\n"
-    );
+    log("translateNoKeys", "info");
+    log("infoEnd", "success");
   } else {
     processTranslations(
       data,

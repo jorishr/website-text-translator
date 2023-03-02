@@ -1,6 +1,7 @@
 import config from "./config.json" assert { type: "json" };
 import parser from "node-html-parser";
 import findNewElements from "./elemsAdd/index.js";
+import log from "./utils/log.js";
 const parse = parser.parse;
 
 export default (html) => {
@@ -22,9 +23,7 @@ export default (html) => {
   );
   //flatten arrays of nodeLists to get a single array of html elements
   const existingElems = [].concat.apply([], existingElemsLists);
-  console.log(
-    `Found a total of ${existingElems.length} HTML elements with an existing data-id in this HTML file.\n\n${newElems.length} new HTML elements were found.\n`
-  );
+  log("elementsFound", "info", [existingElems.length, newElems.length]);
   return {
     root: root,
     txtElems: txtElems,

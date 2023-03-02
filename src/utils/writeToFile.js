@@ -1,12 +1,13 @@
 import fs from "fs";
+import log from "./log.js";
 
 export default async (dest, data, fileName, type) => {
-  console.log(`Start writing to file ${fileName}...`);
+  log("writeFileStart", "info", [fileName]);
   try {
     fs.accessSync(dest);
   } catch (e) {
     fs.mkdirSync(dest, { recursive: true });
-    console.log(`Directory ${dest} does not exist. Creating...`);
+    log("mkdir", "info", [dest]);
   }
 
   switch (type) {
@@ -17,14 +18,14 @@ export default async (dest, data, fileName, type) => {
           JSON.stringify(data, null, 2)
         );
       } catch (err) {
-        console.log(`Unexpected error while writing to JSON file.\n`, err);
+        log("jsonFileWriteFail", "error", [err]);
       }
       break;
     case "html":
       try {
         fs.promises.writeFile(`${dest}/${fileName}`, data);
       } catch (err) {
-        console.log(`Unexpected error while writing to HTML file.\n`, err);
+        log("htmlFileWriteFail", "error", [err]);
       }
       break;
     default:

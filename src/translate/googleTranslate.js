@@ -1,3 +1,4 @@
+import log from "../utils/log.js";
 import translateApi from "@google-cloud/translate";
 import chunkArray from "../utils/chunkArray.js";
 //console.log(Translate);
@@ -5,9 +6,7 @@ const Translate = translateApi.v2.Translate;
 const translate = new Translate();
 
 export default async (data, target, type) => {
-  console.log(
-    `Fetching translations for ${type} text strings from the Google Translate API for language: ${target}...`
-  );
+  log("fetchTranslation", "info", [type, target]);
   //Google Translate API has a limit of 128 strings per request
   //write an array with 135 strings of lorem ipsum text to test this
   if (data.length <= 128) {

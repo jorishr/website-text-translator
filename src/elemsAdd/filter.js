@@ -82,7 +82,6 @@ function checkTextNodes(elem) {
       elem.childNodes[i].innerText !== "&times;"
     ) {
       //tim, remove double spaces, remove newlines, tabs
-      console.log();
       return true;
     }
   }

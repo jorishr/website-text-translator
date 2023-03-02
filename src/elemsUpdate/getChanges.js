@@ -1,10 +1,11 @@
 import config from "../config.json" assert { type: "json" };
+import log from "../utils/log.js";
 
 export default (data, target) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const elems = data.htmlData[target];
   const keysToUpdate = [];
-  console.log(`\nSearching for text changes in ${target}...\n`);
+  log("getTxtChanges", "info", [target]);
   elems.forEach((elem) => {
     let key = null;
     switch (target) {
@@ -36,13 +37,11 @@ export default (data, target) => {
         break;
 
       default:
-        console.log(
-          "WARNING: Unsupported target value while getting keys with text updates. This should not happen. Please report his issue."
-        );
+        log("getTxtChangesException", "error");
     }
   });
   if (keysToUpdate.length === 0) {
-    console.log(`No changes found in ${target}.\n`);
+    log("noChangesFound", "info", [target]);
   }
   return keysToUpdate;
 };
@@ -58,7 +57,7 @@ function hasTxtKeyChanged(elem, txtId, data) {
       textNodes[i].textContent.trim().replace(/\s\s/g, "") !==
       data.langData[idArr[i]]
     ) {
-      console.log(`txt value for txt-id ${idArr[i]} has changed\n`);
+      log("txtChange", "info", [idArr[i]]);
       result.push(idArr[i]);
     }
   }
@@ -75,7 +74,7 @@ function hasAttrKeyChanged(elem, attrId, data) {
   if (
     elem.getAttribute(target).trim().replace(/\s\s/g, "") !== data.langData[id]
   ) {
-    console.log(`txt value for ${name} attribute txt-id ${id} has changed\n`);
+    log("attrChange", "info", [name, id]);
     return id;
   }
   return null;

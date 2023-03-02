@@ -1,4 +1,5 @@
 import config from "../config.json" assert { type: "json" };
+import log from "../utils/log.js";
 
 export default (keys, data, target) => {
   if (keys.length === 0) return data;
@@ -22,9 +23,7 @@ export default (keys, data, target) => {
         res = setAttr(data, target, key, metaId);
         break;
       default:
-        console.log(
-          "WARNING: Unsupported target value while setting keys with text updates. This should not happen. Please report his issue."
-        );
+        log("txtUpdateException", "error");
         res = data;
     }
   });

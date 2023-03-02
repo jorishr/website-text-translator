@@ -2,11 +2,12 @@ import fs from "fs";
 import path from "path";
 import config from "../config.json" assert { type: "json" };
 import getFileList from "./getFileList.js";
+import log from "./log.js";
 //const config = JSON.parse(fs.readFileSync("./src/config.json"));
 
 export default (src) => {
   const dest = config.folders.backup;
-  console.log(`SAFE MODE ON:\nStarting backup...\n`);
+  log("backupStart", "start");
   let fileList = getFiles(src);
   if (fileList.length === 0) return;
   if (!fs.existsSync(dest)) {
@@ -44,9 +45,7 @@ function getFiles(src) {
   );
   const result = htmlFiles.concat(filteredJsonFiles);
   if (result.length === 0) {
-    console.log(
-      `Backup failed. No HTML and JSON file(s) found in source folder.\n`
-    );
+    log("backupFail", "fail");
     return [];
   }
   return result;
@@ -64,6 +63,6 @@ function createBackup(src, dest, fileList, mostRecent = "0") {
       fs.copyFileSync(`${src}/${file}`, `${folderName}/${file}`);
     });
   } catch (err) {
-    console.log(`An error occurred while creating a file backup:\n`, err);
+    log("backupWriteFail", "error", [err]);
   }
 }

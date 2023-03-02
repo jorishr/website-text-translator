@@ -1,14 +1,17 @@
 # HTML-Text-Translator
 
-Automatically translate html files to multiple languages, detect changes and store translations in a json files.
+![GitHub package.json version](https://img.shields.io/github/package-json/v/jorishr/html-text-translator?style=flat-square)
+![GitHub](https://img.shields.io/github/license/jorishr/html-text-translator?style=flat-square)
+
+Automatically translate html files to multiple languages, detect changes and store translations in JSON files.
 
 ## What to expect
 
 The program will read and parse the html file(s) in the source folder. It will first add text-id's to HTML elements that contain text content:
 
-- text elements (e.g. `<p>`, `<h1>`, `<span>`, etc.)
-- attributes (e.g. `alt`, `title` )
-- meta tags (e.g. `description`, `keywords`)
+- text elements e.g. `<p>`, `<h1>`, `<span>`, etc.
+- element attributes: `alt`, `title`, `placeholder`
+- meta tag content: `description`, `keywords`
 
 A base JSON file will be generated with key-value pairs for each text element.
 

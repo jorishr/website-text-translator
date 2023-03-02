@@ -1,12 +1,14 @@
 import config from "../config.json" assert { type: "json" };
+import log from "../utils/log.js";
 
 export default (data, offset) => {
-  console.log(`Start processing new HTML elements...\n`);
-  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const newElements = data.htmlData.newElements;
+  data.newKeys = [];
+  if (newElements.length === 0) return data;
+  log("newElemsStart", "start1");
+  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const newKeys = [];
   let counter = Number(Object.keys(data.langData).at(-1)) + 1 || offset;
-  data["newKeys"] = [];
   if (newElements.length === 0) return data;
   for (let i = 0; i < newElements.length; i++) {
     if (newElements[i].hasAttribute("alt")) {
@@ -44,9 +46,7 @@ export default (data, offset) => {
       const txtIdTxt = `[${counter}]`;
       newElements[i].setAttribute(txtId, txtIdTxt);
       newKeys.push(counter.toString());
-      console.log(
-        `Added txt-id ${counter} to ${newElements[i].tagName} element`
-      );
+      log("txtAdded", "info", [counter, newElements[i].tagName]);
       counter++;
     }
     if (newElements[i].childNodes.length > 1) {
@@ -61,15 +61,11 @@ export default (data, offset) => {
       });
       const txtIdTxt = `[${txt_id_arr}]`;
       newElements[i].setAttribute(txtId, txtIdTxt);
-      console.log(
-        `Added txt-id's ${[...txt_id_arr]} to ${
-          newElements[i].tagName
-        } element.`
-      );
+      log("txtAdded", "info", [[...txt_id_arr], newElements[i].tagName]);
     }
   }
-  console.log(`\nNew HTML element text strings processing completed.\n`);
   data.newKeys.push(...newKeys);
+  log("newElemsDone", "done");
   return data;
 };
 
@@ -81,7 +77,7 @@ function setAttr(elem, data, counter, attrId) {
 
   data.langData[counter] = elem.getAttribute(target);
   elem.setAttribute(attrId, newKey);
-  console.log(`Added ${attrId}=${newKey} to ${elem.tagName} element`);
+  log("attrAdded", "info", [attrId, newKey, elem.tagName]);
   counter++;
   return { data, counter, newKey };
 }

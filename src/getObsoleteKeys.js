@@ -1,4 +1,5 @@
 import config from "./config.json" assert { type: "json" };
+import log from "./utils/log.js";
 
 export default (data, docList) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
@@ -22,9 +23,7 @@ export default (data, docList) => {
     }
   });
   if (obsoleteKeys.length > 0) {
-    console.log(
-      `The following keys are obsolete and will be removed from the base JSON file: ${obsoleteKeys}\n`
-    );
+    log("obsoleteKeys", "info", [obsoleteKeys]);
   }
   return obsoleteKeys;
 };

@@ -9,6 +9,7 @@ import parseHtml from "./parseHtml.js";
 import processUpdates from "./elemsUpdate/index.js";
 import setNewElements from "./elemsAdd/setNewElems.js";
 import getObsoleteKeys from "./getObsoleteKeys.js";
+import log from "./utils/log.js";
 
 export default (src, dest) => {
   const htmlFileList = findHtmlFiles(`${src}`, [".html"]);
@@ -22,7 +23,7 @@ export default (src, dest) => {
   let documents = [];
   let keysToTranslate = { changedKeys: [], newKeys: [] };
   for (let i = 0; i < htmlFileList.length; i++) {
-    console.log(`\nStart processing HTML file: ${htmlFileList[i]}\n`);
+    log("htmlStart", "start2", [htmlFileList[i]]);
     const langData = updatedData.langData || srcLangData;
     const html = getHtmlData(src, htmlFileList[i]);
     const htmlData = parseHtml(html);
@@ -35,20 +36,19 @@ export default (src, dest) => {
     }
     data = setNewElements(data, offset);
     keysToTranslate.newKeys.push(...data.newKeys);
-
     const updatedHtml = data.htmlData.root.toString();
     writeFile(dest, updatedHtml, htmlFileList[i], "html");
     //persist data over iterations
     documents.push(data.htmlData.root);
     updatedData = data;
-    console.log(`Done processing file: ${htmlFileList[i]}\n\n`);
+    log("htmlDone", "done", [htmlFileList[i]]);
   }
   const keysToDelete = getObsoleteKeys(updatedData, documents);
   keysToDelete.forEach((key) => {
     delete updatedData.langData[key];
   });
   writeFile(dest, updatedData.langData, config.fileNames.baseJson, "json");
-  console.log(`\nDone processing HTML and JSON base files!\n\n`);
+  log("htmlEnd", "done");
   return [updatedData, keysToTranslate, keysToDelete, offset];
 };
 

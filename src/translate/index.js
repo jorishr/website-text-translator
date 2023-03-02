@@ -2,6 +2,7 @@ import config from "../config.json" assert { type: "json" };
 import getJsonData from "../utils/getJsonData.js";
 import writeFile from "../utils/writeToFile.js";
 import getTranslations from "./googleTranslate.js";
+import log from "../utils/log.js";
 
 export default async (
   data,
@@ -13,7 +14,7 @@ export default async (
   dest
 ) => {
   const [changedValues, newValues] = getValues(keysToTranslate, data);
-  console.log("Starting translation(s)...\n");
+  log("translateStart", "start2");
   targets.forEach(async (lang) => {
     //Google Translate API returns an array of translations, in the same order as the input array
     let resChangedVals = [];
@@ -28,9 +29,7 @@ export default async (
     const prefix = config.fileNames.prefix;
     let data = getJsonData(src, `${prefix}${lang}.json`) || {};
     if (Object.keys(data).length !== 0) {
-      console.log(
-        `Found existing translation file for language: ${lang}. Applying updates...`
-      );
+      log("langFileExists", "info", [lang]);
       keysToDelete.forEach((key) => {
         delete data[key];
       });
@@ -43,9 +42,7 @@ export default async (
         data[keysToTranslate.changedKeys[i]] = resChangedVals[i];
       }
     } else {
-      console.log(
-        `\nNo existing translation data found for language: ${lang}. Creating new file...`
-      );
+      log("langFileNew", "info", [lang]);
       //in this case, there should be no changed keys, only new keys to append to the end of the file
       for (let i = 0; i < resNewVals.length; i++) {
         data[offset + i] = resNewVals[i];

@@ -1,12 +1,13 @@
 import fs from "fs";
 import path from "path";
+import log from "./log.js";
 
 export default (src) => {
   try {
     const result = getFiles(src);
     return result;
   } catch (err) {
-    console.log(`Unexpected fatal error while reading folder content.\n${err}`);
+    log("getFilesFail", "error", [err]);
     return null;
   }
 };
