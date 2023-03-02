@@ -19,6 +19,7 @@ The program will then fetch translation strings from the Google Translate API an
 ### Backup
 
 By default the program will create a versioned backup of your HTML and JSON files in the `backup` folder, because by default your existing HTML files will be overwritten. You can disable this feature by setting the `backup` boolean to `false` in the config file. If you do this, you should make sure you have a backup of your files before running the program or change the output folder to a different location.
+Add the backup folder to your `.gitignore` file if you are using Git.
 
 ### Requirements
 
@@ -45,7 +46,7 @@ Once you have HTML files with txt-id's and JSON file(s) with corresponding text 
   ```
 
   ```json
-  //write the new text at the corresponding txt_id
+  //write the new text at the corresponding txt_id in the base language JSON file
   {
     "100": "The new text."
   }

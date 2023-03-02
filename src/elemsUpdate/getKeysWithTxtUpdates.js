@@ -28,11 +28,6 @@ export default (data, target) => {
         key = hasAttrKeyChanged(elem, metaId, data);
         if (key) keysToUpdate.push(key);
         break;
-
-      case "metaElems":
-        key = hasAttrKeyChanged(elem, metaId, data);
-        if (key) keysToUpdate.push(key);
-        break;
     }
   });
   if (keysToUpdate.length === 0) {
@@ -60,16 +55,16 @@ function hasTxtKeyChanged(elem, txtId, data) {
 }
 
 function hasAttrKeyChanged(elem, attrId, data) {
-  const type = attrId.split("__").at(-1); // alt, title, meta
+  const id = elem.getAttribute(attrId); // a "number"
+  const name = attrId.split("__").at(-1); // alt, title, meta
 
-  let target = type;
-  if (type === "meta") target = "content";
+  let target = name;
+  if (name === "meta") target = "content";
 
-  const id = elem.getAttribute(target);
   if (
     elem.getAttribute(target).trim().replace(/\s\s/g, "") !== data.langData[id]
   ) {
-    console.log(`txt value for ${type} attribute txt-id ${id} has changed\n`);
+    console.log(`txt value for ${name} attribute txt-id ${id} has changed\n`);
     return id;
   }
   return null;
