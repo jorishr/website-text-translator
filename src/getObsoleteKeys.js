@@ -1,7 +1,7 @@
 import config from "./config.json" assert { type: "json" };
 
 export default (data, docList) => {
-  const { txtId, altId, titleId, metaId } = config.id;
+  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const keysInLangData = Object.keys(data.langData);
   const obsoleteKeys = [];
   keysInLangData.forEach((key) => {
@@ -9,7 +9,7 @@ export default (data, docList) => {
     for (let i = 0; i < docList.length; i++) {
       const txtElems = checkTxtElems(docList[i], txtId, key);
       const otherElems = docList[i].querySelectorAll(
-        `[${altId}=${key}], [${titleId}=${key}], [${metaId}=${key}]`
+        `[${altId}=${key}], [${titleId}=${key}], [${plchldrId}=${key}], [${metaId}=${key}]`
       );
       if (txtElems.length > 0 || otherElems.length > 0) {
         res = false;

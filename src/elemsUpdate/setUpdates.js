@@ -2,7 +2,7 @@ import config from "../config.json" assert { type: "json" };
 
 export default (keys, data, target) => {
   if (keys.length === 0) return data;
-  const { txtId, altId, titleId, metaId } = config.id;
+  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   let res = null;
   keys.forEach((key) => {
     switch (target) {
@@ -15,11 +15,17 @@ export default (keys, data, target) => {
       case "titleAttrElems":
         res = setAttr(data, target, key, titleId);
         break;
+      case "plchldrAttrElems":
+        res = setAttr(data, target, key, plchldrId);
+        break;
       case "metaElems":
         res = setAttr(data, target, key, metaId);
         break;
       default:
-        return null;
+        console.log(
+          "WARNING: Unsupported target value while setting keys with text updates. This should not happen. Please report his issue."
+        );
+        res = data;
     }
   });
   return res;
@@ -56,7 +62,7 @@ function setText(data, target, key, txtId) {
 function setAttr(data, target, key, id) {
   const attrElems = data.htmlData[target];
   const direction = config.direction.direction || config.direction.default;
-  let name = id.split("__")[1]; //alt, title, meta
+  let name = id.split("__").at(-1); //alt, title, meta
   if (name === "meta") name = "content";
 
   const elem = attrElems.find((elem) => {
