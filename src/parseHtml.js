@@ -1,6 +1,6 @@
 import config from "./config.json" assert { type: "json" };
 import parser from "node-html-parser";
-import findNewElements from "./elemsAdd/index.js";
+import findNewElements from "./elemsAdd/getNewElems.js";
 import log from "./utils/log.js";
 const parse = parser.parse;
 
