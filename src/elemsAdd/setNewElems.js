@@ -2,7 +2,7 @@ import config from "../config.json" assert { type: "json" };
 
 export default (data, offset) => {
   console.log(`Start processing new HTML elements...\n`);
-  const { txtId, altId, titleId, metaId } = config.id;
+  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const newElements = data.htmlData.newElements;
   const newKeys = [];
   let counter = Number(Object.keys(data.langData).at(-1)) + 1 || offset;
@@ -17,6 +17,12 @@ export default (data, offset) => {
     }
     if (newElements[i].hasAttribute("title")) {
       const result = setAttr(newElements[i], data, counter, titleId);
+      data = result.data;
+      counter = result.counter;
+      newKeys.push(result.newKey);
+    }
+    if (newElements[i].hasAttribute("placeholder")) {
+      const result = setAttr(newElements[i], data, counter, plchldrId);
       data = result.data;
       counter = result.counter;
       newKeys.push(result.newKey);
@@ -68,14 +74,14 @@ export default (data, offset) => {
 };
 
 function setAttr(elem, data, counter, attrId) {
-  const type = attrId.split("__").at(-1); // alt, title, meta
-  const target = type;
   const newKey = counter.toString();
-  if (type === "meta") target = "content";
+  const name = attrId.split("__").at(-1); // alt, title, meta, placeholder
+  const target = name;
+  if (name === "meta") target = "content";
 
   data.langData[counter] = elem.getAttribute(target);
-  elem.setAttribute(target, newKey);
-  console.log(`Added txt-id__${type} ${newKey} to ${elem.tagName} element`);
+  elem.setAttribute(attrId, newKey);
+  console.log(`Added ${attrId}=${newKey} to ${elem.tagName} element`);
   counter++;
   return { data, counter, newKey };
 }

@@ -1,7 +1,7 @@
 import config from "../config.json" assert { type: "json" };
 
 export default (data, target) => {
-  const { txtId, altId, titleId, metaId } = config.id;
+  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const elems = data.htmlData[target];
   const keysToUpdate = [];
   console.log(`\nSearching for text changes in ${target}...\n`);
@@ -14,6 +14,7 @@ export default (data, target) => {
           keyArr.forEach((key) => keysToUpdate.push(key));
         }
         break;
+
       case "altAttrElems":
         key = hasAttrKeyChanged(elem, altId, data);
         if (key) keysToUpdate.push(key);
@@ -24,10 +25,20 @@ export default (data, target) => {
         if (key) keysToUpdate.push(key);
         break;
 
+      case "plchldrAttrElems":
+        key = hasAttrKeyChanged(elem, plchldrId, data);
+        if (key) keysToUpdate.push(key);
+        break;
+
       case "metaElems":
         key = hasAttrKeyChanged(elem, metaId, data);
         if (key) keysToUpdate.push(key);
         break;
+
+      default:
+        console.log(
+          "WARNING: Unsupported target value while getting keys with text updates. This should not happen. Please report his issue."
+        );
     }
   });
   if (keysToUpdate.length === 0) {

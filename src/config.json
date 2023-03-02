@@ -3,10 +3,11 @@
     "txtId": "data-txt_id",
     "altId": "data-txt_id__alt",
     "titleId": "data-txt_id__title",
+    "plchldrId": "data-txt_id__placeholder",
     "metaId": "data-txt_id__meta"
   },
   "offset": 100,
-  "selectors": "head meta[name=description], head meta[name=keywords], head title, h1, h2, h3, h4, h5, h6, p, span, a, img, strong, em",
+  "selectors": "head meta[name=description], head meta[name=keywords], head title, h1, h2, h3, h4, h5, h6, p, span, a, img, strong, em, input",
   "languages": {
     "base": "nl",
     "targets": ["en", "es", "ca"]

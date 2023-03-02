@@ -2,7 +2,7 @@ import config from "../config.json" assert { type: "json" };
 
 export default (elem) => {
   //NOTE: Order of the filters matters!
-  const { txtId, altId, titleId, metaId } = config.id;
+  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const { classesToExclude, idsToExclude } = config.exclude;
   const doExcludeClass = exclude(elem, "class", classesToExclude);
   const doExcludeId = exclude(elem, "id", idsToExclude);
@@ -31,6 +31,9 @@ export default (elem) => {
     }
     return false;
   }
+  if (elem.hasAttribute(plchldrId)) {
+    return false;
+  }
   if (elem.hasAttribute(metaId)) {
     return false;
   }
@@ -41,6 +44,7 @@ export default (elem) => {
     !hasTextNodes &&
     !elem.hasAttribute("alt") &&
     !elem.hasAttribute("title") &&
+    !elem.hasAttribute("placeholder") &&
     elem.tagName !== "META"
   )
     return false;
