@@ -41,7 +41,8 @@ function getFiles(src) {
   const htmlFiles = allFiles.filter((elem) => path.extname(elem) === ".html");
   const jsonFiles = allFiles.filter((elem) => path.extname(elem) === ".json");
   const filteredJsonFiles = jsonFiles.filter((elem) =>
-    elem.startsWith(config.fileNames.prefix)
+    //for subfolders, path is included in the filename string and needs to be filtered out 'folder/filename' or 'folder/subfolder/filename'
+    elem.split("/").at(-1).startsWith(config.fileNames.prefix)
   );
   const result = htmlFiles.concat(filteredJsonFiles);
   if (result.length === 0) {
@@ -60,7 +61,15 @@ function createBackup(src, dest, fileList, mostRecent = "0") {
   try {
     fs.mkdirSync(`${folderName}`, { recursive: true });
     fileList.forEach((file) => {
-      fs.copyFileSync(`${src}/${file}`, `${folderName}/${file}`);
+      //process subfolders present in filestring
+      const fileName = file.split("/").at(-1);
+      const subfolders = file.slice(0, file.length - fileName.length);
+      if (path)
+        fs.mkdirSync(`${folderName}/${subfolders}`, { recursive: true });
+      fs.copyFileSync(
+        `${src}${file}`,
+        `${folderName}/${subfolders}${fileName}`
+      );
     });
   } catch (err) {
     log("backupWriteFail", "error", [err]);
