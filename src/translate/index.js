@@ -13,6 +13,10 @@ export default async (
   src,
   dest
 ) => {
+  if (targets.length === 0) {
+    log("noTargets", "error");
+    return;
+  }
   const [changedValues, newValues] = getValues(keysToTranslate, data);
   log("translateStart", "start2");
   targets.forEach(async (lang) => {

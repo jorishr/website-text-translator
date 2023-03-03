@@ -23,11 +23,9 @@ export default () => {
     if (config.mode.dryRun) log("dryRun", "info");
     if (config.mode.noTranslate) log("translateDisabled", "info");
     log("infoEnd", "success");
-    process.exit();
   } else if (keysToProcess.length === 0) {
     log("translateNoKeys", "info");
     log("infoEnd", "success");
-    process.exit();
   } else {
     processTranslations(
       data,

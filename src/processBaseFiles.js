@@ -14,7 +14,8 @@ import log from "./utils/log.js";
 export default (src, dest) => {
   const htmlFileList = findHtmlFiles(`${src}`, [".html"]);
   //load existing language data json
-  const srcLangData = getJsonData(src, config.fileNames.baseJson) || {};
+  const jsonFile = config.fileNames.prefix + config.languages.base + ".json";
+  const srcLangData = getJsonData(src, jsonFile) || {};
   const keysInLangData = Object.keys(srcLangData);
   logResult(keysInLangData);
   //persist data over iterations
