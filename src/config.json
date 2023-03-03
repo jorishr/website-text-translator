@@ -1,8 +1,13 @@
 {
+  "languages": {
+    "base": "nl",
+    "targets": ["en", "es", "ca"]
+  },
   "mode": {
     "backup": true,
     "noTranslate": false,
-    "dryRun": true
+    "dryRun": false,
+    "logLevel": "verbose"
   },
   "id": {
     "txtId": "data-txt_id",
@@ -19,18 +24,13 @@
       "idsToExclude": []
     }
   },
-  "languages": {
-    "base": "nl",
-    "targets": ["en", "es", "ca"]
-  },
   "folders": {
     "src": "./",
-    "dest": "./",
-    "backup": "./backup/"
+    "dest": "./tmp",
+    "backup": "./backup"
   },
   "fileNames": {
-    "prefix": "txt_data_",
-    "baseJson": "txt_data_nl.json"
+    "prefix": "txt_data_"
   },
   "direction": {
     "direction": "",

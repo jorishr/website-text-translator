@@ -1,4 +1,15 @@
+import config from "../config.json" assert { type: "json" };
+
 export default (msg, type, vals = []) => {
+  if (config.mode.logLevel === "verbose") {
+    print(msg, type, vals);
+  } else {
+    if (type !== "info") {
+      print(msg, type, vals);
+    }
+  }
+};
+function print(msg, type, vals = []) {
   switch (type) {
     case "error":
       if (vals.length === 0) {
@@ -43,7 +54,7 @@ export default (msg, type, vals = []) => {
       }
       break;
   }
-};
+}
 
 function getFullMsg(msg) {
   return messages[msg];
@@ -67,7 +78,10 @@ const messages = {
   backupFail: "Backup failed. No HTML and JSON file(s) found in source folder.",
   htmlStart: "Start processing HTML file: ${0}",
   htmlRead: "Read HTML file: ${0}",
+  htmlList: "Found HTML file(s) to process:\n${0}\n",
   htmlReadFail: "Unable to load HTML data from folder:\n\n\t${0}",
+  htmlNotFound:
+    "Program terminated. No HTML file(s) found in folder\n\nHint:\n\tMake sure you have at least one HTML file in the source folder: ${0}\n\tOr change the folder path in the config file.",
   htmlDone: "Done processing HTML file: ${0}",
   htmlEnd: "Done processing all HTML and JSON base files!",
   elementsFound:
@@ -83,14 +97,14 @@ const messages = {
   htmlFileWriteFail: "Unexpected error while writing to HTML file:\n\n\t${0}",
   backupWriteFail: "Unexpected error while writing to backup file:\n\n\t${0}",
   translateStart: "Starting translation(s)...",
+  translateDisabled: "Translations disabled in config file.",
+  translateNoKeys: "No changes found in base files. No translations needed.",
   langFileExists:
     "Found existing translation file for language: ${0}. Applying updates...",
   langFileNew:
     "No existing translation data found for language: ${0}. Creating new file...",
   fetchTranslation:
     "Fetching translations for ${0} text strings from the Google Translate API for language: ${1}...`",
-  translateDisabled: "Translations disabled in config file.",
-  translateNoKeys: "No changes found in base files. No translations needed.",
   txtUpdateException:
     "WARNING: Unsupported target value while setting keys with text updates. This should not happen. Please report his issue.",
   getTxtChanges: "\nSearching for text changes in ${0}...",
@@ -102,5 +116,6 @@ const messages = {
   txtAdded: "Added txt-id ${0} to ${1} element",
   attrAdded: "Added ${0}=${1} to ${2} element",
   dryRun: "Translations are disabled in dry run mode.",
-  dryRunStart: "Dry run mode: ON. No files will be written.",
+  dryRunStart:
+    "Dry run mode: ON. No files will be written. No translations will be fetched from the Google Translate API.",
 };

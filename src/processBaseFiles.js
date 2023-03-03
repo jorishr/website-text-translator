@@ -50,7 +50,8 @@ export default (src, dest) => {
     delete updatedData.langData[key];
   });
   if (!config.mode.dryRun) {
-    writeFile(dest, updatedData.langData, config.fileNames.baseJson, "json");
+    const fileName = config.fileNames.prefix + config.languages.base + ".json";
+    writeFile(dest, updatedData.langData, fileName, "json");
   }
   log("htmlEnd", "done");
   return [updatedData, keysToTranslate, keysToDelete, offset];
@@ -62,11 +63,9 @@ function findHtmlFiles(src) {
     (elem) => path.extname(elem) === ".html"
   );
   if (htmlFileList.length === 0) {
-    console.log(
-      `Program terminated. No HTML file(s) found in folder\n\nHint:\n\tMake sure you have at least one HTML file in the source folder: ${src}\n\tOr change the folder path in the config file.\n`
-    );
+    log("htmlNotFound", "error", [src]);
     process.exit();
   }
-  console.log(`Found HTML file(s) to process:\n${htmlFileList}\n`);
+  log("htmlList", "info", [htmlFileList]);
   return htmlFileList;
 }
