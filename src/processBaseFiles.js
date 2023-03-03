@@ -40,7 +40,10 @@ export default (src, dest) => {
     data = setNewElements(data, offset);
     keysToTranslate.newKeys.push(...data.newKeys);
     const updatedHtml = data.htmlData.root.toString();
-    if (!config.mode.dryRun) {
+    const hasChanged =
+      keysToTranslate.changedKeys.length > 0 ||
+      keysToTranslate.newKeys.length > 0;
+    if (hasChanged && !config.mode.dryRun) {
       writeFile(dest, updatedHtml, htmlFileList[i], "html");
     }
     //persist data over iterations
@@ -52,7 +55,11 @@ export default (src, dest) => {
   keysToDelete.forEach((key) => {
     delete updatedData.langData[key];
   });
-  if (!config.mode.dryRun) {
+  const hasChanged =
+    keysToDelete.length > 0 ||
+    keysToTranslate.changedKeys.length > 0 ||
+    keysToTranslate.newKeys.length > 0;
+  if (hasChanged && !config.mode.dryRun) {
     const fileName = config.fileNames.prefix + config.languages.base + ".json";
     writeFile(dest, updatedData.langData, fileName, "json");
   }
