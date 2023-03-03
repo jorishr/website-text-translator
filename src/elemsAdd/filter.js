@@ -3,7 +3,7 @@ import config from "../config.json" assert { type: "json" };
 export default (elem) => {
   //NOTE: Order of the filters matters!
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
-  const { classesToExclude, idsToExclude } = config.exclude;
+  const { classesToExclude, idsToExclude } = config.elements.exclude;
   const doExcludeClass = exclude(elem, "class", classesToExclude);
   const doExcludeId = exclude(elem, "id", idsToExclude);
   if (doExcludeClass) return false;

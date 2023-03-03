@@ -5,6 +5,24 @@
 
 Automatically translate html files to multiple languages, detect changes and store translations in JSON files.
 
+- [HTML-Text-Translator](#html-text-translator)
+  - [What to expect](#what-to-expect)
+  - [Getting started](#getting-started)
+    - [Languages](#languages)
+    - [Backup](#backup)
+    - [Requirements](#requirements)
+    - [First run](#first-run)
+    - [Handling future updates and changes to your HTML files and/or JSON files](#handling-future-updates-and-changes-to-your-html-files-andor-json-files)
+    - [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project)
+  - [Limitations and known issues](#limitations-and-known-issues)
+  - [Additional configuration options](#additional-configuration-options)
+    - [selectors and exclusions](#selectors-and-exclusions)
+    - [text-id's](#text-ids)
+    - [offset](#offset)
+    - [folders](#folders)
+    - [change direction](#change-direction)
+    - [log level](#log-level)
+
 ## What to expect
 
 The program will read and parse the html file(s) in the source folder. It will first add text-id's to HTML elements that contain text content:
@@ -19,24 +37,25 @@ The program will then fetch translation strings from the Google Translate API an
 
 ## Getting started
 
+### Languages
+
+Define the base language and the languages you want to translate to in the config file. The base language is the language you used to write the text in your HTML files. The program will use this base language to generate the base JSON file.
+
+The target languages are two letter language codes. For example: `en` for English, `nl` for Dutch, `fr` for French, etc. Set your target languages in the `targets` array in the config file.
+
 ### Backup
 
-By default the program will create a versioned backup of your HTML and JSON files in the `backup` folder, because by default your existing HTML files will be overwritten. You can disable this feature by setting the `backup` boolean to `false` in the config file. If you do this, you should make sure you have a backup of your files before running the program or change the output folder to a different location.
+The program will create a numbered backup of your HTML and JSON files in the `backup` folder. Note that by default your existing HTML files will be overwritten, unless you set a different output folder. You can disable the backup feature by setting the `backup` boolean to `false` in the config file. If you do this, you should make sure you have a backup of your files before running the program or change the output folder to a different location.
 Add the backup folder to your `.gitignore` file if you are using Git.
 
 ### Requirements
 
+- At least one HTML file in the source folder or any of it's sub-folders.
+
 - Google Application Credentials: to fetch the translation strings from the Google Translate API you need to setup authentication for Google Cloud Services. Without, you will see an error message for an invalid API key. See [Getting started with Google Cloud Authentication](https://cloud.google.com/docs/authentication/getting-started).
-
-The program can run without the Google Translate API. Set the `noGoogle` option in the config file to `true`. In this case the program will only run the first part of the program: add txt-id's to the HTML files and generate the base JSON file. No translation files will be generated.
-
-### Configuration
-
-- Changing text-id's: the default text-id is `data-txt_id`. Modifiers are used for attribute text: `data-txt_id__alt`, `data-txt__title`, `data-txt__placeholder`, etc.You can change these in the config file. However, be careful: the `data` prefix is required for the id to be part of HTML dataset attribute, and the `__` modifiers are used in the program to identify the type of text. If you change these, the program may no longer work as expected or throw an error that you will have to debug.
+- The program can run without the Google Translate API. Set the `noTranslate` option in the config file to `true`. In this case the program will only run the first part of the program: add txt-id's to the HTML files and generate the base JSON file. No translation files will be generated.
 
 ### First run
-
-### How to load the translation files in your project
 
 ### Handling future updates and changes to your HTML files and/or JSON files
 
@@ -63,13 +82,15 @@ Once you have HTML files with txt-id's and JSON file(s) with corresponding text 
 
   All translation files will be updated as well with a new translation string for the new text. All other translation strings will be left unchanged.
 
-  NOTE: there is an experimental option that applies the updates in the other direction. This means that if you update the text of an HTML element in the HTML file, the program will detect the change and will update the base JSON file. This is not recommended but it is there if you need it. Set the `direction` string in the config file to `html2json` to enable this feature.
+  <em>Note</em>: there is an experimental option that applies the updates in the other direction. This means that if you update the text of an HTML element in the HTML file, the program will detect the change and will update the base JSON file. This is not recommended but it is there if you need it. Set the `direction` string in the config file to `html2json` to enable this feature.
 
-- IMPORTANT! Structural changes to an existing HTML element <em>that already has one or more txt-id's</em>: It's impossible to predict all possible changes one can make to an existing element. Text may be added, removed entirely or partially, and one or more nested elements like `<em>` or `<a>` may be added or removed. To avoid errors and unexpected results, it is recommended to <em>remove all existing txt-id's that are already present on the element.</em> The program will then treat all your changes as new elements. New txt-id's will be added to the HTML and your JSON files will be updated automatically with the new text and the corresponding translations, while the old obsolete key-pair values are purged.
+- <em>Important!</em> Structural changes to an existing HTML element <em>that already has one or more txt-id's</em>: It's impossible to predict all possible changes one can make to an existing element. Text may be added, removed entirely or partially, and one or more nested elements like `<em>` or `<a>` may be added or removed. To avoid errors and unexpected results, it is recommended to <em>remove all existing txt-id's that are already present on the element.</em> The program will then treat all your changes as new elements. New txt-id's will be added to the HTML element and your JSON files will be updated automatically with the new text and the corresponding translations, while the old obsolete key-pair values are purged.
+
+### How to load the translation files in your project
 
 ## Limitations and known issues
 
-- Note that translations by the Google Translate API or any other service are not perfect. You should still review the translations and correct them manually, once the language JSON file(s) are generated. Make your updates in the respective JSON language file(s). These manual changes in your translation files will <em>not</em> be overwritten by the program, unless you make changes to the base language JSON and/or HTML file.
+- Note that translations by the Google Translate API or any other service are not perfect. You should still review the translations and correct them manually, once the language JSON file(s) are generated. Make your corrections in the respective JSON language file(s). These manual changes in your translation files will <em>not</em> be overwritten by the program, unless you make changes to the base language JSON and/or HTML file.
 - Paragraphs with nested elements like `<em>` or `<strong>` may lose some of the spaces before or after the nested element. For example:
 
   ```html
@@ -89,3 +110,41 @@ Once you have HTML files with txt-id's and JSON file(s) with corresponding text 
   ```
 
   The reason for this behavior is that the program trims the text content string for comparisons to exclude empty textNodes that are present in many HTML elements. If you see a more elegant solution, please open an issue on github.
+
+## Additional configuration options
+
+### selectors and exclusions
+
+The program will ignore HTML elements unless they are included in the `selectors` array in the config file. For example, `<div>` elements are ignored by default. It is recommended to not have translatable text lingering around, wrap it in a `<p>` or `<span>`.
+
+default exclusions:
+
+- elements with the HTML attribute `translate="no"`
+- elements and textNodes that are empty or contain only whitespace
+- elements and textNodes that only contain a single special character like `&,.?!` etc.
+
+Custom exclusions: You can tell the program to ignore HTML elements by class or id. Add the class or id to the respective `exclude` arrays in the config file.
+
+### text-id's
+
+The default text-id is `data-txt_id`. Modifiers are used for attribute text: `data-txt_id__alt`, `data-txt__title`, `data-txt__placeholder`, etc. You can change these in the config file. However, be careful: the `data` prefix is required for the id to be part of HTML dataset attribute, and the `__` modifiers are used in the program to identify the type of text. If you change these, the program may no longer work as expected or throw an error that you will have to debug.
+
+### offset
+
+The key-value pairs in the JSON language files are numbered in sequence. The default offset is `100`. If you want to start numbering at a different number, set the `offset` number in the config file.
+
+### folders
+
+By default the source folder is the root folder of your application. The program will try to find HTML files and relevant JSON files in this folder, including all sub-folders. All HTML files will processed but only JSON files with the prefix defined in the config file will be considered.
+
+Note that the program will overwrite your existing HTML files by default. If you want to keep your existing HTML files, set the `dest` string in the config file to a different folder. The program will then write the updated HTML and JSON files to this folder.
+
+The backup mode is enabled by default with copies of your original HTML and JSON files. You can change the backup folder in the config file.
+
+### change direction
+
+This experimental. See the section on handling future updates and changes to your HTML files and/or JSON files.
+
+### log level
+
+The default log level is `verbose`. If you want less log messages in the terminal, set the `logLevel` string to an empty string `""` in the config file.

@@ -5,6 +5,9 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
+    "htt": "npx bin/index.js",
+    "htt dry": "npx bin/index.js --dry-run",
+    "htt no-backup": "npx bin/index.js --no-backup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

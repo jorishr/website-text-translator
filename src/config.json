@@ -1,4 +1,14 @@
 {
+  "languages": {
+    "base": "nl",
+    "targets": ["en", "es", "ca"]
+  },
+  "mode": {
+    "backup": true,
+    "noTranslate": false,
+    "dryRun": false,
+    "logLevel": "verbose"
+  },
   "id": {
     "txtId": "data-txt_id",
     "altId": "data-txt_id__alt",
@@ -7,30 +17,25 @@
     "metaId": "data-txt_id__meta"
   },
   "offset": 100,
-  "selectors": "head meta[name=description], head meta[name=keywords], head title, h1, h2, h3, h4, h5, h6, p, span, a, img, strong, em, input",
-  "languages": {
-    "base": "nl",
-    "targets": ["en", "es", "ca"]
+  "elements": {
+    "selectors": "head meta[name=description], head meta[name=keywords], head title, h1, h2, h3, h4, h5, h6, p, span, a, img, strong, em, input",
+    "exclude": {
+      "classesToExclude": [],
+      "idsToExclude": []
+    }
   },
   "folders": {
     "src": "./",
-    "dest": "./",
-    "backup": "./backup/"
+    "dest": "./tmp",
+    "backup": "./backup"
   },
   "fileNames": {
-    "prefix": "txt_data_",
-    "baseJson": "txt_data_nl.json"
+    "prefix": "txt_data_"
   },
   "direction": {
     "direction": "",
     "default": "json2html",
     "jsonToHtml": "json2html",
     "htmlToJson": "html2json"
-  },
-  "exclude": {
-    "classesToExclude": [],
-    "idsToExclude": []
-  },
-  "safeMode": true,
-  "noGoogle": false
+  }
 }
