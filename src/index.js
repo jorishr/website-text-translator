@@ -2,18 +2,25 @@ import config from "./config.json" assert { type: "json" };
 import processTranslations from "./translate/index.js";
 import processBaseFiles from "./processBaseFiles.js";
 import backup from "./utils/backup.js";
-import log from "./utils/log.js";
+import log from "./utils/log/log.js";
 
 export default () => {
   log("infoStart", "header");
+  //config
+  const { base, targets } = config.languages;
   const { src, dest } = config.folders;
-  const targets = config.languages.targets;
+  if (!base || targets.length === 0) {
+    log("missingLang", "error");
+    return;
+  }
   if (config.mode.dryRun) log("dryRunStart", "start2");
   if (!config.mode.dryRun && config.mode.backup) backup(src);
+  //parse files
   const [data, keysToTranslate, keysToDelete, offset] = processBaseFiles(
     src,
     dest
   );
+  //translate
   const keysToProcess = [
     ...Object.keys(keysToTranslate.changedKeys),
     ...Object.keys(keysToTranslate.newKeys),

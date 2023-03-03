@@ -2,7 +2,7 @@ import config from "../config.json" assert { type: "json" };
 import getJsonData from "../utils/getJsonData.js";
 import writeFile from "../utils/writeToFile.js";
 import getTranslations from "./googleTranslate.js";
-import log from "../utils/log.js";
+import log from "../utils/log/log.js";
 
 export default async (
   data,
@@ -13,10 +13,6 @@ export default async (
   src,
   dest
 ) => {
-  if (targets.length === 0) {
-    log("noTargets", "error");
-    return;
-  }
   const [changedValues, newValues] = getValues(keysToTranslate, data);
   log("translateStart", "start2");
   targets.forEach(async (lang) => {

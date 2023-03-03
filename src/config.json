@@ -34,8 +34,6 @@
   },
   "direction": {
     "direction": "",
-    "default": "json2html",
-    "jsonToHtml": "json2html",
-    "htmlToJson": "html2json"
+    "default": "json2html"
   }
 }

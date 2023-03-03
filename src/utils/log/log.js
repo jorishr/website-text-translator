@@ -1,4 +1,4 @@
-import config from "../config.json" assert { type: "json" };
+import config from "../../config.json" assert { type: "json" };
 
 export default (msg, type, vals = []) => {
   if (config.mode.logLevel === "verbose") {
@@ -96,7 +96,7 @@ const messages = {
   jsonFileWriteFail: "Unexpected error while writing to JSON file:\n\n\t${0}",
   htmlFileWriteFail: "Unexpected error while writing to HTML file:\n\n\t${0}",
   backupWriteFail: "Unexpected error while writing to backup file:\n\n\t${0}",
-  noTargets: "No target languages set. Check config file.",
+  missingLang: "No base or target languages set. Check the config file.",
   translateStart: "Starting translation(s)...",
   translateDisabled: "Translations disabled in config file.",
   translateNoKeys: "No changes found in base files. No translations needed.",
@@ -119,4 +119,6 @@ const messages = {
   dryRun: "Translations are disabled in dry run mode.",
   dryRunStart:
     "Dry run mode: ON. No files will be written. No translations will be fetched from the Google Translate API.",
+  jsonRead: "The base JSON file contains ${0} strings.",
+  jsonNotFound: "No base file JSON data found. Continue without...",
 };

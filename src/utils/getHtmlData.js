@@ -1,5 +1,5 @@
 import fs from "fs";
-import log from "./log.js";
+import log from "./log/log.js";
 
 export default (src, fileName) => {
   try {

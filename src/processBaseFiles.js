@@ -3,13 +3,13 @@ import config from "./config.json" assert { type: "json" };
 import getFileList from "./utils/getFileList.js";
 import getJsonData from "./utils/getJsonData.js";
 import getHtmlData from "./utils/getHtmlData.js";
-import logResult from "./utils/logResult.js";
 import writeFile from "./utils/writeToFile.js";
 import parseHtml from "./parseHtml.js";
 import processUpdates from "./elemsUpdate/index.js";
 import setNewElements from "./elemsAdd/setNewElems.js";
 import getObsoleteKeys from "./getObsoleteKeys.js";
-import log from "./utils/log.js";
+import logResult from "./utils/log/logResult.js";
+import log from "./utils/log/log.js";
 
 export default (src, dest) => {
   const htmlFileList = findHtmlFiles(`${src}`, [".html"]);
@@ -17,7 +17,9 @@ export default (src, dest) => {
   const jsonFile = config.fileNames.prefix + config.languages.base + ".json";
   const srcLangData = getJsonData(src, jsonFile) || {};
   const keysInLangData = Object.keys(srcLangData);
-  logResult(keysInLangData);
+  logResult(keysInLangData, "jsonRead", "jsonNotFound", [
+    keysInLangData.length,
+  ]);
   //persist data over iterations
   const offset = Number(keysInLangData.at(-1)) + 1 || config.offset;
   let updatedData = {};

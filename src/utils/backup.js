@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import config from "../config.json" assert { type: "json" };
 import getFileList from "./getFileList.js";
-import log from "./log.js";
+import log from "./log/log.js";
 //const config = JSON.parse(fs.readFileSync("./src/config.json"));
 
 export default (src) => {

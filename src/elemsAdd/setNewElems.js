@@ -1,5 +1,5 @@
 import config from "../config.json" assert { type: "json" };
-import log from "../utils/log.js";
+import log from "../utils/log/log.js";
 
 export default (data, offset) => {
   const newElements = data.htmlData.newElements;
