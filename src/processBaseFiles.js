@@ -37,7 +37,9 @@ export default (src, dest) => {
     data = setNewElements(data, offset);
     keysToTranslate.newKeys.push(...data.newKeys);
     const updatedHtml = data.htmlData.root.toString();
-    writeFile(dest, updatedHtml, htmlFileList[i], "html");
+    if (!config.mode.dryRun) {
+      writeFile(dest, updatedHtml, htmlFileList[i], "html");
+    }
     //persist data over iterations
     documents.push(data.htmlData.root);
     updatedData = data;
@@ -47,7 +49,9 @@ export default (src, dest) => {
   keysToDelete.forEach((key) => {
     delete updatedData.langData[key];
   });
-  writeFile(dest, updatedData.langData, config.fileNames.baseJson, "json");
+  if (!config.mode.dryRun) {
+    writeFile(dest, updatedData.langData, config.fileNames.baseJson, "json");
+  }
   log("htmlEnd", "done");
   return [updatedData, keysToTranslate, keysToDelete, offset];
 };

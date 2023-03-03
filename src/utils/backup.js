@@ -7,7 +7,7 @@ import log from "./log.js";
 
 export default (src) => {
   const dest = config.folders.backup;
-  log("backupStart", "start");
+  log("backupStart", "start2");
   let fileList = getFiles(src);
   if (fileList.length === 0) return;
   if (!fs.existsSync(dest)) {

@@ -8,8 +8,8 @@ export default () => {
   log("infoStart", "header");
   const { src, dest } = config.folders;
   const targets = config.languages.targets;
-  const safeMode = config.safeMode;
-  if (safeMode) backup(src);
+  if (config.mode.dryRun) log("dryRunStart", "start2");
+  if (!config.mode.dryRun && config.mode.backup) backup(src);
   const [data, keysToTranslate, keysToDelete, offset] = processBaseFiles(
     src,
     dest
@@ -19,12 +19,15 @@ export default () => {
     ...Object.keys(keysToTranslate.newKeys),
     ...keysToDelete,
   ];
-  if (config.noGoogle === true) {
-    log("translateDisabled", "info");
+  if (config.mode.dryRun || config.mode.noTranslate) {
+    if (config.mode.dryRun) log("dryRun", "info");
+    if (config.mode.noTranslate) log("translateDisabled", "info");
     log("infoEnd", "success");
+    process.exit();
   } else if (keysToProcess.length === 0) {
     log("translateNoKeys", "info");
     log("infoEnd", "success");
+    process.exit();
   } else {
     processTranslations(
       data,

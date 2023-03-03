@@ -63,7 +63,7 @@ const messages = {
   infoStart:
     "HTML-Text-Translator, by liondigits\x1b[0m\nhttps://liondigits.com",
   infoEnd: "All done!",
-  backupStart: "SAFE MODE: ON\tStarting backup...",
+  backupStart: "Safe mode: ON. Starting backup...",
   backupFail: "Backup failed. No HTML and JSON file(s) found in source folder.",
   htmlStart: "Start processing HTML file: ${0}",
   htmlRead: "Read HTML file: ${0}",
@@ -101,4 +101,6 @@ const messages = {
   attrChange: "txt value for ${0} attribute txt-id ${1} has changed",
   txtAdded: "Added txt-id ${0} to ${1} element",
   attrAdded: "Added ${0}=${1} to ${2} element",
+  dryRun: "Translations are disabled in dry run mode.",
+  dryRunStart: "Dry run mode: ON. No files will be written.",
 };

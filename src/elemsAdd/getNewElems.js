@@ -3,6 +3,6 @@ import filterElem from "./filter.js";
 
 export default (root) => {
   return root
-    .querySelectorAll(config.selectors)
+    .querySelectorAll(config.elements.selectors)
     .filter((elem) => filterElem(elem));
 };
