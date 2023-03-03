@@ -1,15 +1,15 @@
 import config from "../config.json" assert { type: "json" };
 
 export default (elem) => {
-  //NOTE: Order of the filters matters!
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
+  //custom exclusion filters
   const { classesToExclude, idsToExclude } = config.elements.exclude;
   const doExcludeClass = exclude(elem, "class", classesToExclude);
   const doExcludeId = exclude(elem, "id", idsToExclude);
   if (doExcludeClass) return false;
   if (doExcludeId) return false;
 
-  //exclude elements with a standard html translate="no" attribute
+  //standard html element translation attribute
   const noTranslate = elem.getAttribute("translate");
   if (noTranslate === "no") return false;
 
@@ -38,8 +38,16 @@ export default (elem) => {
     return false;
   }
 
-  //exclude elements with no textContent
+  //exclude elements with no text, unless
   const hasTextNodes = checkTextNodes(elem);
+  //console.log(checkTextNodes(elem));
+  console.log(
+    !hasTextNodes &&
+      !elem.hasAttribute("alt") &&
+      !elem.hasAttribute("title") &&
+      !elem.hasAttribute("placeholder") &&
+      elem.tagName !== "META"
+  );
   if (
     !hasTextNodes &&
     !elem.hasAttribute("alt") &&
@@ -48,11 +56,7 @@ export default (elem) => {
     elem.tagName !== "META"
   )
     return false;
-
-  //exclude elements with only one character that is not translatable
-  const excludeChars = checkChars(elem);
-  if (excludeChars) return false;
-
+  console.log(elem.textContent);
   return true;
 };
 
@@ -74,27 +78,20 @@ function exclude(elem, type, arr) {
 }
 
 function checkTextNodes(elem) {
-  for (let i = 0; i < elem.childNodes.length; i++) {
-    if (
-      elem.childNodes[i].nodeType === 3 &&
-      elem.childNodes[i].textContent.trim().length !== 0 &&
-      elem.childNodes[i].textContent.trim() !== "." &&
-      elem.childNodes[i].innerText !== "&times;"
-    ) {
-      //tim, remove double spaces, remove newlines, tabs
+  const textNodes = elem.childNodes.filter((elem) => elem.nodeType === 3);
+  for (let i = 0; i < textNodes.length; i++) {
+    const text = textNodes[i].textContent.trim();
+    let isValid = true;
+    if (text.length === 1) isValid = isLetter(textNodes[i]);
+    if (text.length !== 0 && isValid) {
       return true;
     }
   }
   return false;
 }
 
-//to-do: list is incomplete; find a better way to do this
-function checkChars(elem) {
-  const chars = [".", "!", "?", " ", "-", "—", "&mdash;", "&nbsp;", ":", ";"];
-  for (let i = 0; i < chars.length; i++) {
-    if (elem.textContent.trim().replace(/\s\s+/g, "") === chars[i]) {
-      return true;
-    }
-  }
-  return false;
+function isLetter(str) {
+  //regex to exclude characters that are not translatable
+  const regex = new RegExp(/^[a-zA-Z]+$/);
+  return regex.test(str);
 }
