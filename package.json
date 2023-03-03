@@ -30,5 +30,8 @@
   "dependencies": {
     "@google-cloud/translate": "^7.2.0",
     "node-html-parser": "^6.1.5"
+  },
+  "engines": {
+    "node": ">=16.14.0"
   }
 }

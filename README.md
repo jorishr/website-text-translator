@@ -2,6 +2,7 @@
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/jorishr/html-text-translator?style=flat-square)
 ![GitHub](https://img.shields.io/github/license/jorishr/html-text-translator?style=flat-square)
+![node-current](https://img.shields.io/node/v/html-text-translator?style=flat-square)
 
 Automatically translate html files to multiple languages, detect changes and store translations in JSON files.
 
