@@ -36,6 +36,7 @@ export default (data, offset) => {
       newKeys.push(result.newKey);
     }
     //run when there is just one child node and that node is a text node
+    //todo: review this first part: which elements would be targeted here? Why not just the loop as in the second part?
     if (
       newElements[i].childNodes.length === 1 &&
       newElements[i].childNodes[0].nodeType === 3
@@ -52,8 +53,10 @@ export default (data, offset) => {
     if (newElements[i].childNodes.length > 1) {
       let txt_id_arr = [];
       newElements[i].childNodes.forEach((node) => {
-        if (node.nodeType === 3 && node.textContent.trim().length !== 0) {
-          data.langData[counter] = node.textContent.trim().replace(/\s\s/g, "");
+        //collapse all whitespace into a single space.
+        const text = node.textContent.replace(/[\t\n\r]+/g, "");
+        if (node.nodeType === 3 && text.length !== 0) {
+          data.langData[counter] = text;
           newKeys.push(counter.toString());
           txt_id_arr.push(counter);
           counter++;
