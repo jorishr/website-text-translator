@@ -40,14 +40,6 @@ export default (elem) => {
 
   //exclude elements with no text, unless
   const hasTextNodes = checkTextNodes(elem);
-  //console.log(checkTextNodes(elem));
-  console.log(
-    !hasTextNodes &&
-      !elem.hasAttribute("alt") &&
-      !elem.hasAttribute("title") &&
-      !elem.hasAttribute("placeholder") &&
-      elem.tagName !== "META"
-  );
   if (
     !hasTextNodes &&
     !elem.hasAttribute("alt") &&
@@ -56,7 +48,6 @@ export default (elem) => {
     elem.tagName !== "META"
   )
     return false;
-  console.log(elem.textContent);
   return true;
 };
 
