@@ -51,9 +51,10 @@ function setText(data, target, key, txtId) {
     textNodes[childNodeIndex].textContent = data.langData[key];
   }
   if (direction === "html2json") {
-    data.langData[key] = textNodes[childNodeIndex].textContent
-      .trim()
-      .replace(/\s\s+/g, "");
+    data.langData[key] = textNodes[childNodeIndex].textContent.replace(
+      /[\t\n\r]+/g,
+      ""
+    );
   }
   return data;
 }

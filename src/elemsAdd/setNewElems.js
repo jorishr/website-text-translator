@@ -75,7 +75,7 @@ export default (data, offset) => {
 function setAttr(elem, data, counter, attrId) {
   const newKey = counter.toString();
   const name = attrId.split("__").at(-1); // alt, title, meta, placeholder
-  const target = name;
+  let target = name;
   if (name === "meta") target = "content";
 
   data.langData[counter] = elem.getAttribute(target);
