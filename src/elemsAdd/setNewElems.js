@@ -54,8 +54,10 @@ export default (data, offset) => {
       let txt_id_arr = [];
       newElements[i].childNodes.forEach((node) => {
         //collapse all whitespace into a single space.
-        const text = node.textContent.replace(/[\t\n\r]+/g, "");
-        if (node.nodeType === 3 && text.length !== 0) {
+        const text = node.textContent
+          .replace(/[\t\n\r]+/g, "")
+          .replace(/\s{2,}/g, " ");
+        if (node.nodeType === 3 && text.trim() !== "") {
           data.langData[counter] = text;
           newKeys.push(counter.toString());
           txt_id_arr.push(counter);
