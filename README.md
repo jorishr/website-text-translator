@@ -4,7 +4,7 @@
 ![GitHub](https://img.shields.io/github/license/jorishr/html-text-translator?style=flat-square)
 ![node-current](https://img.shields.io/node/v/html-text-translator?style=flat-square)
 
-Automatically translate html files to multiple languages, detect changes and store translations in JSON files.
+Automatically translate the text in html files to multiple languages, store translations in JSON files and detect changes.
 
 - [HTML-Text-Translator](#html-text-translator)
   - [What to expect](#what-to-expect)
@@ -83,7 +83,7 @@ Once you have HTML files with txt-id's and JSON file(s) with corresponding text 
 
   All translation files will be updated as well with a new translation string for the new text. All other translation strings will be left unchanged.
 
-  <em>Note</em>: there is an experimental option that applies the updates in the other direction. This means that if you update the text of an HTML element in the HTML file, the program will detect the change and will update the base JSON file. This is not recommended but it is there if you need it. Set the `direction` string in the config file to `html2json` to enable this feature.
+  <em>Note</em>: there is an experimental option that applies the updates in the other direction. This means that if you update the text of an HTML element <em>in the HTML file</em>, the program will detect the change and will update the base JSON file. This is not recommended but it is there if you need it. Set the `direction` string in the config file to `html2json` to enable this feature.
 
 - <em>Important!</em> Structural changes to an existing HTML element <em>that already has one or more txt-id's</em>: It's impossible to predict all possible changes one can make to an existing element. Text may be added, removed entirely or partially, and one or more nested elements like `<em>` or `<a>` may be added or removed. To avoid errors and unexpected results, it is recommended to <em>remove all existing txt-id's that are already present on the element.</em> The program will then treat all your changes as new elements. New txt-id's will be added to the HTML element and your JSON files will be updated automatically with the new text and the corresponding translations, while the old obsolete key-pair values are purged.
 
@@ -92,25 +92,8 @@ Once you have HTML files with txt-id's and JSON file(s) with corresponding text 
 ## Limitations and known issues
 
 - Note that translations by the Google Translate API or any other service are not perfect. You should still review the translations and correct them manually, once the language JSON file(s) are generated. Make your corrections in the respective JSON language file(s). These manual changes in your translation files will <em>not</em> be overwritten by the program, unless you make changes to the base language JSON and/or HTML file.
-- Paragraphs with nested elements like `<em>` or `<strong>` may lose some of the spaces before or after the nested element. For example:
-
-  ```html
-  <p>This paragraph has a <em>nested</em> element.</p>
-  ```
-
-  may end up as:
-
-  ```html
-  <p>This paragraph has a<em>nested</em>element.</p>
-  ```
-
-  The solution is to add a non-breaking space (`&nbsp;`) before or after the nested element:
-
-  ```html
-  <p>This paragraph has a&nbsp;<em>nested</em>&nbsp;element.</p>
-  ```
-
-  The reason for this behavior is that the program trims the text content string for comparisons to exclude empty textNodes that are present in many HTML elements. If you see a more elegant solution, please open an issue on github.
+- Do <em>not</em> manually remove key-value pairs in the JSON files. The program will do this automatically when it detects that a key is no longer present in the HTML file. As explained in the section about [Handling future updates and changes to your HTML files and/or JSON files](#handling-future-updates-and-changes-to-your-html-files-andor-json-files), you can update the text values inside a JSON file, but do not remove keys manually. If you do so, the program will no longer be able to accurately assess which keys are obsolete and you may end up with orphaned text-id's in your HTML files.
+- Whitespace issues: you yourself, linters and formatters may add or remove whitespace and new lines inside HTML element text. The program will try to normalize the text content by removing unnecessary double spaces, tabs and new lines. Also, elements with only whitespace will be ignored. This works well for most common case, but there may be exceptions. If you do encounter issues with whitespace, first try updating the text value in the base JSOn file or try wrapping the problematic text in a `<span>` element. If this does not work, please open an issue on GitHub.
 
 ## Additional configuration options
 
@@ -118,7 +101,7 @@ Once you have HTML files with txt-id's and JSON file(s) with corresponding text 
 
 The program will ignore HTML elements unless they are included in the `selectors` array in the config file. For example, `<div>` elements are ignored by default. It is recommended to not have translatable text lingering around, wrap it in a `<p>` or `<span>`.
 
-default exclusions:
+other exclusions by default:
 
 - elements with the HTML attribute `translate="no"`
 - elements and textNodes that are empty or contain only whitespace
@@ -144,7 +127,7 @@ The backup mode is enabled by default with copies of your original HTML and JSON
 
 ### change direction
 
-This experimental. See the section on handling future updates and changes to your HTML files and/or JSON files.
+This experimental. See the section on [Handling future updates and changes to your HTML files and/or JSON files](#handling-future-updates-and-changes-to-your-html-files-andor-json-files).
 
 ### log level
 
