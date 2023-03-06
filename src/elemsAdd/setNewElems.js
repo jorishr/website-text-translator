@@ -42,8 +42,8 @@ export default (data, offset) => {
       newElements[i].childNodes[0].nodeType === 3
     ) {
       data.langData[counter] = newElements[i].textContent
-        .trim()
-        .replace(/\s\s/g, "");
+        .replace(/[\t\n\r]+/g, "")
+        .replace(/\s{2,}/g, " ");
       const txtIdTxt = `[${counter}]`;
       newElements[i].setAttribute(txtId, txtIdTxt);
       newKeys.push(counter.toString());
