@@ -35,25 +35,15 @@ export default (data, offset) => {
       counter = result.counter;
       newKeys.push(result.newKey);
     }
-    //run when there is just one child node and that node is a text node
-    if (
-      newElements[i].childNodes.length === 1 &&
-      newElements[i].childNodes[0].nodeType === 3
-    ) {
-      data.langData[counter] = newElements[i].textContent
-        .trim()
-        .replace(/\s\s/g, "");
-      const txtIdTxt = `[${counter}]`;
-      newElements[i].setAttribute(txtId, txtIdTxt);
-      newKeys.push(counter.toString());
-      log("txtAdded", "info", [counter, newElements[i].tagName]);
-      counter++;
-    }
-    if (newElements[i].childNodes.length > 1) {
+    if (newElements[i].childNodes.length > 0) {
       let txt_id_arr = [];
       newElements[i].childNodes.forEach((node) => {
-        if (node.nodeType === 3 && node.textContent.trim().length !== 0) {
-          data.langData[counter] = node.textContent.trim().replace(/\s\s/g, "");
+        //collapse all whitespace into a single space.
+        const text = node.textContent
+          .replace(/[\t\n\r]+/g, "")
+          .replace(/\s{2,}/g, " ");
+        if (node.nodeType === 3 && text.trim() !== "") {
+          data.langData[counter] = text;
           newKeys.push(counter.toString());
           txt_id_arr.push(counter);
           counter++;
@@ -72,7 +62,7 @@ export default (data, offset) => {
 function setAttr(elem, data, counter, attrId) {
   const newKey = counter.toString();
   const name = attrId.split("__").at(-1); // alt, title, meta, placeholder
-  const target = name;
+  let target = name;
   if (name === "meta") target = "content";
 
   data.langData[counter] = elem.getAttribute(target);

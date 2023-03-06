@@ -49,16 +49,19 @@ export default (data, target) => {
 function hasTxtKeyChanged(elem, txtId, data) {
   const idArr = eval(elem.getAttribute(txtId));
   const textNodes = elem.childNodes.filter(
-    (node) => node.nodeType === 3 && node.textContent.trim().length > 0
+    (node) => node.nodeType === 3 && node.textContent.trim() !== ""
   );
   const result = [];
   for (let i = 0; i < idArr.length; i++) {
-    if (
-      textNodes[i].textContent.trim().replace(/\s\s/g, "") !==
-      data.langData[idArr[i]]
-    ) {
-      log("txtChange", "info", [idArr[i]]);
-      result.push(idArr[i]);
+    const text = textNodes[i].textContent
+      .replace(/[\t\n\r]+/g, "")
+      .replace(/\s{2,}/g, " ");
+    const txtInJson = data.langData[idArr[i]];
+    if (txtInJson) {
+      if (text.trim() !== txtInJson.trim()) {
+        log("txtChange", "info", [idArr[i]]);
+        result.push(idArr[i]);
+      }
     }
   }
   return result;
