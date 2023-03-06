@@ -1,6 +1,5 @@
-import path from "path";
 import config from "./config.json" assert { type: "json" };
-import getFileList from "./utils/getFileList.js";
+import findHtmlFiles from "./utils/findHtmlFiles.js";
 import getJsonData from "./utils/getJsonData.js";
 import getHtmlData from "./utils/getHtmlData.js";
 import writeFile from "./utils/writeToFile.js";
@@ -66,16 +65,3 @@ export default (src, dest) => {
   log("htmlEnd", "done");
   return [updatedData, keysToTranslate, keysToDelete, offset];
 };
-
-function findHtmlFiles(src) {
-  const allFiles = getFileList(src);
-  const htmlFileList = allFiles.filter(
-    (elem) => path.extname(elem) === ".html"
-  );
-  if (htmlFileList.length === 0) {
-    log("htmlNotFound", "error", [src]);
-    process.exit();
-  }
-  log("htmlList", "info", [htmlFileList]);
-  return htmlFileList;
-}
