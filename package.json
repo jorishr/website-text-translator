@@ -2,12 +2,15 @@
   "name": "html-text-translator",
   "version": "0.1.0",
   "description": "Automatically translate HTML files to multiple languages with Google Translate API, detect changes and store translations in JSON files.",
-  "main": "src/index.js",
+  "bin": "bin/index.js",
+  "main": "bin/index.js",
   "type": "module",
   "scripts": {
-    "htt": "npx bin/index.js",
-    "htt dry": "npx bin/index.js --dry-run",
-    "htt no-backup": "npx bin/index.js --no-backup",
+    "htt": "node bin/index.js",
+    "htt help": "node bin/index.js --help",
+    "htt dry": "node bin/index.js --dry-run",
+    "htt no-backup": "node bin/index.js --no-backup",
+    "htt strip": "node bin/strip.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
