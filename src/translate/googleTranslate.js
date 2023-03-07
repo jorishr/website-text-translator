@@ -13,14 +13,14 @@ export default async (data, target, type) => {
     return translations;
   } else {
     const translatedData = [];
-    const chunks = chunkArray(data, 128);
-    chunks.forEach(async (chunk) => {
-      let [translations] = await translate.translate(chunk, target);
+    const chunks = chunkArray([...data], 128);
+    for (let i = 0; i < chunks.length; i++) {
+      let [translations] = await translate.translate(chunks[i], target);
       translations = Array.isArray(translations)
         ? translations
         : [translations];
       translatedData.push(...translations);
-    });
+    }
     return translatedData;
   }
 };

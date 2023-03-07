@@ -49,9 +49,11 @@ export default (data, offset) => {
           counter++;
         }
       });
-      const txtIdTxt = `[${txt_id_arr}]`;
-      newElements[i].setAttribute(txtId, txtIdTxt);
-      log("txtAdded", "info", [[...txt_id_arr], newElements[i].tagName]);
+      if (txt_id_arr.length > 0) {
+        const txtIdTxt = `[${txt_id_arr}]`;
+        newElements[i].setAttribute(txtId, txtIdTxt);
+        log("txtAdded", "info", [[...txt_id_arr], newElements[i].tagName]);
+      }
     }
   }
   data.newKeys.push(...newKeys);

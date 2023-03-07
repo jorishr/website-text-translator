@@ -121,4 +121,5 @@ const messages = {
     "Dry run mode: ON. No files will be written. No translations will be fetched from the Google Translate API.",
   jsonRead: "The base JSON file contains ${0} strings.",
   jsonNotFound: "No base file JSON data found. Continue without...",
+  startStrip: "\nStripping txt-id's from HTML file: ${0}",
 };
