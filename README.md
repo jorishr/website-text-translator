@@ -23,6 +23,7 @@ Automatically translate the text in html files to multiple languages, store tran
     - [folders](#folders)
     - [change direction](#change-direction)
     - [log level](#log-level)
+  - [Strip all txt-id's from existing HTML file(s)](#strip-all-txt-ids-from-existing-html-files)
 
 ## What to expect
 
@@ -89,11 +90,60 @@ Once you have HTML files with txt-id's and JSON file(s) with corresponding text 
 
 ### How to load the translation files in your project
 
+Your project will need a script that loads the data from the respective JSON translation files. There are many ways to do this and explaining how to detect the user's language or changes to the language settings is beyond the scope of this document.
+
+Here are the things you need to know and do, with some (pseudo code ) examples.
+
+```js
+// import language data as data object from one of the JSON files
+// example: if language === nl then import nl data
+const data = require("./txt_data_nl.json");
+
+function setElementTxt(data) {
+  /* 
+   Get the elements with the txt_id attribute
+   The data-txt_id value is an array of numbers inside a string
+   e.g. data-txt_id="[100, 101, 102]" when there are 3 text nodes inside the element
+   e.g. data-txt_id="[100]" when there is only one text node inside the element
+  */
+  const txtElems = document.querySelectorAll("[data-txt_id]");
+  txtElems.forEach((elem) => {
+    const idArr = eval(elem.dataset.txt_id);
+    if (elem.childNodes.length === 0) {
+      elem.textContent = data[idArr[0]];
+    } else {
+      const textNodes = Array.from(elem.childNodes).filter(
+        (node) => node.nodeType === 3 && node.textContent.trim().length > 0
+      );
+      for (let i = 0; i < idArr.length; i++) {
+        textNodes[i].textContent = data[idArr[i]];
+      }
+    }
+  });
+}
+
+// attribute target can be "title", "alt", "placeholder", "meta"
+// attribute id values: e.g. data-txt_id__title="100", data-txt_id__alt="101"
+function setAttributeTxt(data, target) {
+  const elems = document.querySelectorAll(`[data-txt_id__${target}]`);
+  let name = target;
+  if (target === "meta") name = "content";
+  elems.forEach((elem) => {
+    elem.setAttribute(name, data[elem.dataset[`txt_id__${target}`]]);
+  });
+}
+setElementTxt(data);
+setAttributeTxt(data, "title");
+setAttributeTxt(data, "alt");
+setAttributeTxt(data, "placeholder");
+setAttributeTxt(data, "meta");
+```
+
 ## Limitations and known issues
 
 - Note that translations by the Google Translate API or any other service are not perfect. You should still review the translations and correct them manually, once the language JSON file(s) are generated. Make your corrections in the respective JSON language file(s). These manual changes in your translation files will <em>not</em> be overwritten by the program, unless you make changes to the base language JSON and/or HTML file.
 - Do <em>not</em> manually remove key-value pairs in the JSON files. The program will do this automatically when it detects that a key is no longer present in the HTML file. As explained in the section about [Handling future updates and changes to your HTML files and/or JSON files](#handling-future-updates-and-changes-to-your-html-files-andor-json-files), you can update the text values inside a JSON file, but do not remove keys manually. If you do so, the program will no longer be able to accurately assess which keys are obsolete and you may end up with orphaned text-id's in your HTML files.
-- Whitespace issues: you yourself, linters and formatters may add or remove whitespace and new lines inside HTML element text. The program will try to normalize the text content by removing unnecessary double spaces, tabs and new lines. Also, elements with only whitespace will be ignored. This works well for most common case, but there may be exceptions. If you do encounter issues with whitespace, first try updating the text value in the base JSOn file or try wrapping the problematic text in a `<span>` element. If this does not work, please open an issue on GitHub.
+- Whitespace issues: you yourself, linters and formatters may add or remove whitespace and new lines inside HTML element text. The program will try to normalize the text content by removing unnecessary double spaces, tabs and new lines. Also, elements with only whitespace will be ignored. This works well for most common case, but there may be exceptions. If you do encounter issues with whitespace, first try updating the text value in the base JSON file or try wrapping the problematic text in a `<span>` element. If this does not work, please open an issue on GitHub.
 
 ## Additional configuration options
 
@@ -132,3 +182,15 @@ This experimental. See the section on [Handling future updates and changes to yo
 ### log level
 
 The default log level is `verbose`. If you want less log messages in the terminal, set the `logLevel` string to an empty string `""` in the config file.
+
+## Strip all txt-id's from existing HTML file(s)
+
+The strip function will remove all txt-id's from your HTML file(s). This is useful if you want to start over with a clean slate. The strip program will not touch your JSON files, but these will no longer be linked to your HTML file(s). You will have to manually remove the JSON files that are no longer needed.
+
+```
+
+```
+
+```
+
+```
