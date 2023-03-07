@@ -56,14 +56,10 @@ function getValues(keys, data) {
   const changedValues = [];
   const newValues = [];
   keys.changedKeys.forEach((key) => {
-    if (data.langData[key]) {
-      changedValues.push(data.langData[key]);
-    }
+    changedValues.push(data.langData[key]);
   });
   keys.newKeys.forEach((key) => {
-    if (data.langData[key]) {
-      newValues.push(data.langData[key]);
-    }
+    newValues.push(data.langData[key]);
   });
   return [changedValues, newValues];
 }
