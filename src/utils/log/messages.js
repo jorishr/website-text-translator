@@ -27,7 +27,7 @@ export default {
   missingLang:
     "No base or target languages set. Run the config command or add a config file. See documentation for more info.",
   translateStart: "Starting translation(s)...",
-  translateDisabled: "Translations disabled in config file.",
+  translateDisabled: "Translations are disabled.\n",
   translateNoKeys: "No changes found in base files. No translations needed.",
   langFileExists:
     "Found existing translation file for language: ${0}. Applying updates...",
