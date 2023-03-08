@@ -1,52 +1,52 @@
-import config from "../config.json" assert { type: "json" };
 import log from "../utils/log/log.js";
 
-export default (data, target) => {
+export default (data, target, config) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const elems = data.htmlData[target];
   const keysToUpdate = [];
-  log("getTxtChanges", "info", [target]);
+  log("getTxtChanges", "info", config, [target]);
   elems.forEach((elem) => {
     let key = null;
     switch (target) {
       case "txtElems":
-        const keyArr = hasTxtKeyChanged(elem, txtId, data);
+        const keyArr = hasTxtKeyChanged(elem, data, config);
         if (keyArr.length > 0) {
           keyArr.forEach((key) => keysToUpdate.push(key));
         }
         break;
 
       case "altAttrElems":
-        key = hasAttrKeyChanged(elem, altId, data);
+        key = hasAttrKeyChanged(elem, data, config.id.altId, config);
         if (key) keysToUpdate.push(key);
         break;
 
       case "titleAttrElems":
-        key = hasAttrKeyChanged(elem, titleId, data);
+        key = hasAttrKeyChanged(elem, data, config.id.titleId, config);
         if (key) keysToUpdate.push(key);
         break;
 
       case "plchldrAttrElems":
-        key = hasAttrKeyChanged(elem, plchldrId, data);
+        key = hasAttrKeyChanged(elem, data, config.id.plchldrId, config);
         if (key) keysToUpdate.push(key);
         break;
 
       case "metaElems":
-        key = hasAttrKeyChanged(elem, metaId, data);
+        key = hasAttrKeyChanged(elem, data, config.id.metaId, config);
         if (key) keysToUpdate.push(key);
         break;
 
       default:
-        log("getTxtChangesException", "error");
+        log("getTxtChangesException", "error", config);
     }
   });
   if (keysToUpdate.length === 0) {
-    log("noChangesFound", "info", [target]);
+    log("noChangesFound", "info", config, [target]);
   }
   return keysToUpdate;
 };
 
-function hasTxtKeyChanged(elem, txtId, data) {
+function hasTxtKeyChanged(elem, data, config) {
+  const txtId = config.id.txtId;
   const idArr = eval(elem.getAttribute(txtId));
   const textNodes = elem.childNodes.filter(
     (node) => node.nodeType === 3 && node.textContent.trim() !== ""
@@ -59,7 +59,7 @@ function hasTxtKeyChanged(elem, txtId, data) {
     const txtInJson = data.langData[idArr[i]];
     if (txtInJson) {
       if (text.trim() !== txtInJson.trim()) {
-        log("txtChange", "info", [idArr[i]]);
+        log("txtChange", "info", config, [idArr[i]]);
         result.push(idArr[i]);
       }
     }
@@ -67,7 +67,7 @@ function hasTxtKeyChanged(elem, txtId, data) {
   return result;
 }
 
-function hasAttrKeyChanged(elem, attrId, data) {
+function hasAttrKeyChanged(elem, data, attrId, config) {
   const id = elem.getAttribute(attrId); // a "number"
   const name = attrId.split("__").at(-1); // alt, title, meta
 
@@ -77,7 +77,7 @@ function hasAttrKeyChanged(elem, attrId, data) {
   if (
     elem.getAttribute(target).trim().replace(/\s\s/g, "") !== data.langData[id]
   ) {
-    log("attrChange", "info", [name, id]);
+    log("attrChange", "info", config, [name, id]);
     return id;
   }
   return null;

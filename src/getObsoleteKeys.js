@@ -1,7 +1,6 @@
-import config from "./config.json" assert { type: "json" };
 import log from "./utils/log/log.js";
 
-export default (data, docList) => {
+export default (data, docList, config) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const keysInLangData = Object.keys(data.langData);
   const obsoleteKeys = [];
@@ -23,7 +22,7 @@ export default (data, docList) => {
     }
   });
   if (obsoleteKeys.length > 0) {
-    log("obsoleteKeys", "info", [obsoleteKeys]);
+    log("obsoleteKeys", "info", config, [obsoleteKeys]);
   }
   return obsoleteKeys;
 };

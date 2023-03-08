@@ -1,11 +1,11 @@
 {
   "languages": {
-    "base": "nl",
-    "targets": ["en", "es", "ca"]
+    "base": "",
+    "targets": []
   },
   "mode": {
     "backup": true,
-    "noTranslate": false,
+    "translate": true,
     "dryRun": false,
     "logLevel": "verbose"
   },

@@ -2,15 +2,15 @@ import path from "path";
 import getFileList from "./getFileList.js";
 import log from "./log/log.js";
 
-export default (src) => {
-  const allFiles = getFileList(src);
+export default (src, config) => {
+  const allFiles = getFileList(src, config);
   const htmlFileList = allFiles.filter(
     (elem) => path.extname(elem) === ".html"
   );
   if (htmlFileList.length === 0) {
-    log("htmlNotFound", "error", [src]);
+    log("htmlNotFound", "error", config, [src]);
     process.exit();
   }
-  log("htmlList", "info", [htmlFileList]);
+  log("htmlList", "info", config, [htmlFileList]);
   return htmlFileList;
 };

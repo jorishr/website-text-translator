@@ -1,6 +1,4 @@
-import config from "../config.json" assert { type: "json" };
-
-export default (elem) => {
+export default (elem, config) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   //custom exclusion filters
   const { classesToExclude, idsToExclude } = config.elements.exclude;

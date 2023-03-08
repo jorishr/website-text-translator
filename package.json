@@ -2,7 +2,10 @@
   "name": "html-text-translator",
   "version": "0.1.0",
   "description": "Automatically translate HTML files to multiple languages with Google Translate API, detect changes and store translations in JSON files.",
-  "bin": "bin/index.js",
+  "bin": {
+    "htt": "bin/index.js",
+    "htt-strip": "bin/strip.js"
+  },
   "main": "bin/index.js",
   "type": "module",
   "scripts": {
