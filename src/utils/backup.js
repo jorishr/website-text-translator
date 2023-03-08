@@ -7,13 +7,13 @@ export default (config) => {
   log("backupStart", "start2", config);
   let fileList = filterFiles(config);
   if (fileList.length === 0) return;
-  if (!fs.existsSync(config.folders.dest)) {
-    fs.mkdirSync(config.folders.dest, { recursive: true });
+  if (!fs.existsSync(config.folders.backup)) {
+    fs.mkdirSync(config.folders.backup, { recursive: true });
     createBackup(config, fileList);
   } else {
     //if folder exists, check if it has subfolders with the name backup_XXX
     const dirList = fs
-      .readdirSync(config.folders.dest, { withFileTypes: true })
+      .readdirSync(config.folders.backup, { withFileTypes: true })
       .filter((elem) => elem.isDirectory())
       .map((elem) => elem.name);
     if (dirList.length === 0) {

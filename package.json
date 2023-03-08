@@ -8,14 +8,6 @@
   },
   "main": "bin/index.js",
   "type": "module",
-  "scripts": {
-    "htt": "node bin/index.js",
-    "htt help": "node bin/index.js --help",
-    "htt dry": "node bin/index.js --dry-run",
-    "htt no-backup": "node bin/index.js --no-backup",
-    "htt strip": "node bin/strip.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jorishr/html-text-translator.git"
