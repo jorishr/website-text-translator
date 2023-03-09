@@ -7,7 +7,7 @@ const program = new Command();
 
 program
   .description(
-    "This command will remove all existing txt-id's from all the html files. A backup of the original files will be created in the default backup directory."
+    "This command will remove all existing txt-id's from all the HTML files. A backup of the original files will be created in the default backup directory."
   )
   .action(() => {
     const config = mergeConfig();

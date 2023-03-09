@@ -1,4 +1,4 @@
-# HTML-Text-Translator
+# Website-Text-Translator
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/jorishr/html-text-translator?style=flat-square)
 ![GitHub](https://img.shields.io/github/license/jorishr/html-text-translator?style=flat-square)
@@ -6,7 +6,7 @@
 
 Automatically translate the text in html files to multiple languages, store translations in JSON files and detect changes.
 
-- [HTML-Text-Translator](#html-text-translator)
+- [Website-Text-Translator](#website-text-translator)
   - [What to expect](#what-to-expect)
   - [Getting started](#getting-started)
     - [Languages](#languages)
@@ -17,8 +17,8 @@ Automatically translate the text in html files to multiple languages, store tran
     - [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project)
   - [Limitations and known issues](#limitations-and-known-issues)
   - [Additional configuration options](#additional-configuration-options)
-    - [config file](#config-file)
-    - [languages](#languages-1)
+    - [Config file](#config-file)
+    - [Languages](#languages-1)
     - [Modes](#modes)
     - [selectors and exclusions](#selectors-and-exclusions)
     - [text-id's](#text-ids)
@@ -161,13 +161,13 @@ setAttributeTxt(data, "meta");
 
 ## Additional configuration options
 
-### config file
+### Config file
 
-To add a config file manually, create a file named `htt.config.json` in the root of your project. The program will automatically detect and use this file.
+By running the `wtt config` command a config file named `wtt.config.json` is created in the root folder of your NPM project. The program will automatically detect and use this file. You can edit this file to manually configure various options, but to avoid unexpected behavior, it is recommended to use the command line configuration wizard.
 
-### languages
+### Languages
 
-Use the `languages` object to specify the base language and the target languages. The base language is the language of your HTML file. The target languages are the languages you want to translate to. The program will generate a JSON file for each target language.
+Use the `languages` object to specify the base language and the target languages. The base language is the language of the text in your HTML files. The target languages are the languages you want to translate to. The program will generate a JSON file for each target language.
 
 ```json
 {
