@@ -4,7 +4,6 @@ import backup from "./utils/backup.js";
 import log from "./utils/log/log.js";
 
 export default (config) => {
-  log("infoStart", "header", config);
   //config
   const { base, targets } = config.languages;
   if (!base || targets.length === 0) {

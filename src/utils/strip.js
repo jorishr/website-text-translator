@@ -5,9 +5,8 @@ import { parse } from "node-html-parser";
 import log from "./log/log.js";
 
 export default (config) => {
-  const { src, dest } = config.path;
-  log("infoStart", "header", config);
-  const htmlFileList = findHtmlFiles(`${src}`, [".html"], config);
+  const { src, dest } = config.folders;
+  const htmlFileList = findHtmlFiles(`${src}`, config);
   for (let i = 0; i < htmlFileList.length; i++) {
     log("startStrip", "start2", config, [htmlFileList[i]]);
     const html = getHtmlData(src, htmlFileList[i], config);
