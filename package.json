@@ -19,7 +19,7 @@
     "language",
     "website"
   ],
-  "author": "Joris Raymaekers",
+  "author": "Joris Raymaekers <joris@liondigits.com> (https://liondigits.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jorishr/website-text-translator/issues"
