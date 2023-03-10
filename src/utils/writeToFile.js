@@ -23,7 +23,7 @@ export default async (dest, data, fileName, type, config) => {
       break;
     case "html":
       try {
-        fs.promises.writeFile(`${dest}/${fileName}`, data);
+        fs.promises.writeFile(`${fileName}`, data);
       } catch (err) {
         log("htmlFileWriteFail", "error", config, [err]);
       }

@@ -53,7 +53,7 @@ To configure your languages run the config command `npx wtt config` or add a con
 
 ### Backup
 
-The program will create a numbered backup of your HTML and JSON files in the backup folder. Note that by default your existing HTML files will be overwritten, unless you set a different output folder. You can disable the backup feature by using the flag `npx wtt --backup-no` or by adding a config file in your app root folder. See [Additional configuration options](#additional-configuration-options) for more information. If you do disable the backup feature, make sure you have a backup of your files before running the program or change the output folder to a different location.
+The program will create a numbered backup of your HTML and JSON files in the backup folder. You can disable the backup feature by using the flag `npx wtt --backup-no` or by adding a config file in your app root folder. See [Additional configuration options](#additional-configuration-options) for more information. If you do disable the backup feature, make sure you have a backup of your files before running the program.
 Add the backup folder to your `.gitignore` file if you are using Git.
 
 ### Requirements
@@ -163,7 +163,7 @@ setAttributeTxt(data, "placeholder");
 setAttributeTxt(data, "meta");
 ```
 
-There are other things to consider, like changing the language attribute of the HTML document itself, but the code above should do the job for the elements that are targeted with the default configuration.
+There are other things to consider, like changing the language attribute of the HTML document itself. The code above does the job for the elements that are targeted with the default configuration.
 
 ## Limitations and known issues
 
@@ -245,9 +245,9 @@ The key-value pairs in the JSON language files are numbered in sequence. The def
 
 By default the source folder is the root NPM folder of your application. The program will try to find HTML files and relevant JSON files in this folder, including all sub-folders. All HTML files will processed but only JSON files with the prefix defined in the config file will be considered.
 
-Note that the program will overwrite your existing HTML files by default. If you want to keep your existing HTML files, set the `dest` string in the config file to a different folder. The program will then write the updated HTML and JSON files to this folder.
+Note that the program will overwrite your existing HTML files. The backup mode is enabled by default with copies of your original HTML file(s). You can change the backup folder in the config file as well.
 
-The backup mode is enabled by default with copies of your original HTML and JSON files. You can change the backup folder in the config file as well.
+The destination folder is the folder where the JSON language files will be written to. By default this is the root folder of your NPM project. If you change this, make sure the destination folder is equal to the source folder or a sub-folder of the source folder. Otherwise the program will not be able to find the JSON files when you run the program again to process changes. For example, if your source folder is `./src` then the destination folder can be `./src`, `./src/translations` or the default `./` but <em>not</em> `./translations`.
 
 ```json
   "folders": {
