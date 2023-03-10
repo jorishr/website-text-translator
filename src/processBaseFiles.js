@@ -14,7 +14,7 @@ export default (config) => {
   const htmlFileList = findHtmlFiles(`${src}`, config);
   //load existing language data json
   const jsonFile = config.fileNames.prefix + config.languages.base + ".json";
-  const srcLangData = getJsonData(src, jsonFile) || {};
+  const srcLangData = getJsonData(dest, jsonFile) || {};
   const keysInLangData = Object.keys(srcLangData);
   logResult(keysInLangData, "jsonRead", "jsonNotFound", config, [
     keysInLangData.length,
@@ -27,7 +27,7 @@ export default (config) => {
   for (let i = 0; i < htmlFileList.length; i++) {
     log("htmlStart", "start2", config, [htmlFileList[i]]);
     const langData = updatedData.langData || srcLangData;
-    const html = getHtmlData(src, htmlFileList[i], config);
+    const html = getHtmlData(htmlFileList[i], config);
     const htmlData = parseHtml(html, config);
     let data = Object.assign({}, { htmlData }, { langData });
     //updates require a base JSON file to compare against

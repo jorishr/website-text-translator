@@ -9,7 +9,7 @@ export default (config) => {
   const htmlFileList = findHtmlFiles(`${src}`, config);
   for (let i = 0; i < htmlFileList.length; i++) {
     log("startStrip", "start2", config, [htmlFileList[i]]);
-    const html = getHtmlData(src, htmlFileList[i], config);
+    const html = getHtmlData(htmlFileList[i], config);
     const root = parse(html, config);
     const { txtId, altId, titleId, plchldrId, metaId } = config.id;
     root.querySelectorAll(`[${txtId}]`).forEach((elem) => {

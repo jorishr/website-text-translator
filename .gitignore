@@ -1,6 +1,6 @@
 wtt.config.json
 backup
-data
+
 # Logs
 logs
 *.log

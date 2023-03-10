@@ -50,7 +50,7 @@ function filterFiles(config) {
 }
 
 function createBackup(config, fileList, mostRecent = "0") {
-  const { src, backup } = config.folders;
+  const { backup } = config.folders;
   mostRecent = Number(mostRecent) + 1;
   if (mostRecent.length !== 3) {
     mostRecent = mostRecent.toString().padStart(3, "0");
@@ -64,10 +64,7 @@ function createBackup(config, fileList, mostRecent = "0") {
       const subfolders = file.slice(0, file.length - fileName.length);
       if (path)
         fs.mkdirSync(`${folderName}/${subfolders}`, { recursive: true });
-      fs.copyFileSync(
-        `${src}${file}`,
-        `${folderName}/${subfolders}${fileName}`
-      );
+      fs.copyFileSync(`${file}`, `${folderName}/${subfolders}${fileName}`);
     });
   } catch (err) {
     log("backupWriteFail", "error", config, [err]);

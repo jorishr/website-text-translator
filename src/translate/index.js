@@ -31,7 +31,7 @@ export default async (
       resNewVals = await getTranslations(newValues, lang, "new", config);
     }
     //read the existing translation file for the language
-    let jsonData = getJsonData(src, `${prefix}${lang}.json`) || {};
+    let jsonData = getJsonData(dest, `${prefix}${lang}.json`) || {};
     if (Object.keys(jsonData).length) {
       log("langFileExists", "info", config, [lang]);
       keysToDelete.forEach((key) => {
