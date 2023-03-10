@@ -18,7 +18,7 @@ export default async (
   targets.forEach(async (lang) => {
     //Google Translate API returns an array of translations, in the same order as the input array
     let resChangedVals = [];
-    if (changedValues.length > 0) {
+    if (changedValues.length) {
       resChangedVals = await getTranslations(
         changedValues,
         lang,
@@ -27,12 +27,12 @@ export default async (
       );
     }
     let resNewVals = [];
-    if (newValues.length > 0) {
+    if (newValues.length) {
       resNewVals = await getTranslations(newValues, lang, "new", config);
     }
     //read the existing translation file for the language
     let jsonData = getJsonData(src, `${prefix}${lang}.json`) || {};
-    if (Object.keys(jsonData).length !== 0) {
+    if (Object.keys(jsonData).length) {
       log("langFileExists", "info", config, [lang]);
       keysToDelete.forEach((key) => {
         delete jsonData[key];

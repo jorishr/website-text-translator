@@ -7,7 +7,7 @@ export default (src, config) => {
   const htmlFileList = allFiles.filter(
     (elem) => path.extname(elem) === ".html"
   );
-  if (htmlFileList.length === 0) {
+  if (!htmlFileList.length) {
     log("htmlNotFound", "error", config, [src]);
     process.exit();
   }

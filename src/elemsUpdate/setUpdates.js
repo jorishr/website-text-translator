@@ -1,7 +1,7 @@
 import log from "../utils/log/log.js";
 
 export default (keys, data, target, config) => {
-  if (keys.length === 0) return data;
+  if (!keys.length) return data;
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   let res = null;
   keys.forEach((key) => {
@@ -44,7 +44,7 @@ function setText(data, target, key, txtId, config) {
   });
   //default direction is json over html
   const textNodes = elem.childNodes.filter(
-    (node) => node.nodeType === 3 && node.textContent.trim().length > 0
+    (node) => node.nodeType === 3 && node.textContent.trim().length
   );
   if (direction === "json2html") {
     textNodes[childNodeIndex].textContent = data.langData[key];

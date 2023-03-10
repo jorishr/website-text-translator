@@ -12,7 +12,7 @@ export default (msg, type, config, vals = []) => {
 function print(msg, type, vals = []) {
   switch (type) {
     case "error":
-      if (vals.length === 0) {
+      if (!vals.length) {
         console.error("\x1b[31m" + getFullMsg(msg) + "\x1b[0m\n");
       } else {
         console.error("\x1b[31m" + writeMsg(msg, vals) + "\x1b[0m\n");
@@ -27,14 +27,14 @@ function print(msg, type, vals = []) {
       console.log("\x1b[3m" + getFullMsg(msg) + "\x1b[0m\n");
       break;
     case "start2":
-      if (vals.length === 0) {
+      if (!vals.length) {
         console.log("\x1b[3m\x1b[34m" + getFullMsg(msg) + "\x1b[0m\n");
       } else {
         console.log("\x1b[3m\x1b[34m" + writeMsg(msg, vals) + "\x1b[0m\n");
       }
       break;
     case "done":
-      if (vals.length === 0) {
+      if (!vals.length) {
         console.log("\n\x1b[3m" + getFullMsg(msg) + "\x1b[0m\n");
       } else {
         console.log("\n\x1b[3m" + writeMsg(msg, vals) + "\x1b[0m\n");
@@ -47,7 +47,7 @@ function print(msg, type, vals = []) {
       console.log("\x1b[3m" + getFullMsg(msg) + "\x1b[0m\n");
       break;
     case "info":
-      if (vals.length === 0) {
+      if (!vals.length) {
         console.log("" + getFullMsg(msg) + "");
       } else {
         console.log("" + writeMsg(msg, vals) + "");

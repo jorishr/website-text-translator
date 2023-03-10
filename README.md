@@ -92,8 +92,9 @@ Once you have HTML files with txt-id's and JSON file(s) with corresponding text 
   <p data-txt_id="100">This a simple sentence.</p>
   ```
 
+  Write the new text at the corresponding txt_id in the base language JSON file `txt_data_en.json`:
+
   ```json
-  //write the new text at the corresponding txt_id in the base language JSON file txt_data_en.json
   {
     "100": "The new text."
   }
@@ -136,7 +137,7 @@ function setElementTxt(data) {
       elem.textContent = data[idArr[0]];
     } else {
       const textNodes = Array.from(elem.childNodes).filter(
-        (node) => node.nodeType === 3 && node.textContent.trim().length > 0
+        (node) => node.nodeType === 3 && node.textContent.trim().length
       );
       for (let i = 0; i < idArr.length; i++) {
         textNodes[i].textContent = data[idArr[i]];
