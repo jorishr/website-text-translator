@@ -31,7 +31,7 @@ export default (config) => {
     const htmlData = parseHtml(html, config);
     let data = Object.assign({}, { htmlData }, { langData });
     //updates require a base JSON file to compare against
-    if (Object.keys(langData).length !== 0) {
+    if (Object.keys(langData).length) {
       const [dataUpdates, changedKeys] = processUpdates(data, config);
       data = dataUpdates;
       keysToTranslate.changedKeys.push(...changedKeys);
@@ -40,8 +40,7 @@ export default (config) => {
     keysToTranslate.newKeys.push(...data.newKeys);
     const updatedHtml = data.htmlData.root.toString();
     const hasChanged =
-      keysToTranslate.changedKeys.length > 0 ||
-      keysToTranslate.newKeys.length > 0;
+      keysToTranslate.changedKeys.length || keysToTranslate.newKeys.length;
     if (hasChanged && !config.mode.dryRun) {
       writeFile(dest, updatedHtml, htmlFileList[i], "html", config);
     }
@@ -55,9 +54,9 @@ export default (config) => {
     delete updatedData.langData[key];
   });
   const hasChanged =
-    keysToDelete.length > 0 ||
-    keysToTranslate.changedKeys.length > 0 ||
-    keysToTranslate.newKeys.length > 0;
+    keysToDelete.length ||
+    keysToTranslate.changedKeys.length ||
+    keysToTranslate.newKeys.length;
   if (hasChanged && !config.mode.dryRun) {
     const fileName = config.fileNames.prefix + config.languages.base + ".json";
     writeFile(dest, updatedData.langData, fileName, "json", config);

@@ -6,7 +6,7 @@ import log from "./utils/log/log.js";
 export default (config) => {
   //config
   const { base, targets } = config.languages;
-  if (!base || targets.length === 0) {
+  if (!base || !targets.length) {
     log("missingLang", "error", config);
     return;
   }
@@ -25,7 +25,7 @@ export default (config) => {
     if (config.mode.dryRun) log("dryRun", "info", config);
     if (!config.mode.translate) log("translateDisabled", "info", config);
     log("infoEnd", "success", config);
-  } else if (keysToProcess.length === 0) {
+  } else if (!keysToProcess.length) {
     log("translateNoKeys", "info", config);
     log("infoEnd", "success", config);
   } else {

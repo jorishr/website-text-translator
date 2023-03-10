@@ -6,7 +6,7 @@ import log from "./log/log.js";
 export default (config) => {
   log("backupStart", "start2", config);
   let fileList = filterFiles(config);
-  if (fileList.length === 0) return;
+  if (!fileList.length) return;
   if (!fs.existsSync(config.folders.backup)) {
     fs.mkdirSync(config.folders.backup, { recursive: true });
     createBackup(config, fileList);
@@ -16,12 +16,12 @@ export default (config) => {
       .readdirSync(config.folders.backup, { withFileTypes: true })
       .filter((elem) => elem.isDirectory())
       .map((elem) => elem.name);
-    if (dirList.length === 0) {
+    if (!dirList.length) {
       createBackup(config, fileList);
     } else {
       //get mostRecent backup folder version number
       const backups = dirList.filter((elem) => elem.startsWith("backup_"));
-      if (backups.length === 0) {
+      if (!backups.length) {
         createBackup(config, fileList);
       } else {
         let mostRecent = backups.sort().reverse()[0].slice(7);
@@ -42,7 +42,7 @@ function filterFiles(config) {
     elem.split("/").at(-1).startsWith(config.fileNames.prefix)
   );
   const result = htmlFiles.concat(filteredJsonFiles);
-  if (result.length === 0) {
+  if (!result.length) {
     log("backupFail", "fail", config);
     return [];
   }

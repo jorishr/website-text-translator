@@ -3,12 +3,12 @@ import log from "../utils/log/log.js";
 export default (data, offset, config) => {
   const newElements = data.htmlData.newElements;
   data.newKeys = [];
-  if (newElements.length === 0) return data;
+  if (!newElements.length) return data;
   log("newElemsStart", "start1", config);
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const newKeys = [];
   let counter = Number(Object.keys(data.langData).at(-1)) + 1 || offset;
-  if (newElements.length === 0) return data;
+  if (!newElements.length) return data;
   for (let i = 0; i < newElements.length; i++) {
     if (newElements[i].hasAttribute("alt")) {
       const result = setAttr(newElements[i], data, counter, altId, config);
@@ -34,7 +34,7 @@ export default (data, offset, config) => {
       counter = result.counter;
       newKeys.push(result.newKey);
     }
-    if (newElements[i].childNodes.length > 0) {
+    if (newElements[i].childNodes.length) {
       let txt_id_arr = [];
       newElements[i].childNodes.forEach((node) => {
         //collapse all whitespace into a single space.
@@ -48,7 +48,7 @@ export default (data, offset, config) => {
           counter++;
         }
       });
-      if (txt_id_arr.length > 0) {
+      if (txt_id_arr.length) {
         const txtIdTxt = `[${txt_id_arr}]`;
         newElements[i].setAttribute(txtId, txtIdTxt);
         log("txtAdded", "info", config, [

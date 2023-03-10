@@ -11,7 +11,7 @@ export default (data, docList, config) => {
       const otherElems = docList[i].querySelectorAll(
         `[${altId}=${key}], [${titleId}=${key}], [${plchldrId}=${key}], [${metaId}=${key}]`
       );
-      if (txtElems.length > 0 || otherElems.length > 0) {
+      if (txtElems.length || otherElems.length) {
         res = false;
         break;
       }
@@ -21,7 +21,7 @@ export default (data, docList, config) => {
       obsoleteKeys.push(key);
     }
   });
-  if (obsoleteKeys.length > 0) {
+  if (obsoleteKeys.length) {
     log("obsoleteKeys", "info", config, [obsoleteKeys]);
   }
   return obsoleteKeys;

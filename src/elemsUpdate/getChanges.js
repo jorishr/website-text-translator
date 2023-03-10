@@ -10,7 +10,7 @@ export default (data, target, config) => {
     switch (target) {
       case "txtElems":
         const keyArr = hasTxtKeyChanged(elem, data, config);
-        if (keyArr.length > 0) {
+        if (keyArr.length) {
           keyArr.forEach((key) => keysToUpdate.push(key));
         }
         break;
@@ -39,7 +39,7 @@ export default (data, target, config) => {
         log("getTxtChangesException", "error", config);
     }
   });
-  if (keysToUpdate.length === 0) {
+  if (!keysToUpdate.length) {
     log("noChangesFound", "info", config, [target]);
   }
   return keysToUpdate;

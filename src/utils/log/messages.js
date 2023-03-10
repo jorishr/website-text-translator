@@ -11,7 +11,7 @@ export default {
   htmlNotFound:
     "Program terminated. No HTML file(s) found in folder\n\nHint:\n\tMake sure you have at least one HTML file in the source folder: ${0}\n\tYou can change the default folder path by running the config command.",
   htmlDone: "Done processing HTML file: ${0}",
-  htmlEnd: "Done processing all HTML and JSON base files!",
+  htmlEnd: "Done processing all HTML and JSON base file(s)!",
   elementsFound:
     "Found a total of ${0} HTML elements with an existing data-id in this HTML file.\n\n${1} new HTML elements were found.\n",
   newElemsStart: "Start processing new HTML elements...",
@@ -26,9 +26,10 @@ export default {
   backupWriteFail: "Unexpected error while writing to backup file:\n\n\t${0}",
   missingLang:
     "No base or target languages set. Run the config command or add a config file. See documentation for more info.",
-  translateStart: "Starting translation(s)...",
-  translateDisabled: "Translations are disabled.\n",
-  translateNoKeys: "No changes found in base files. No translations needed.",
+  translateStart: "Start processing translation file(s)...",
+  translateDisabled: "Processing translation files is disabled.\n",
+  translateNoKeys:
+    "No changes found in base files. No translation changes needed.",
   langFileExists:
     "Found existing translation file for language: ${0}. Applying updates...",
   langFileNew:
