@@ -1,7 +1,6 @@
-import config from "./config.json" assert { type: "json" };
 import log from "./utils/log/log.js";
 
-export default (data, docList) => {
+export default (data, docList, config) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const keysInLangData = Object.keys(data.langData);
   const obsoleteKeys = [];
@@ -12,7 +11,7 @@ export default (data, docList) => {
       const otherElems = docList[i].querySelectorAll(
         `[${altId}=${key}], [${titleId}=${key}], [${plchldrId}=${key}], [${metaId}=${key}]`
       );
-      if (txtElems.length > 0 || otherElems.length > 0) {
+      if (txtElems.length || otherElems.length) {
         res = false;
         break;
       }
@@ -22,8 +21,8 @@ export default (data, docList) => {
       obsoleteKeys.push(key);
     }
   });
-  if (obsoleteKeys.length > 0) {
-    log("obsoleteKeys", "info", [obsoleteKeys]);
+  if (obsoleteKeys.length) {
+    log("obsoleteKeys", "info", config, [obsoleteKeys]);
   }
   return obsoleteKeys;
 };

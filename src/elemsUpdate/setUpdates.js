@@ -1,36 +1,35 @@
-import config from "../config.json" assert { type: "json" };
 import log from "../utils/log/log.js";
 
-export default (keys, data, target) => {
-  if (keys.length === 0) return data;
+export default (keys, data, target, config) => {
+  if (!keys.length) return data;
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   let res = null;
   keys.forEach((key) => {
     switch (target) {
       case "txtElems":
-        res = setText(data, target, key, txtId);
+        res = setText(data, target, key, txtId, config);
         break;
       case "altAttrElems":
-        res = setAttr(data, target, key, altId);
+        res = setAttr(data, target, key, altId, config);
         break;
       case "titleAttrElems":
-        res = setAttr(data, target, key, titleId);
+        res = setAttr(data, target, key, titleId, config);
         break;
       case "plchldrAttrElems":
-        res = setAttr(data, target, key, plchldrId);
+        res = setAttr(data, target, key, plchldrId, config);
         break;
       case "metaElems":
-        res = setAttr(data, target, key, metaId);
+        res = setAttr(data, target, key, metaId, config);
         break;
       default:
-        log("txtUpdateException", "error");
+        log("txtUpdateException", "error", config);
         res = data;
     }
   });
   return res;
 };
 
-function setText(data, target, key, txtId) {
+function setText(data, target, key, txtId, config) {
   const txtElems = data.htmlData[target];
   const direction = config.direction.direction || config.direction.default;
   let childNodeIndex = null;
@@ -45,7 +44,7 @@ function setText(data, target, key, txtId) {
   });
   //default direction is json over html
   const textNodes = elem.childNodes.filter(
-    (node) => node.nodeType === 3 && node.textContent.trim().length > 0
+    (node) => node.nodeType === 3 && node.textContent.trim().length
   );
   if (direction === "json2html") {
     textNodes[childNodeIndex].textContent = data.langData[key];
@@ -58,7 +57,7 @@ function setText(data, target, key, txtId) {
   return data;
 }
 
-function setAttr(data, target, key, id) {
+function setAttr(data, target, key, id, config) {
   const attrElems = data.htmlData[target];
   const direction = config.direction.direction || config.direction.default;
   let name = id.split("__").at(-1); //alt, title, meta

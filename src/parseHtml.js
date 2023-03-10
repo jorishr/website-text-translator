@@ -1,10 +1,9 @@
-import config from "./config.json" assert { type: "json" };
 import parser from "node-html-parser";
 import findNewElements from "./elemsAdd/getNewElems.js";
 import log from "./utils/log/log.js";
 const parse = parser.parse;
 
-export default (html) => {
+export default (html, config) => {
   const root = parse(html);
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const txtElems = root.querySelectorAll(`[${txtId}]`);
@@ -12,7 +11,7 @@ export default (html) => {
   const titleAttrElems = root.querySelectorAll(`[${titleId}]`);
   const plchldrAttrElems = root.querySelectorAll(`[${plchldrId}]`);
   const metaElems = root.querySelectorAll(`[${metaId}]`);
-  const newElems = findNewElements(root);
+  const newElems = findNewElements(root, config);
   const existingElemsLists = [];
   existingElemsLists.push(
     txtElems,
@@ -23,7 +22,7 @@ export default (html) => {
   );
   //flatten arrays of nodeLists to get a single array of html elements
   const existingElems = [].concat.apply([], existingElemsLists);
-  log("elementsFound", "info", [existingElems.length, newElems.length]);
+  log("elementsFound", "info", config, [existingElems.length, newElems.length]);
   return {
     root: root,
     txtElems: txtElems,

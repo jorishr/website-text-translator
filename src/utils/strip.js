@@ -1,17 +1,16 @@
 import findHtmlFiles from "./findHtmlFiles.js";
 import getHtmlData from "./getHtmlData.js";
 import writeFile from "./writeToFile.js";
-import config from "../config.json" assert { type: "json" };
 import { parse } from "node-html-parser";
 import log from "./log/log.js";
 
-export default (src, dest) => {
-  log("infoStart", "header");
-  const htmlFileList = findHtmlFiles(`${src}`, [".html"]);
+export default (config) => {
+  const { src, dest } = config.folders;
+  const htmlFileList = findHtmlFiles(`${src}`, config);
   for (let i = 0; i < htmlFileList.length; i++) {
-    log("startStrip", "start2", [htmlFileList[i]]);
-    const html = getHtmlData(src, htmlFileList[i]);
-    const root = parse(html);
+    log("startStrip", "start2", config, [htmlFileList[i]]);
+    const html = getHtmlData(src, htmlFileList[i], config);
+    const root = parse(html, config);
     const { txtId, altId, titleId, plchldrId, metaId } = config.id;
     root.querySelectorAll(`[${txtId}]`).forEach((elem) => {
       elem.removeAttribute(txtId);
@@ -29,6 +28,6 @@ export default (src, dest) => {
       elem.removeAttribute(metaId);
     });
     const updatedHtml = root.toString();
-    writeFile(dest, updatedHtml, htmlFileList[i], "html");
+    writeFile(dest, updatedHtml, htmlFileList[i], "html", config);
   }
 };

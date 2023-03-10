@@ -1,8 +1,7 @@
-import config from "../config.json" assert { type: "json" };
 import filterElem from "./filter.js";
 
-export default (root) => {
+export default (root, config) => {
   return root
     .querySelectorAll(config.elements.selectors)
-    .filter((elem) => filterElem(elem));
+    .filter((elem) => filterElem(elem, config));
 };

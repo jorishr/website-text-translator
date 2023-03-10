@@ -1,4 +1,3 @@
-import config from "../config.json" assert { type: "json" };
 import getJsonData from "../utils/getJsonData.js";
 import writeFile from "../utils/writeToFile.js";
 import getTranslations from "./googleTranslate.js";
@@ -10,26 +9,31 @@ export default async (
   targets,
   keysToDelete,
   offset,
-  src,
-  dest
+  config
 ) => {
+  const { src, dest } = config.folders;
   const prefix = config.fileNames.prefix;
   const [changedValues, newValues] = getValues(keysToTranslate, data);
-  log("translateStart", "start2");
+  log("translateStart", "start2", config);
   targets.forEach(async (lang) => {
     //Google Translate API returns an array of translations, in the same order as the input array
     let resChangedVals = [];
-    if (changedValues.length > 0) {
-      resChangedVals = await getTranslations(changedValues, lang, "updated");
+    if (changedValues.length) {
+      resChangedVals = await getTranslations(
+        changedValues,
+        lang,
+        "updated",
+        config
+      );
     }
     let resNewVals = [];
-    if (newValues.length > 0) {
-      resNewVals = await getTranslations(newValues, lang, "new");
+    if (newValues.length) {
+      resNewVals = await getTranslations(newValues, lang, "new", config);
     }
     //read the existing translation file for the language
     let jsonData = getJsonData(src, `${prefix}${lang}.json`) || {};
-    if (Object.keys(jsonData).length !== 0) {
-      log("langFileExists", "info", [lang]);
+    if (Object.keys(jsonData).length) {
+      log("langFileExists", "info", config, [lang]);
       keysToDelete.forEach((key) => {
         delete jsonData[key];
       });
@@ -42,13 +46,13 @@ export default async (
         jsonData[keysToTranslate.changedKeys[i]] = resChangedVals[i];
       }
     } else {
-      log("langFileNew", "info", [lang]);
+      log("langFileNew", "info", config, [lang]);
       //in this case, there should be no changed keys, only new keys to append to the end of the file
       for (let i = 0; i < resNewVals.length; i++) {
         jsonData[offset + i] = resNewVals[i];
       }
     }
-    writeFile(dest, jsonData, `${prefix}${lang}.json`, "json");
+    writeFile(dest, jsonData, `${prefix}${lang}.json`, "json", config);
   });
 };
 

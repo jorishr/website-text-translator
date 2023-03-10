@@ -1,40 +1,37 @@
 {
-  "name": "html-text-translator",
+  "name": "website-text-translator",
   "version": "0.1.0",
   "description": "Automatically translate HTML files to multiple languages with Google Translate API, detect changes and store translations in JSON files.",
-  "bin": "bin/index.js",
+  "bin": {
+    "wtt": "bin/index.js"
+  },
   "main": "bin/index.js",
   "type": "module",
-  "scripts": {
-    "htt": "node bin/index.js",
-    "htt help": "node bin/index.js --help",
-    "htt dry": "node bin/index.js --dry-run",
-    "htt no-backup": "node bin/index.js --no-backup",
-    "htt strip": "node bin/strip.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jorishr/html-text-translator.git"
+    "url": "git+https://github.com/jorishr/website-text-translator.git"
   },
   "keywords": [
     "translation",
     "translator",
     "html",
+    "json",
     "language",
     "website"
   ],
-  "author": "Joris Raymaekers",
+  "author": "Joris Raymaekers <joris@liondigits.com> (https://liondigits.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jorishr/html-text-translator/issues"
+    "url": "https://github.com/jorishr/website-text-translator/issues"
   },
-  "homepage": "https://github.com/jorishr/html-text-translator#readme",
+  "homepage": "https://github.com/jorishr/website-text-translator#readme",
   "dependencies": {
     "@google-cloud/translate": "^7.2.0",
+    "commander": "^10.0.0",
+    "deepmerge": "^4.3.0",
     "node-html-parser": "^6.1.5"
   },
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=18.13.0"
   }
 }
