@@ -68,13 +68,12 @@ export default {
       inValidEqual: "Base and target languages can't be the same.",
     },
     folders: {
-      intro:
-        "\x1b[34mLet's configure the input and output folder.\x1b[0m\n\n\x1b[3mNote:\x1b[0m If the source folder and destination folder are the same, your HTML file(s) will be overwritten by the program. This is the recommended and default option. Before processing HTML files, a backup of each file is automatically stored in the backup folder.\x1b[0m",
+      intro: "\x1b[34mLet's configure the input and output folder.\x1b[0m\n",
       info1:
-        "1. Please enter the path to your source folder.\n\nThis is the folder where your HTML files are located. Use relative paths, e.g. './src'.\nThe program will look for HTML files in subfolders as well.\n\nLeave blank and hit ENTER to use the default folder. This is the root folder of your current NPM project('./').",
+        "1. Please enter the path to your source folder.\n\nThis is the folder where your HTML files are located. Use relative paths, e.g. './src'.\nThe program will look for HTML files in subfolders as well.\n\nLeave blank and hit ENTER to use the default folder. The default folder is the root folder of your current NPM project('./').",
       prompt1: "\x1b[3mSource folder:\x1b[0m ",
       info2:
-        "2. Please enter the path to your destination folder.\n\nThis is the folder where the updated HTML files and JSON translation files will be written to. Use relative paths, e.g. './dist'.\nSubfolder paths are retained, thus e.g. './view/_modules/footer.html' will be written to 'destination/view/_modules/footer.html'.\n\nLeave blank and hit ENTER to use the default folder. This is the root folder of your current NPM project('./').",
+        "2. Please enter the path to your destination folder.\n\nThis is the folder where the JSON translation files will be written to. Use relative paths, e.g. './src/translations'. If you specified a source folder in the previous step, make sure the destination folder is the same or a subfolder of the source folder. \n\nLeave blank and hit ENTER to use the default folder. This is the root folder of your current NPM project('./').",
       prompt2: "\x1b[3mDestination folder:\x1b[0m ",
       inValid:
         "Invalid input. Please try again.\nYour folder paths must be a string that starts with './', for example './src'.",
@@ -82,7 +81,7 @@ export default {
     backup: {
       intro: "\x1b[34mLet's configure the backup functionality.\x1b[0m",
       info1:
-        "1. By default the program will create a backup of your existing HTML files and the JSON translation files, before making any changes. This is the recommended option.\n",
+        "1. By default the program will create a backup of your existing HTML files and the JSON translation files, before making any changes. This is the recommended option because your original files will be overwritten when processed by the program. Only disable backups if you want to handle backups manually.\n",
       prompt1: "\x1b[3mCreate backups? Type ('y' or 'n'):\x1b[0m ",
       info2:
         "2. Regardless of your choice to enable of disable backups, please specify a backup folder path. Use relative paths, e.g. './backup'. Leave blank and hit ENTER to use the default path: './backup'\n",
