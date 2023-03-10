@@ -137,7 +137,7 @@ function setElementTxt(data) {
       elem.textContent = data[idArr[0]];
     } else {
       const textNodes = Array.from(elem.childNodes).filter(
-        (node) => node.nodeType === 3 && node.textContent.trim().length > 0
+        (node) => node.nodeType === 3 && node.textContent.trim().length
       );
       for (let i = 0; i < idArr.length; i++) {
         textNodes[i].textContent = data[idArr[i]];
