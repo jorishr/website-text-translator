@@ -1,8 +1,8 @@
 import log from "./utils/log/log.js";
 
-export default (data, docList, config) => {
+export default (langData, docList, config) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
-  const keysInLangData = Object.keys(data.langData);
+  const keysInLangData = Object.keys(langData);
   const obsoleteKeys = [];
   keysInLangData.forEach((key) => {
     let res = true;

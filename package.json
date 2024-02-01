@@ -5,8 +5,11 @@
   "bin": {
     "wtt": "bin/index.js"
   },
-  "main": "bin/index.js",
+  "main": "src/index.js",
   "type": "module",
+  "scripts": {
+    "wtt": "node ./bin/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jorishr/website-text-translator.git"

@@ -15,7 +15,7 @@ program
   .description(
     "Website-Text-Translator: Automatically translate the text in HTML files to multiple languages, store translations in JSON files and detect changes."
   )
-  .version("0.1.0")
+  .version("0.1.1")
   .command("start", "Start the website-text-translator program.", {
     isDefault: true,
   })
