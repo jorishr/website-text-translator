@@ -1,37 +1,38 @@
 import log from "../utils/log/log.js";
 
 export default (keys, data, target, config) => {
-  if (!keys.length) return data;
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
-  let res = null;
+  let result = null;
+  if (!keys.length) return data;
+
   keys.forEach((key) => {
     switch (target) {
       case "txtElems":
-        res = setText(data, target, key, txtId, config);
+        result = setText(data, target, key, txtId, config);
         break;
       case "altAttrElems":
-        res = setAttr(data, target, key, altId, config);
+        result = setAttr(data, target, key, altId, config);
         break;
       case "titleAttrElems":
-        res = setAttr(data, target, key, titleId, config);
+        result = setAttr(data, target, key, titleId, config);
         break;
       case "plchldrAttrElems":
-        res = setAttr(data, target, key, plchldrId, config);
+        result = setAttr(data, target, key, plchldrId, config);
         break;
       case "metaElems":
-        res = setAttr(data, target, key, metaId, config);
+        result = setAttr(data, target, key, metaId, config);
         break;
       default:
         log("txtUpdateException", "error", config);
-        res = data;
+        result = data;
     }
   });
-  return res;
+  return result;
 };
 
 function setText(data, target, key, txtId, config) {
+  const txtUpdateDirection = config.textUpdateDirection || "default";
   const txtElems = data.htmlData[target];
-  const direction = config.direction.direction || config.direction.default;
   let childNodeIndex = null;
   const elem = txtElems.find((elem) => {
     const idArr = eval(elem.getAttribute(txtId));
@@ -42,14 +43,13 @@ function setText(data, target, key, txtId, config) {
       }
     }
   });
-  //default direction is json over html
   const textNodes = elem.childNodes.filter(
     (node) => node.nodeType === 3 && node.textContent.trim().length
   );
-  if (direction === "json2html") {
+  if (txtUpdateDirection === "jsonToHtml") {
     textNodes[childNodeIndex].textContent = data.langData[key];
   }
-  if (direction === "html2json") {
+  if (txtUpdateDirection === "default") {
     data.langData[key] = textNodes[childNodeIndex].textContent
       .replace(/[\t\n\r]+/g, "")
       .replace(/\s{2,}/g, " ");

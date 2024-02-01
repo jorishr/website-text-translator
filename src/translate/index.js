@@ -4,7 +4,7 @@ import getTranslations from "./googleTranslate.js";
 import log from "../utils/log/log.js";
 
 export default async (
-  data,
+  langData,
   keysToTranslate,
   targets,
   keysToDelete,
@@ -13,7 +13,7 @@ export default async (
 ) => {
   const { src, dest } = config.folders;
   const prefix = config.fileNames.prefix;
-  const [changedValues, newValues] = getValues(keysToTranslate, data);
+  const [changedValues, newValues] = getValues(keysToTranslate, langData);
   log("translateStart", "start2", config);
   targets.forEach(async (lang) => {
     //Google Translate API returns an array of translations, in the same order as the input array
@@ -56,14 +56,14 @@ export default async (
   });
 };
 
-function getValues(keys, data) {
+function getValues(keys, langData) {
   const changedValues = [];
   const newValues = [];
   keys.changedKeys.forEach((key) => {
-    changedValues.push(data.langData[key]);
+    changedValues.push(langData[key]);
   });
   keys.newKeys.forEach((key) => {
-    newValues.push(data.langData[key]);
+    newValues.push(langData[key]);
   });
   return [changedValues, newValues];
 }
