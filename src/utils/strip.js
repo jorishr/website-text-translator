@@ -11,24 +11,22 @@ export default () => {
   for (let i = 0; i < htmlFileList.length; i++) {
     log("startStrip", "start2", [htmlFileList[i]]);
     const html = getHtmlData(htmlFileList[i]);
-    const root = parse(html);
-    const { txtId, altId, titleId, plchldrId, metaId } = config.id;
-    root.querySelectorAll(`[${txtId}]`).forEach((elem) => {
-      elem.removeAttribute(txtId);
-    });
-    root.querySelectorAll(`[${altId}]`).forEach((elem) => {
-      elem.removeAttribute(altId);
-    });
-    root.querySelectorAll(`[${titleId}]`).forEach((elem) => {
-      elem.removeAttribute(titleId);
-    });
-    root.querySelectorAll(`[${plchldrId}]`).forEach((elem) => {
-      elem.removeAttribute(plchldrId);
-    });
-    root.querySelectorAll(`[${metaId}]`).forEach((elem) => {
-      elem.removeAttribute(metaId);
-    });
-    const updatedHtml = root.toString();
-    writeFile(dest, updatedHtml, htmlFileList[i], "html");
+    const htmlRoot = parse(html);
+    let modifiedHtml;
+    const dataAttributeIdList = Object.values(config.id.attributeTextId);
+    dataAttributeIdList.push(config.id.textNodeId);
+
+    modifiedHtml = removeDataAttributes(htmlRoot, dataAttributeIdList);
+
+    writeFile(dest, modifiedHtml, htmlFileList[i], "html");
   }
 };
+
+function removeDataAttributes(htmlRoot, dataAttributeIdList) {
+  dataAttributeIdList.forEach((dataAttributeId) => {
+    htmlRoot.querySelectorAll(`[${dataAttributeId}]`).forEach((elem) => {
+      elem.removeAttribute(dataAttributeId);
+    });
+  });
+  return htmlRoot.toString();
+}

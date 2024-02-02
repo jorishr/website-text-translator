@@ -7,52 +7,52 @@ import { config } from "../../bin/commander/setConfig.js";
  * @param {object} data - The working data object
  *  @property {object} htmlData - The object representing HTML data
  *  @property {object} langData - The object representing base language data
- * @param {string} target - The target html element type ("txtElems", "altAttrElems", etc.).
+ * @param {string} target - The target html element type ("textElems", "altAttrElems", etc.).
  * @returns {string[]} An array containing the keys of elements that need updates.
  */
 export default (data, target) => {
-  // text id's to process, example id {"txtId": "data-txt_id"}
-  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
+  const textNodeId = config.id.textNodeId;
+  const { altId, titleId, placeholderId, metaId } = config.id.attributeTextId;
   const elems = data.htmlData[target];
   const keysToUpdate = [];
 
-  log("getTxtChanges", "info", [target]);
+  log("getTextChanges", "info", [target]);
 
   elems.forEach((elem) => {
     let targetKey = null;
 
     switch (target) {
-      case "txtElems":
-        const keyArr = hasTxtKeyChanged(elem, data, txtId);
+      case "textNodeElems":
+        const keyArr = hasChangedText(elem, data, textNodeId);
 
         if (keyArr.length) {
           keyArr.forEach((key) => keysToUpdate.push(key));
         }
         break;
 
-      case "altAttrElems":
-        targetKey = hasAttrKeyChanged(elem, data, altId);
+      case "altAttributeElems":
+        targetKey = hasChangedAttrText(elem, data, altId);
 
         if (targetKey) keysToUpdate.push(targetKey);
         break;
 
-      case "titleAttrElems":
-        targetKey = hasAttrKeyChanged(elem, data, titleId);
+      case "titleAttributeElems":
+        targetKey = hasChangedAttrText(elem, data, titleId);
         if (targetKey) keysToUpdate.push(targetKey);
         break;
 
-      case "plchldrAttrElems":
-        targetKey = hasAttrKeyChanged(elem, data, plchldrId);
+      case "placeholderAttributeElems":
+        targetKey = hasChangedAttrText(elem, data, placeholderId);
         if (targetKey) keysToUpdate.push(targetKey);
         break;
 
-      case "metaElems":
-        targetKey = hasAttrKeyChanged(elem, data, metaId);
+      case "metaAttributeElems":
+        targetKey = hasChangedAttrText(elem, data, metaId);
         if (targetKey) keysToUpdate.push(targetKey);
         break;
 
       default:
-        log("getTxtChangesException", "error");
+        log("getTextChangesException", "error");
     }
   });
 
@@ -66,17 +66,17 @@ export default (data, target) => {
  * Check if text keys have changed for a given HTML element.
  *
  * @param {Element} elem - The HTML element to check for text key changes.
- * @param {string} txtId - Id to identify the target text.
+ * @param {string} textId - Id to identify the target text.
  * @returns {string[]} An array containing the keys of text elements that have changed.
  */
-function hasTxtKeyChanged(elem, data, txtId) {
+function hasChangedText(elem, data, textId) {
   const result = [];
-  const txtIdArr = JSON.parse(elem.getAttribute(txtId));
+  const textIdArr = JSON.parse(elem.getAttribute(textId));
   const textNodes = elem.childNodes.filter(
     (node) => node.nodeType === 3 && node.textContent.trim() !== ""
   );
 
-  for (let i = 0; i < txtIdArr.length; i++) {
+  for (let i = 0; i < textIdArr.length; i++) {
     /*
       - normalize trailing spaces before comparison
       - changes in trailing spaces are ignored
@@ -84,11 +84,11 @@ function hasTxtKeyChanged(elem, data, txtId) {
     const text = textNodes[i].textContent
       .replace(/[\t\n\r]+/g, "")
       .replace(/\s{2,}/g, " ");
-    const compareValue = data.langData[txtIdArr[i]];
+    const compareValue = data.langData[textIdArr[i]];
     if (compareValue) {
       if (text.trim() !== compareValue.trim()) {
-        log("txtChange", "info", [txtIdArr[i]]);
-        result.push(txtIdArr[i]);
+        log("textChange", "info", [textIdArr[i]]);
+        result.push(textIdArr[i]);
       }
     }
   }
@@ -102,9 +102,9 @@ function hasTxtKeyChanged(elem, data, txtId) {
  * @param {string} attrId - Id to identify the target text.
  * @returns {string} A string containing the key of the attribute that has changed.
  */
-function hasAttrKeyChanged(elem, data, attrId) {
+function hasChangedAttrText(elem, data, attrId) {
   const id = elem.getAttribute(attrId); // string, e.g "100"
-  const name = attrId.split("__").at(-1); // e.g "data-txt_id__title" -> "title"
+  const name = attrId.split("__").at(-1); // e.g "data-text_id__title" -> "title"
 
   let target = name;
   if (name === "meta") target = "content";

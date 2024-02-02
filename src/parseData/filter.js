@@ -1,11 +1,12 @@
 import { config } from "../../bin/commander/setConfig.js";
 
 export default (elem) => {
-  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
+  const textNodeId = config.id.textNodeId;
+  const { altId, titleId, placeholderId, metaId } = config.id.attributeTextId;
   //custom exclusion filters
-  const { classesToExclude, idsToExclude } = config.elements.exclude;
-  const doExcludeClass = exclude(elem, "class", classesToExclude);
-  const doExcludeId = exclude(elem, "id", idsToExclude);
+  const { classToExclude, idToExclude } = config.elements.exclude;
+  const doExcludeClass = exclude(elem, "class", classToExclude);
+  const doExcludeId = exclude(elem, "id", idToExclude);
   if (doExcludeClass) return false;
   if (doExcludeId) return false;
 
@@ -13,8 +14,8 @@ export default (elem) => {
   const noTranslate = elem.getAttribute("translate");
   if (noTranslate === "no") return false;
 
-  //exclude elements that already have a data-txt_id attribute
-  if (elem.hasAttribute(txtId)) {
+  //exclude elements that already have a data-text_id attribute
+  if (elem.hasAttribute(textNodeId)) {
     return false;
   }
   if (elem.hasAttribute(altId)) {
@@ -31,7 +32,7 @@ export default (elem) => {
     }
     return false;
   }
-  if (elem.hasAttribute(plchldrId)) {
+  if (elem.hasAttribute(placeholderId)) {
     return false;
   }
   if (elem.hasAttribute(metaId)) {

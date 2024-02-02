@@ -34,16 +34,16 @@ function print(msg, type, vals = []) {
       break;
     case "start2":
       if (!vals.length) {
-        console.log("\x1b[3m\x1b[34m" + getFullMsg(msg) + "\x1b[0m\n");
+        console.log("\x1b[34m" + getFullMsg(msg) + "\x1b[0m\n");
       } else {
-        console.log("\x1b[3m\x1b[34m" + writeMsg(msg, vals) + "\x1b[0m\n");
+        console.log("\x1b[34m" + writeMsg(msg, vals) + "\x1b[0m\n");
       }
       break;
     case "done":
       if (!vals.length) {
-        console.log("\n\x1b[3m" + getFullMsg(msg) + "\x1b[0m\n");
+        console.log("\x1b[96m" + getFullMsg(msg) + "\x1b[0m\n");
       } else {
-        console.log("\n\x1b[3m" + writeMsg(msg, vals) + "\x1b[0m\n");
+        console.log("\x1b[96m" + writeMsg(msg, vals) + "\x1b[0m\n");
       }
       break;
     case "success":

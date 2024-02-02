@@ -3,8 +3,8 @@ import getJsonData from "./utils/getJsonData.js";
 import getHtmlData from "./utils/getHtmlData.js";
 import writeFile from "./utils/writeToFile.js";
 import parseHtml from "./parseHtml.js";
-import updateHtml from "./elemsUpdate/index.js";
-import setNewHtmlElements from "./elemsAdd/setNewElems.js";
+import parseWorkingData from "./parseData/index.js";
+import setNewElements from "./parseData/setNewElems.js";
 import getObsoleteKeys from "./getObsoleteKeys.js";
 import logResult from "./utils/log/logResult.js";
 import log from "./utils/log/log.js";
@@ -23,7 +23,7 @@ import { config } from "../bin/commander/setConfig.js";
 export default () => {
   const { src, dest } = config.folders;
   const htmlFileList = findHtmlFiles(`${src}`);
-  const jsonFile = config.fileNames.prefix + config.languages.base + ".json";
+  const jsonFile = config.languageFile.prefix + config.languages.base + ".json";
   const baseLangData = getJsonData(dest, jsonFile) || {};
   const keysInBaseLangData = Object.keys(baseLangData);
 
@@ -31,7 +31,8 @@ export default () => {
     keysInBaseLangData.length,
   ]);
 
-  const keyCountOffset = Number(keysInBaseLangData.at(-1)) + 1 || config.offset;
+  const keyCountOffset =
+    Number(keysInBaseLangData.at(-1)) + 1 || config.keyCountOffset;
   let modifiedLangData = {};
   let modifiedHtmlDocs = [];
   let keysToTranslate = { changedKeys: [], newKeys: [] };
@@ -46,13 +47,13 @@ export default () => {
     let updatedHtml;
 
     if (Object.keys(langData).length) {
-      const [workingDataUpdates, changedKeys] = updateHtml(workingData);
+      const [workingDataUpdates, changedKeys] = parseWorkingData(workingData);
       workingData = workingDataUpdates;
       keysToTranslate.changedKeys.push(...changedKeys);
     }
 
-    workingData = setNewHtmlElements(workingData, keyCountOffset);
-    updatedHtml = workingData.htmlData.root.toString();
+    workingData = setNewElements(workingData, keyCountOffset);
+    updatedHtml = workingData.htmlData.htmlRoot.toString();
 
     keysToTranslate.newKeys.push(...workingData.newKeys);
 
@@ -63,7 +64,7 @@ export default () => {
       writeFile(dest, updatedHtml, htmlFileList[i], "html");
     }
 
-    modifiedHtmlDocs.push(workingData.htmlData.root);
+    modifiedHtmlDocs.push(workingData.htmlData.htmlRoot);
     modifiedLangData = workingData.langData;
 
     log("htmlDone", "done", [htmlFileList[i]]);

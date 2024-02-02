@@ -1,37 +1,46 @@
 import parser from "node-html-parser";
-import findNewElements from "./elemsAdd/getNewElems.js";
+import findNewElements from "./parseData/getNewElems.js";
 import log from "./utils/log/log.js";
 import { config } from "../bin/commander/setConfig.js";
 const parse = parser.parse;
 
 export default (html) => {
-  const root = parse(html);
-  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
-  const txtElems = root.querySelectorAll(`[${txtId}]`);
-  const altAttrElems = root.querySelectorAll(`[${altId}]`);
-  const titleAttrElems = root.querySelectorAll(`[${titleId}]`);
-  const plchldrAttrElems = root.querySelectorAll(`[${plchldrId}]`);
-  const metaElems = root.querySelectorAll(`[${metaId}]`);
-  const newElems = findNewElements(root);
+  const htmlRoot = parse(html);
+  const textNodeId = config.id.textNodeId;
+  const { altId, titleId, placeholderId, metaId } = config.id.attributeTextId;
+
+  const getAttributeElems = (attribute) =>
+    htmlRoot.querySelectorAll(`[${attribute}]`);
+
+  const textNodeElems = getAttributeElems(textNodeId);
+  const altAttributeElems = getAttributeElems(altId);
+  const titleAttributeElems = getAttributeElems(titleId);
+  const placeholderAttributeElems = getAttributeElems(placeholderId);
+  const metaAttributeElems = getAttributeElems(metaId);
+
+  const newElems = findNewElements(htmlRoot);
   const existingElemsLists = [];
+
   existingElemsLists.push(
-    txtElems,
-    altAttrElems,
-    titleAttrElems,
-    plchldrAttrElems,
-    metaElems
+    textNodeElems,
+    altAttributeElems,
+    titleAttributeElems,
+    placeholderAttributeElems,
+    metaAttributeElems
   );
   //flatten arrays of nodeLists to get a single array of html elements
   const existingElems = [].concat.apply([], existingElemsLists);
+
   log("elementsFound", "info", [existingElems.length, newElems.length]);
+
   return {
-    root: root,
-    txtElems: txtElems,
-    altAttrElems: altAttrElems,
-    titleAttrElems: titleAttrElems,
-    metaElems: metaElems,
-    plchldrAttrElems: plchldrAttrElems,
+    htmlRoot: htmlRoot,
+    textNodeElems: textNodeElems,
+    altAttributeElems: altAttributeElems,
+    titleAttributeElems: titleAttributeElems,
+    metaAttributeElems: metaAttributeElems,
+    placeholderAttributeElems: placeholderAttributeElems,
     existingElems: existingElems,
-    newElements: newElems,
+    newElems: newElems,
   };
 };

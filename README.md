@@ -7,114 +7,338 @@
 Automatically translate the text in html files to multiple languages, store translations in JSON files and detect changes.
 
 - [Website-Text-Translator](#website-text-translator)
-  - [What to expect](#what-to-expect)
+  - [What this program does](#what-this-program-does)
   - [Getting started](#getting-started)
-    - [Languages](#languages)
-    - [Backup](#backup)
-    - [Requirements](#requirements)
+    - [Definitions](#definitions)
+    - [Configuration](#configuration)
+      - [Pre-requisites](#pre-requisites)
+      - [Backup](#backup)
+      - [Folders](#folders)
     - [First run](#first-run)
-    - [Handling future updates and changes to your HTML files and/or JSON files](#handling-future-updates-and-changes-to-your-html-files-andor-json-files)
-    - [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project)
-  - [Limitations and known issues](#limitations-and-known-issues)
-  - [Additional configuration options](#additional-configuration-options)
+      - [Dry run first](#dry-run-first)
+      - [Output after first run](#output-after-first-run)
+  - [Workflow and making changes to your HTML files](#workflow-and-making-changes-to-your-html-files)
+    - [Nested text elements](#nested-text-elements)
+    - [Strip all txt-id's from existing HTML file(s)](#strip-all-txt-ids-from-existing-html-files)
+  - [Limitations and issues](#limitations-and-issues)
+    - [Translation accuracy by third party services](#translation-accuracy-by-third-party-services)
+    - [Whitespace issues](#whitespace-issues)
+  - [Using a configuration file](#using-a-configuration-file)
     - [Config file](#config-file)
-    - [Languages](#languages-1)
+    - [Languages](#languages)
     - [Modes](#modes)
     - [Selectors and exclusions](#selectors-and-exclusions)
     - [Text-id's](#text-ids)
-    - [Offset](#offset)
-    - [Folders](#folders)
-    - [Change direction](#change-direction)
-  - [Strip all txt-id's from existing HTML file(s)](#strip-all-txt-ids-from-existing-html-files)
+    - [keyCounterOffset](#keycounteroffset)
+    - [Change text update direction --experimental](#change-text-update-direction---experimental)
+  - [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project)
 
-## What to expect
+## What this program does
 
-The program will read and parse the html file(s) in the source folder. It will first add text-id's to HTML elements that contain text content:
+The program will read and parse the HTML file(s) in the source folder. Upon first run unique and sequentially numbered text-id's are added to HTML elements that contain text nodes or elements that have translatable attributes values:
 
 - text elements e.g. `<p>`, `<h1>`, `<span>`, etc.
 - element attributes: `alt`, `title`, `placeholder`
 - meta tag content: `description`, `keywords`
 
-A base JSON file will be generated with key-value pairs for each text element.
+Thus for each text node or attribute text value a key is generated and stored in the data-attribute of each element, for example:
 
-The program will then fetch translation strings from the Google Translate API and store them in a separate JSON file for each language.
+```html
+<p data-text_id="[100]">Hello World!</p>
+<a href="#" title="To the homepage" data-text_id__alt="101">Home</a>
+```
 
-Import the JSON files in your project and use a custom JavaScript module to target the text-id's in your updated HTML and load the translation strings.
+Next, the program will generate a base language JSON file containing the key-value pairs for each text node.
+
+```json
+{
+  "100": "Hello World!",
+  "101": "To the homepage"
+}
+```
+
+As a last step, the program will fetch translation strings from the Google Translate API and store them in a separate JSON language file for each target language.
+
+```json
+{
+  "100": "¡Hola Mundo!",
+  "101": "A la página de inicio"
+}
+```
+
+```json
+{
+  "100": "Hola món!",
+  "101": "A la pàgina d'inici"
+}
+```
+
+Importing these JSON files in your website project requires a separate discussion, see [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project).
+
+Once your HTML document(s) have been processed for the first time, you can continue your development and incorporate the translation process in your workflow by running the program again after you have added, removed or changed text elements in your documents.
+
+The program will parse the HTML files again and compare the changes your made to the existing key-value pairs in the base language file. Text from elements that have been removed in your HTML document will be deleted from the language file(s). Elements that have been added will get a new text-id. Elements that have been changed will keep their existing text-id but the text value will be updated and a new translation string will be fetched from the Google Translate API.
 
 ## Getting started
 
-### Languages
+### Definitions
 
-You need to define the base language and the languages you want to translate to. The base language is the language you used to write the text in your HTML files. The program will use this base language to generate the base JSON file.
+- Base language: the language used for the text in your HTML document.
+- Target language(s): the target language(s) to obtain translation strings for.
+- Language file(s): JSON file(s) containing the key-value pairs for each language.
 
-The base language and target languages are two letter language codes. For example: `en` for English, `nl` for Dutch, `fr` for French, etc.
+### Configuration
 
-To configure your languages run the config command `npx wtt config` or add a config file manually in your project folder. See [First run](#first-run) and [Additional configuration options](#additional-configuration-options) for more information.
+Run the script `npx wtt config` to start a series of command line prompts to set the essential configuration options like base language, target language(s), source folder, destination folder and backup functionality.
 
-### Backup
+More advanced configuration options are available, see [Additional configuration options](#additional-configuration-options) for more information.
 
-The program will create a numbered backup of your HTML and JSON files in the backup folder. You can disable the backup feature by using the flag `npx wtt --backup-no` or by adding a config file in your app root folder. See [Additional configuration options](#additional-configuration-options) for more information. If you do disable the backup feature, make sure you have a backup of your files before running the program.
-Add the backup folder to your `.gitignore` file if you are using Git.
+#### Pre-requisites
 
-### Requirements
+- Google Application Credentials: to fetch translation strings from the Google Translate API you need to setup authentication for Google Cloud Services. Without, you will see an error message for an invalid API key. See [Getting started with Google Cloud Authentication](https://cloud.google.com/docs/authentication/getting-started).
 
-- At least one HTML file in the source folder or any of it's sub-folders.
-
-- Google Application Credentials: to fetch the translation strings from the Google Translate API you need to setup authentication for Google Cloud Services. Without, you will see an error message for an invalid API key. See [Getting started with Google Cloud Authentication](https://cloud.google.com/docs/authentication/getting-started).
 - The program can run without the Google Translate API. Run the command `npx wtt --translate-no` or set the `translate` option in the config file to `false`. In this case the program will only run the first part of the program: add txt-id's to the HTML files and generate the base JSON file. No translation files will be generated.
+
+- The code of the program is modular and could be modified to use different translations services without too much trouble. However, this is not part of the current state of the program. Feel free to experiment and contribute [Github: Website-text-translator](https://github.com/jorishr/website-text-translator).
+
+- If your HTML document does not contain too much text and you don't want to use third party services, you can always manually add your own translations by creating your own JSON language files that follow the same key-value pair structure as the base language JSON file generated by the program.
+
+#### Backup
+
+By default the program will create a numbered backup of your HTML (and affected JSON files) in the backup folder. You can disable the backup feature by using the configuration wizard (`npx wtt config`), a command line flag `npx wtt --backup-no` or adding a config file in your app root folder.
+
+_Important:_ If you do disable the backup feature, make sure you have a backup of your existing files elsewhere before running the program because they will be overwritten.
+
+#### Folders
+
+- Source folder: this is the base folder used to find HTML files. The program will look for HTML files recursively all sub-folders as well. The default values is `"./"`, the root folder of your project.
+- Destination folder: this is the folder where you JSON translation files will be stored. This folder must be the same as the source folder _or_ a sub-folder of the source folder. For example, if your source folder is `./src` then the destination folder can be `./src` or `./src/translations`.
+
+Note that your HTML files will be overwritten by the program because txt-id's need to be added to the original HTML. Hence, the importance of the backup option discussed above.
 
 ### First run
 
-First run the configuration wizard in the command line: `npx wtt config`.
+#### Dry run first
 
-To run the program in normal mode, use the command: `npx wtt start`.
+It is recommended to run the program in 'dry mode' first. In dry-mode no files will be generated or overwritten. In the terminal you will get to see a list of all the HTML elements that are detected by the program. This will give you an idea of how many elements will be processed and how many text-id's will be added to the HTML files. If you have multiple HTML documents or lots of text, you may want to limit the terminal log output: run `npx wtt start --dry-run` or `npx wtt --dry-run --info-no`.
 
-It is recommended to run the program in 'dry mode' first to see a list of all the HTML elements that are detected by the program. This will give you an idea of how many elements will be processed and how many text-id's will be added to the HTML files. If your HTML files are very large, you may want to see only the basic log output. Run `npx wtt start --dry-run` or `npx wtt --dry-run --info-no`.
+#### Output after first run
 
-After your first run you should see the following files in your destination folder: a base JSON file and a translation JSON file for each target language. All files are named with a prefix: `txt_data_`. For example, `txt_data_en.json`, `txt_data_nl.json`, `txt_data_fr.json`, etc.
+To run the program, use the command: `npx wtt start`.
 
-Your HTML files will have been updated with txt-id's and each txt-id will have a corresponding translation string in the translation JSON files.
+Now you should see the following files in your destination folder: a base language JSON file and a translation JSON file for each target language. All files are named with a prefix: `txt_data_`. For example, `txt_data_en.json`, `txt_data_nl.json`, `txt_data_fr.json`, etc.
+
+Your HTML files will have been updated with txt-id's and each txt-id will have a corresponding translation string in the translation JSON file(s).
 
 Also, a numbered backup folder with copies of your original HTML files will have been created.
 
-Next steps:
+## Workflow and making changes to your HTML files
 
-- [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project)
-- [Handling future updates and changes to your HTML files and/or JSON files](#handling-future-updates-and-changes-to-your-html-files-andor-json-files)
+Once the program has done it's work and you have HTML elements with txt-id's and corresponding key-value paris in JSON translation files you can continue your regular development work. When you're done adding, changing or removing HTML, run the program again. Changes will be detected and dealt with automatically.
 
-### Handling future updates and changes to your HTML files and/or JSON files
+However, take into account the consideration and recommendations in this section.
 
-Once you have HTML files with txt-id's and JSON file(s) with corresponding text data you need to be careful with updates to the HTML markup. The program has a backup functionality for a reason. Take into account the following recommendations:
+- Keep the backup functionality enabled or at least make sure you have your work stored in a separate Git commit or backed up somewhere else _before_ you run the program.
+- Simple text changes, addition or deletions for an HTML element with an existing text-id can be dealt with automatically, for example:
 
-- Simple text changes: make them directly in <em>the base JSON file</em>. The base JSON file is the file with the language code for the base language you set during the configuration. If your base language is English, this file is `txt_data_en.json`. For example:
+```html
+<!-- your original document -->
+<p data-text_id="[105]">This is an original sentence that will be changed.</p>
+<p data-text_id="[106]">This will be removed by future development work.</p>
+<p data-text_id="[107]">This is an original sentence that remains unchanged.</p>
 
-  ```html
-  <p data-txt_id="100">This a simple sentence.</p>
-  ```
+<!-- your development work introduces the following changes: -->
+<p data-text_id="[105]">This sentence has been changed.</p>
+<p data-text_id="[107]">This is an original sentence that remains unchanged.</p>
+<p>This is a brand new sentence.</p>
 
-  Write the new text at the corresponding txt_id in the base language JSON file `txt_data_en.json`:
+<!-- result after running the program again: -->
+<p data-text_id="[105]">This sentence has been changed.</p>
+<p data-text_id="[107]">This is an original sentence that remains unchanged.</p>
+<p data-text_id="[108]">This is a brand new sentence.</p>
+```
 
-  ```json
-  {
-    "100": "The new text."
+In this case the program will have detected the changes automatically: the text change in the first sentence means that the key-value pair "[105]" in the JSON language file(s) will have been updated to the new string value. The element with the key "[106]" has been removed, which means that the corresponding key-value pair in the JSON languages file(s) will have been deleted as well. Lastly, the introduction of a new HTML text element leads to the addition of a new data attribute on the element and inside the JSON base language file you will find a new key-value pair: `{"108": "This is a brand new sentence"}`. In the target language files your will find corresponding translation strings fetched from the Google Translate API.
+
+### Nested text elements
+
+The simple changes discussed above are not the only changes that might occur and it's impossible to predict all possible permutations for an element with an _existing text-id_. For example, you may decide to add various span elements, an anchor tag and an `<em>` tag to a paragraph element with an existing text-id. All nested elements will be treated as separate text nodes by the program. This is perfectly fine when you run the program for the very first time.
+
+However, when during your future development you introduce structural changes to an existing element it is highly recommended to _remove the existing text-id_ for that element.
+
+Structural changes are changes that, for example, introduce additional HTML elements inside an existing element. Another example would be when you remove a span element from an existing paragraph. Every change that substantially changes the number or order of existing text nodes inside an element are considered structural changes that require removal of the existing text-id on the affected element(s). By removing the existing text-id the program will generate a new key for each text node in the correct order and the old key-value pairs will be purged.
+
+In the example below the paragraph has multiple text nodes and a nested ``:
+
+```html
+<!-- your original html after the first run of the program -->
+<p data-text_id="[100,101]">
+  Hello, this is a paragraph that will undergo
+  <em data-text_id="[102]">structural</em> changes.
+</p>
+```
+
+The base language JSON file will looks like this:
+
+```json
+{
+  "100": "Hello, this is a paragraph that will undergo ",
+  "101": " changes.",
+  "102": "structural"
+}
+```
+
+```html
+<!-- your development work introduces structural changes, so remove the text-id's: -->
+<p>
+  Hello, this paragraph underwent <em>structural</em> changes and now contains a
+  <a href="#" title="To next section">section-link</a>.
+</p>
+<!-- final result after running the program again: -->
+<p data-text_id="[110,111]">
+  Hello, this paragraph underwent
+  <em data-text_id="[112]">structural</em> changes and now contains a
+  <a
+    href="#"
+    title="To next section"
+    data-text-id="[113]"
+    data-text_id__title="114"
+    >section-link</a
+  >.
+</p>
+```
+
+The base language JSON file will contain the following key-value pairs:
+
+```json
+{
+  "110": "Hello, this paragraph underwent ",
+  "111": " changes and now contains a ",
+  "112": "structural",
+  "113": "section-link",
+  "114": "To next section"
+}
+```
+
+- Note that leading and trailing _single_ spaces will be respected by the program.
+- Also note that text nodes that only contain punctuation characters like "." or "!" will be ignored by the program if they are the very last child text node. They are separate text nodes and don't have to be part of the translation process. When loading translation strings into your website project these punctuation text nodes will remain unaffected.
+
+### Strip all txt-id's from existing HTML file(s)
+
+The strip command will remove all txt-id's from your HTML file(s). To run the strip program, use the command `npx wtt strip`.
+
+This is useful if you want to start over with a clean slate.
+
+The strip command will not touch the JSON language files, but the key-value pairs in your JSON language file(s) will no longer be linked to your HTML file(s). You will have to manually remove the JSON language files that are now obsolete.
+
+## Limitations and issues
+
+### Translation accuracy by third party services
+
+Note that translations by the Google Translate API or any other service are not perfect. You should still manually review the translation strings and correct them if necessary. Make your corrections in the respective JSON language file(s) that are generated by the program.
+
+### Whitespace issues
+
+Text nodes with only whitespace will be ignored. Also, the program will try to normalize the text content by removing unnecessary double spaces, tabs and new lines that may have been introduced by accident. _Leading and trailing space are normalized to a single space_. This works well for most common cases, but there may be exceptions.
+
+If you do encounter issues with leading or trailing whitespace you have two options to try:
+
+- try adding or removing spaces manually in the string value in the language JSON file(s).
+- remove the text-id on the affected element(s), including the parent element and wrap the problematic text into an additional `<span>` element.
+
+If none of this suits your needs, open an issue on [GitHub: Website Text Translator](https://github.com/jorishr/website-text-translator/issues).
+
+## Using a configuration file
+
+### Config file
+
+By running the `npx wtt config` command a config file named `wtt.config.json` is created in the root folder of your NPM project. The program will automatically detect and use this file. You can edit this file to manually configure various options.
+
+### Languages
+
+Use the `languages` object to specify the base language and the target languages. The base language is the language of the text in your HTML file(s). The target languages are the languages you want to translate to. The program will generate a JSON file for each target language. Example:
+
+```json
+{
+  "languages": {
+    "base": "en",
+    "targets": ["nl", "fr", "de"]
   }
-  ```
+}
+```
 
-  Run the program `npx wtt start` and the HTML file will be updated as expected:
+### Modes
 
-  ```html
-  <p data-txt_id="100">The new text.</p>
-  ```
+The program can be run with optional command line flags that change the behavior of the program. You can disable backups `npx wtt start --backup-no`; disable the third party translation service `npx wtt start --translate-no`; and run the program in dry-run mode `npx wtt --dry-run`. In dry mode no files are written.
 
-  All translation files will be updated as well with a new translation string for the new text. All other translation strings will be left unchanged.
+By default you will see log messages in the terminal about the progress of the program. If you want to see less log messages in the terminal, use the flag `npx wtt start --info-no` or set the `logLevel` key to an empty string `""` in the config file.
 
-  <em>Note</em>: there is an experimental option that applies the updates in the other direction. This means that if you update the text of an HTML element <em>in the HTML file</em>, the program will detect the change and will update the base JSON file. This is not recommended but it is there if you need it. See [Additional configuration options](#additional-configuration-options) for more information.
+```json
+  "mode": {
+    "dryRun": false,
+    "backup": true,
+    "translate": true,
+    "logLevel": "verbose"
+  },
+```
 
-- <strong>Important!</strong> Structural changes to an existing HTML element <em>that already has one or more txt-id's</em>: It's impossible to predict all possible changes one can make to an existing element. Text may be added, removed entirely or partially, and one or more nested elements like `<em>` or `<a>` may be added or removed. To avoid errors and unexpected results, it is recommended to <em>remove all existing txt-id's that are already present on the affected element.</em> The program will then treat all your changes as new elements. New txt-id's will be added to the HTML element and your JSON files will be updated automatically with the new text and the corresponding translations, while the old obsolete key-pair values are purged.
+### Selectors and exclusions
 
-### How to load the translation files in your project
+The program will ignore HTML elements _unless_ they are included in the `selectors` array in the config file. For example, `<div>` elements are ignored by default as it is considered bad practice to have text lingering inside a container element. Wrap your text in a paragraph or span element.
 
-Your project will need a script that loads the data from the respective JSON translation files. There are many ways to do this and explaining how to detect the user's language or changes to the language settings is beyond the scope of this document.
+Other exclusions by default:
+
+- elements with the HTML attribute `translate="no"`
+- elements and textNodes that are empty or contain only whitespace
+- elements and textNodes that only contain a single special character like `&,.?!` etc.
+
+Custom exclusions: You can tell the program to ignore HTML elements by class or id. Add the class or id to the respective `exclude` arrays in the config file.
+
+Review the list of selectors and add or remove according to your needs.
+
+```json
+{
+  "elements": {
+    "selectors": "head meta[name=description], head meta[name=keywords], head title, h1, h2, h3, h4, h5, h6, p, span, a, img, picture, strong, em, small, cite, abbr, input, button",
+    "exclude": {
+      "classToExclude": [],
+      "idToExclude": []
+    }
+  }
+}
+```
+
+### Text-id's
+
+The default text-id is for text nodes is `data-txt_id`. Modifiers are used for attribute text values: `data-txt_id__alt`, `data-txt__title`, `data-txt__placeholder`, etc. You can change these values in the config file. However, be careful: the `data` prefix is required for the text-id to be part of the HTML dataset attribute and the `__` modifiers are used in the program to identify the type of text. If you change the _structure_ of these identifiers, the program may no longer work as expected or throw an error that you will have to debug yourself.
+
+### keyCounterOffset
+
+The text-id's are numbered in sequence. The default offset is `100`, thus the first key will start at "100". If you want to start counting at a different value, set the `keyCounterOffset` value in the config file:
+
+```json
+{
+  "keyCounterOffset": 100
+}
+```
+
+### Change text update direction --experimental
+
+By default the point of reference is the text content of the HTML file. This means that when the key-value pair inside the JSON base language file is compared to the text content of the corresponding HTML element and a change has been detected, the JSON file is updated with the value of the text content of the corresponding HTML element.
+
+If you change the textUpdateDirection value to `jsonToHtml`, the update direction is reversed. This means that you should make the text changes in the JSON language file first. When you run the program, the HTML text content will be updated with the changes you made in the corresponding key-value pair in the JSON base language file.
+
+This feature may be useful for simple and quick text updates. _However, this is experimental.Use with caution._
+
+```json
+{
+  "textUpdateDirection": "jsonToHtml"
+}
+```
+
+## How to load the translation files in your project
+
+Your project will need a script that loads the translation strings from the respective JSON translation files. There are many ways to do this and explaining how to detect the user's language preferences or changes to the language settings is beyond the scope of this document.
 
 Here are the things you need to know and do, with some (pseudo code) examples.
 
@@ -164,115 +388,3 @@ setAttributeTxt(data, "meta");
 ```
 
 There are other things to consider, like changing the language attribute of the HTML document itself. The code above does the job for the elements that are targeted with the default configuration.
-
-## Limitations and known issues
-
-- Note that translations by the Google Translate API or any other service are not perfect. You should still review the translations and correct them manually, once the language JSON file(s) are generated. Make your corrections in the respective JSON language file(s). These manual changes in your translation files will <em>not</em> be overwritten by the program, unless you make changes to the base language JSON and/or HTML file.
-- Do <em>not</em> manually remove key-value pairs in the JSON files. The program will do this automatically when it detects that a key is no longer present in the HTML file. As explained in the section about [Handling future updates and changes to your HTML files and/or JSON files](#handling-future-updates-and-changes-to-your-html-files-andor-json-files), you can update the text values inside a JSON file, but do not remove keys manually. If you do so, the program will no longer be able to accurately assess which keys are obsolete and you may end up with orphaned text-id's in your HTML files.
-- Whitespace issues: you yourself, linters and formatters may add or remove whitespace and new lines inside HTML element text. The program will try to normalize the text content by removing unnecessary double spaces, tabs and new lines. Also, elements with only whitespace will be ignored. This works well for most common case, but there may be exceptions. If you do encounter issues with whitespace, first try updating the text value in the base JSON file or try wrapping the problematic text in a `<span>` element. If this does not work, please open an issue on GitHub.
-
-## Additional configuration options
-
-### Config file
-
-By running the `npx wtt config` command a config file named `wtt.config.json` is created in the root folder of your NPM project. The program will automatically detect and use this file. You can edit this file to manually configure various options. But to avoid unexpected behavior, it is recommended to use the command line configuration wizard.
-
-### Languages
-
-Use the `languages` object to specify the base language and the target languages. The base language is the language of the text in your HTML files. The target languages are the languages you want to translate to. The program will generate a JSON file for each target language.
-
-```json
-{
-  "languages": {
-    "base": "en",
-    "targets": ["nl", "fr", "de"]
-  }
-}
-```
-
-### Modes
-
-The program can be run with optional flags that change the behavior of the program. You can disable backups `npx wtt start --backup-no`, disable the translation service `npx wtt start --translate-no` and run the program in dry-run mode `npx wtt --dry-run`. In dry mode no files are written. If you want to see less log messages in the terminal, use the flag `npx wtt start --info-no` or set the `logLevel` key to an empty string `""` in the config file.
-
-```json
-  "mode": {
-    "dryRun": false,
-    "backup": true,
-    "translate": true,
-    "logLevel": "verbose"
-  },
-```
-
-### Selectors and exclusions
-
-The program will ignore HTML elements unless they are included in the `selectors` array in the config file. For example, `<div>` elements are ignored by default. It is recommended to not have translatable text lingering around, wrap it in a `<p>` or `<span>`.
-
-Other exclusions by default:
-
-- elements with the HTML attribute `translate="no"`
-- elements and textNodes that are empty or contain only whitespace
-- elements and textNodes that only contain a single special character like `&,.?!` etc.
-
-Custom exclusions: You can tell the program to ignore HTML elements by class or id. Add the class or id to the respective `exclude` arrays in the config file.
-
-```json
-{
-  "elements": {
-    "selectors": "head meta[name=description], head meta[name=keywords], head title, h1, h2, h3, h4, h5, h6, p, span, a, img, strong, em, input",
-    "exclude": {
-      "classesToExclude": [],
-      "idsToExclude": []
-    }
-  }
-}
-```
-
-### Text-id's
-
-The default text-id is `data-txt_id`. Modifiers are used for attribute text: `data-txt_id__alt`, `data-txt__title`, `data-txt__placeholder`, etc. You can change these in the config file. However, be careful: the `data` prefix is required for the id to be part of HTML dataset attribute, and the `__` modifiers are used in the program to identify the type of text. If you change these, the program may no longer work as expected or throw an error that you will have to debug.
-
-### Offset
-
-The key-value pairs in the JSON language files are numbered in sequence. The default offset is `100`. If you want to start numbering at a different number, set the `offset` number in the config file.
-
-```json
-{
-  "offset": 100
-}
-```
-
-### Folders
-
-By default the source folder is the root NPM folder of your application. The program will try to find HTML files and relevant JSON files in this folder, including all sub-folders. All HTML files will processed but only JSON files with the prefix defined in the config file will be considered.
-
-Note that the program will overwrite your existing HTML files. The backup mode is enabled by default with copies of your original HTML file(s). You can change the backup folder in the config file as well.
-
-The destination folder is the folder where the JSON language files will be written to. By default this is the root folder of your NPM project. If you change this, make sure the destination folder is equal to the source folder or a sub-folder of the source folder. Otherwise the program will not be able to find the JSON files when you run the program again to process changes. For example, if your source folder is `./src` then the destination folder can be `./src`, `./src/translations` or the default `./` but <em>not</em> `./translations`.
-
-```json
-  "folders": {
-    "src": "./",
-    "dest": "./",
-    "backup": "./backup"
-  }
-```
-
-### Change direction
-
-This is an experimental feature. First read [Handling future updates and changes to your HTML files and/or JSON files](#handling-future-updates-and-changes-to-your-html-files-andor-json-files).
-
-To change this setting you need a configuration file. Set the `direction` string in the config file to `html2json` to enable this feature.
-
-Note: this feature is not tested and may result in unexpected behavior or errors. Use `--dry-mode` or make sure you have backups enabled.
-
-```json
-  "direction": {
-    "direction": "",
-    "default": "json2html"
-  }
-```
-
-## Strip all txt-id's from existing HTML file(s)
-
-The strip command will remove all txt-id's from your HTML file(s). This is useful if you want to start over with a clean slate. The strip program will not touch your JSON files, but the key-value pairs in your JSON file(s) will no longer be linked to your HTML file(s). You will have to manually remove the JSON files that are no longer needed.
-To run the strip program, use the command `npx wtt strip`.

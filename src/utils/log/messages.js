@@ -4,16 +4,17 @@ export default {
   infoEnd: "All done!",
   backupStart: "Safe mode: ON. Starting backup...",
   backupFail: "Backup failed. No HTML and JSON file(s) found in source folder.",
+  backupDone: "Backup completed.",
   htmlStart: "Start processing HTML file: ${0}",
-  htmlRead: "Read HTML file: ${0}",
+  htmlRead: "Parsed HTML file: ${0}",
   htmlList: "Found HTML file(s) to process:\n${0}\n",
   htmlReadFail: "Unable to load HTML data from folder:\n\n\t${0}",
   htmlNotFound:
     "Program terminated. No HTML file(s) found in folder\n\nHint:\n\tMake sure you have at least one HTML file in the source folder: ${0}\n\tYou can change the default folder path by running the config command.",
   htmlDone: "Done processing HTML file: ${0}",
-  htmlEnd: "Done processing all HTML and JSON base file(s)!",
+  htmlEnd: "Done processing all HTML and JSON base language file(s)!",
   elementsFound:
-    "Found a total of ${0} HTML elements with an existing data-id in this HTML file.\n\n${1} new HTML elements were found.\n",
+    "Found a total of ${0} HTML elements with an existing data-id.\n\n${1} new HTML elements were found.\n",
   newElemsStart: "Start processing new HTML elements...",
   newElemsDone: "Done processing new HTML elements!",
   obsoleteKeys:
@@ -36,22 +37,23 @@ export default {
     "No existing translation data found for language: ${0}. Creating new file...",
   fetchTranslation:
     "Fetching translations for ${0} text strings from the Google Translate API for language: ${1}...`",
-  txtUpdateException:
+  textUpdateException:
     "WARNING: Unsupported target value while setting keys with text updates. This should not happen. Please report his issue.",
-  getTxtChanges: "\nSearching for text changes in ${0}...",
-  getTxtChangesException:
+  getTextChanges: "Searching for text changes in ${0}...",
+  getTextChangesException:
     "WARNING: Unsupported target value while getting keys with text updates. This should not happen. Please report his issue.",
-  noChangesFound: "No changes found in ${0}.",
-  txtChange: "txt value for txt-id ${0} has changed",
-  attrChange: "txt value for ${0} attribute txt-id ${1} has changed",
-  txtAdded: "Added txt-id ${0} to ${1} element",
+  noChangesFound: "No changes found in ${0}.\n",
+  textChange: "text value for text-id ${0} has changed",
+  attrChange: "text value for ${0} attribute text-id ${1} has changed",
+  textAdded: "Added text-id ${0} to ${1} element",
   attrAdded: "Added ${0}=${1} to ${2} element",
   dryRun: "Translations are disabled in dry run mode.",
   dryRunStart:
     "Dry run mode: ON.\nNo files will be written.\nNo translations will be fetched from the Google Translate API.",
-  jsonRead: "The base JSON file contains ${0} strings.",
-  jsonNotFound: "No base file JSON data found. Continue without...",
-  startStrip: "\nStripping txt-id's from HTML file: ${0}",
+  jsonRead:
+    "The base language JSON file contains ${0} keys with a text value.\n",
+  jsonNotFound: "No base language JSON file found. Continuing without...",
+  startStrip: "\nStripping text-id's from HTML file: ${0}",
   configReadError: "Error while reading config file:\n ${0}",
   config: {
     welcome: "Welcome to the Website-Text-Translator configuration wizard.",

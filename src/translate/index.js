@@ -12,7 +12,7 @@ export default async (
   offset
 ) => {
   const { src, dest } = config.folders;
-  const prefix = config.fileNames.prefix;
+  const prefix = config.languageFile.prefix;
   const [changedValues, newValues] = getValues(keysToTranslate, langData);
   log("translateStart", "start2");
   targets.forEach(async (lang) => {

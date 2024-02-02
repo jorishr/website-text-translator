@@ -12,29 +12,30 @@ import { config } from "../../bin/commander/setConfig.js";
  * @returns {Object} - The updated data object.
  */
 export default (keys, data, target) => {
-  const { txtId, altId, titleId, plchldrId, metaId } = config.id;
+  const textNodeId = config.id.textNodeId;
+  const { altId, titleId, placeholderId, metaId } = config.id.attributeTextId;
   let result = null;
   if (!keys.length) return data;
 
   keys.forEach((key) => {
     switch (target) {
-      case "txtElems":
-        result = setText(data, target, key, txtId);
+      case "textNodes":
+        result = setText(data, target, key, textNodeId);
         break;
-      case "altAttrElems":
+      case "altAttributes":
         result = setAttr(data, target, key, altId);
         break;
-      case "titleAttrElems":
+      case "titleAttributes":
         result = setAttr(data, target, key, titleId);
         break;
-      case "plchldrAttrElems":
-        result = setAttr(data, target, key, plchldrId);
+      case "placeholderAttributes":
+        result = setAttr(data, target, key, placeholderId);
         break;
-      case "metaElems":
+      case "metaAttributes":
         result = setAttr(data, target, key, metaId);
         break;
       default:
-        log("txtUpdateException", "error");
+        log("textUpdateException", "error");
         result = data;
     }
   });
@@ -49,17 +50,17 @@ export default (keys, data, target) => {
  *  @property {object} langData - The object representing base language data
  * @param {string} target - The target type to determine which type of element to update.
  * @param {string} key - The key to identify the element in the data.
- * @param {string} txtId - The ID used to identify elements in the target.
+ * @param {string} textNodeId - The ID used to identify elements in the target.
  * @returns {Object} - The updated data object.
  */
-function setText(data, target, key, txtId) {
-  const txtUpdateDirection = config.textUpdateDirection || "default";
-  const txtElems = data.htmlData[target];
+function setText(data, target, key, textNodeId) {
+  const textUpdateDirection = config.textUpdateDirection || "default";
+  const textElems = data.htmlData[target];
   let childNodeIndex = null;
-  const elem = txtElems.find((elem) => {
-    const txtIdArr = JSON.parse(elem.getAttribute(txtId));
-    for (let i = 0; i < txtIdArr.length; i++) {
-      if (txtIdArr[i] === key) {
+  const elem = textElems.find((elem) => {
+    const textIdArr = JSON.parse(elem.getAttribute(textNodeId));
+    for (let i = 0; i < textIdArr.length; i++) {
+      if (textIdArr[i] === key) {
         childNodeIndex = i;
         return elem;
       }
@@ -68,10 +69,10 @@ function setText(data, target, key, txtId) {
   const textNodes = elem.childNodes.filter(
     (node) => node.nodeType === 3 && node.textContent.trim().length
   );
-  if (txtUpdateDirection === "jsonToHtml") {
+  if (textUpdateDirection === "jsonToHtml") {
     textNodes[childNodeIndex].textContent = data.langData[key];
   }
-  if (txtUpdateDirection === "default") {
+  if (textUpdateDirection === "default") {
     data.langData[key] = textNodes[childNodeIndex].textContent
       .replace(/[\t\n\r]+/g, "")
       .replace(/\s{2,}/g, " ");
@@ -93,17 +94,17 @@ function setText(data, target, key, txtId) {
  */
 function setAttr(data, target, key, id) {
   const attrElems = data.htmlData[target];
-  const txtUpdateDirection = config.txtUpdateDirection || "default";
+  const textUpdateDirection = config.textUpdateDirection || "default";
   let name = id.split("__").at(-1); //alt, title, meta
   if (name === "meta") name = "content";
 
   const elem = attrElems.find((elem) => {
     return elem.getAttribute(id) === key;
   });
-  if (txtUpdateDirection === "json2html") {
+  if (textUpdateDirection === "json2html") {
     elem.setAttribute(name, data.langData[key]);
   }
-  if (txtUpdateDirection === "default") {
+  if (textUpdateDirection === "default") {
     data.langData[key] = elem.getAttribute(name);
   }
   return data;

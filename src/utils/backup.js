@@ -40,7 +40,7 @@ function filterFiles() {
   const jsonFiles = allFiles.filter((elem) => path.extname(elem) === ".json");
   const filteredJsonFiles = jsonFiles.filter((elem) =>
     //for subfolders, path is included in the filename string and needs to be filtered out 'folder/filename' or 'folder/subfolder/filename'
-    elem.split("/").at(-1).startsWith(config.fileNames.prefix)
+    elem.split("/").at(-1).startsWith(config.languageFile.prefix)
   );
   const result = htmlFiles.concat(filteredJsonFiles);
   if (!result.length) {
@@ -70,4 +70,5 @@ function createBackup(fileList, mostRecent = "0") {
   } catch (err) {
     log("backupWriteFail", "error", [err]);
   }
+  log("backupDone", "done");
 }
