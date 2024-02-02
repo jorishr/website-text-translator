@@ -3,7 +3,7 @@ import log from "../utils/log/log.js";
 /**
  * Get the keys of elements that need updates based on changes in the provided target.
  *
- * @param {object} data - The data object
+ * @param {object} data - The working data object
  *  @property {object} htmlData - The object representing HTML data
  *  @property {object} langData - The object representing base language data
  * @param {string} target - The target html element type ("txtElems", "altAttrElems", etc.).

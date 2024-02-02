@@ -47,8 +47,8 @@ export default (config) => {
     let updatedHtml;
 
     if (Object.keys(langData).length) {
-      const [dataUpdates, changedKeys] = updateHtml(workingData, config);
-      workingData = dataUpdates;
+      const [workingDataUpdates, changedKeys] = updateHtml(workingData, config);
+      workingData = workingDataUpdates;
       keysToTranslate.changedKeys.push(...changedKeys);
     }
 

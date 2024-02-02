@@ -4,7 +4,7 @@ import setUpdates from "./setUpdates.js";
 /**
  * Update specified elements in the data object based on configuration.
  *
- * @param {object} data - The data object to be updated.
+ * @param {object} data - The working data object to be updated.
  *  @property {object} htmlData - The object representing HTML data
  *  @property {object} langData - The object representing base language data
  * @param {object} config - The configuration object.

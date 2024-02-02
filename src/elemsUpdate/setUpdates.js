@@ -1,5 +1,15 @@
 import log from "../utils/log/log.js";
 
+/**
+ * Update specified text values or attribute values in the given data based on the target.
+ *
+ * @param {Array} keys - An array of keys to identify elements in the working data.
+ * @param {Object} data - The working data object to be updated.
+ *  @property {object} htmlData - The object representing HTML data
+ *  @property {object} langData - The object representing base language data
+ * @param {string} target - The target type to determine which type of element to update.
+ * @returns {Object} - The updated data object.
+ */
 export default (keys, data, target, config) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   let result = null;
@@ -30,14 +40,25 @@ export default (keys, data, target, config) => {
   return result;
 };
 
+/**
+ * Set text content in the specified data based on the target element and text * update direction set in the config file.
+ *
+ * @param {Object} data - The working data object to be updated.
+ *  @property {object} htmlData - The object representing HTML data
+ *  @property {object} langData - The object representing base language data
+ * @param {string} target - The target type to determine which type of element to update.
+ * @param {string} key - The key to identify the element in the data.
+ * @param {string} txtId - The ID used to identify elements in the target.
+ * @returns {Object} - The updated data object.
+ */
 function setText(data, target, key, txtId, config) {
   const txtUpdateDirection = config.textUpdateDirection || "default";
   const txtElems = data.htmlData[target];
   let childNodeIndex = null;
   const elem = txtElems.find((elem) => {
-    const idArr = eval(elem.getAttribute(txtId));
-    for (let i = 0; i < idArr.length; i++) {
-      if (idArr[i] === key) {
+    const txtIdArr = JSON.parse(elem.getAttribute(txtId));
+    for (let i = 0; i < txtIdArr.length; i++) {
+      if (txtIdArr[i] === key) {
         childNodeIndex = i;
         return elem;
       }
@@ -57,19 +78,31 @@ function setText(data, target, key, txtId, config) {
   return data;
 }
 
+/**
+ * Set attribute text value in the specified data based on the target element
+ * and text update direction set in the config file.
+ *
+ * @param {Object} data - The working data object to be updated.
+ *  @property {object} htmlData - The object representing HTML data
+ *  @property {object} langData - The object representing base language data
+ * @param {string} target - The target type to determine which type of element to update.
+ * @param {string} key - The key to identify the element in the data.
+ * @param {string} id - The ID used to identify elements in the target.
+ * @returns {Object} - The updated data object.
+ */
 function setAttr(data, target, key, id, config) {
   const attrElems = data.htmlData[target];
-  const direction = config.direction.direction || config.direction.default;
+  const txtUpdateDirection = config.txtUpdateDirection || "default";
   let name = id.split("__").at(-1); //alt, title, meta
   if (name === "meta") name = "content";
 
   const elem = attrElems.find((elem) => {
     return elem.getAttribute(id) === key;
   });
-  if (direction === "json2html") {
+  if (txtUpdateDirection === "json2html") {
     elem.setAttribute(name, data.langData[key]);
   }
-  if (direction === "html2json") {
+  if (txtUpdateDirection === "default") {
     data.langData[key] = elem.getAttribute(name);
   }
   return data;
