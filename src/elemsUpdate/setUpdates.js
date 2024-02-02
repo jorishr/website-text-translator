@@ -1,4 +1,5 @@
 import log from "../utils/log/log.js";
+import { config } from "../../bin/commander/setConfig.js";
 
 /**
  * Update specified text values or attribute values in the given data based on the target.
@@ -10,7 +11,7 @@ import log from "../utils/log/log.js";
  * @param {string} target - The target type to determine which type of element to update.
  * @returns {Object} - The updated data object.
  */
-export default (keys, data, target, config) => {
+export default (keys, data, target) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   let result = null;
   if (!keys.length) return data;
@@ -18,22 +19,22 @@ export default (keys, data, target, config) => {
   keys.forEach((key) => {
     switch (target) {
       case "txtElems":
-        result = setText(data, target, key, txtId, config);
+        result = setText(data, target, key, txtId);
         break;
       case "altAttrElems":
-        result = setAttr(data, target, key, altId, config);
+        result = setAttr(data, target, key, altId);
         break;
       case "titleAttrElems":
-        result = setAttr(data, target, key, titleId, config);
+        result = setAttr(data, target, key, titleId);
         break;
       case "plchldrAttrElems":
-        result = setAttr(data, target, key, plchldrId, config);
+        result = setAttr(data, target, key, plchldrId);
         break;
       case "metaElems":
-        result = setAttr(data, target, key, metaId, config);
+        result = setAttr(data, target, key, metaId);
         break;
       default:
-        log("txtUpdateException", "error", config);
+        log("txtUpdateException", "error");
         result = data;
     }
   });
@@ -51,7 +52,7 @@ export default (keys, data, target, config) => {
  * @param {string} txtId - The ID used to identify elements in the target.
  * @returns {Object} - The updated data object.
  */
-function setText(data, target, key, txtId, config) {
+function setText(data, target, key, txtId) {
   const txtUpdateDirection = config.textUpdateDirection || "default";
   const txtElems = data.htmlData[target];
   let childNodeIndex = null;
@@ -90,7 +91,7 @@ function setText(data, target, key, txtId, config) {
  * @param {string} id - The ID used to identify elements in the target.
  * @returns {Object} - The updated data object.
  */
-function setAttr(data, target, key, id, config) {
+function setAttr(data, target, key, id) {
   const attrElems = data.htmlData[target];
   const txtUpdateDirection = config.txtUpdateDirection || "default";
   let name = id.split("__").at(-1); //alt, title, meta

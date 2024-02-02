@@ -2,14 +2,15 @@ import fs from "fs";
 import path from "path";
 import getFileList from "./getFileList.js";
 import log from "./log/log.js";
+import { config } from "../../bin/commander/setConfig.js";
 
-export default (config) => {
-  log("backupStart", "start2", config);
-  let fileList = filterFiles(config);
+export default () => {
+  log("backupStart", "start2");
+  let fileList = filterFiles();
   if (!fileList.length) return;
   if (!fs.existsSync(config.folders.backup)) {
     fs.mkdirSync(config.folders.backup, { recursive: true });
-    createBackup(config, fileList);
+    createBackup(fileList);
   } else {
     //if folder exists, check if it has subfolders with the name backup_XXX
     const dirList = fs
@@ -17,24 +18,24 @@ export default (config) => {
       .filter((elem) => elem.isDirectory())
       .map((elem) => elem.name);
     if (!dirList.length) {
-      createBackup(config, fileList);
+      createBackup(fileList);
     } else {
       //get mostRecent backup folder version number
       const backups = dirList.filter((elem) => elem.startsWith("backup_"));
       if (!backups.length) {
-        createBackup(config, fileList);
+        createBackup(fileList);
       } else {
         let mostRecent = backups.sort().reverse()[0].slice(7);
         //case somebody manually creates a folder with the name backup_ABC
         if (isNaN(Number(mostRecent))) mostRecent = "100";
-        createBackup(config, fileList, mostRecent);
+        createBackup(fileList, mostRecent);
       }
     }
   }
 };
 
-function filterFiles(config) {
-  const allFiles = getFileList(config.folders.src, config);
+function filterFiles() {
+  const allFiles = getFileList(config.folders.src);
   const htmlFiles = allFiles.filter((elem) => path.extname(elem) === ".html");
   const jsonFiles = allFiles.filter((elem) => path.extname(elem) === ".json");
   const filteredJsonFiles = jsonFiles.filter((elem) =>
@@ -43,13 +44,13 @@ function filterFiles(config) {
   );
   const result = htmlFiles.concat(filteredJsonFiles);
   if (!result.length) {
-    log("backupFail", "fail", config);
+    log("backupFail", "fail");
     return [];
   }
   return result;
 }
 
-function createBackup(config, fileList, mostRecent = "0") {
+function createBackup(fileList, mostRecent = "0") {
   const { backup } = config.folders;
   mostRecent = Number(mostRecent) + 1;
   if (mostRecent.length !== 3) {
@@ -67,6 +68,6 @@ function createBackup(config, fileList, mostRecent = "0") {
       fs.copyFileSync(`${file}`, `${folderName}/${subfolders}${fileName}`);
     });
   } catch (err) {
-    log("backupWriteFail", "error", config, [err]);
+    log("backupWriteFail", "error", [err]);
   }
 }

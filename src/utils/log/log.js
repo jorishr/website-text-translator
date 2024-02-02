@@ -1,7 +1,12 @@
 import messages from "./messages.js";
+import { config } from "../../../bin/commander/setConfig.js";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const configDefault = require("../../config.default.json");
 
-export default (msg, type, config, vals = []) => {
-  if (config.mode.logLevel === "verbose") {
+export default (msg, type, vals = []) => {
+  const useConfig = config || configDefault;
+  if (useConfig.mode.logLevel === "verbose") {
     print(msg, type, vals);
   } else {
     if (type !== "info") {
@@ -9,6 +14,7 @@ export default (msg, type, config, vals = []) => {
     }
   }
 };
+
 function print(msg, type, vals = []) {
   switch (type) {
     case "error":

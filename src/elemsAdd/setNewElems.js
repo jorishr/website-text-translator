@@ -1,35 +1,36 @@
 import log from "../utils/log/log.js";
+import { config } from "../../bin/commander/setConfig.js";
 
-export default (data, offset, config) => {
+export default (data, offset) => {
   const newElements = data.htmlData.newElements;
   data.newKeys = [];
   if (!newElements.length) return data;
-  log("newElemsStart", "start1", config);
+  log("newElemsStart", "start1");
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const newKeys = [];
   let counter = Number(Object.keys(data.langData).at(-1)) + 1 || offset;
   if (!newElements.length) return data;
   for (let i = 0; i < newElements.length; i++) {
     if (newElements[i].hasAttribute("alt")) {
-      const result = setAttr(newElements[i], data, counter, altId, config);
+      const result = setAttr(newElements[i], data, counter, altId);
       data = result.data;
       counter = result.counter;
       newKeys.push(result.newKey);
     }
     if (newElements[i].hasAttribute("title")) {
-      const result = setAttr(newElements[i], data, counter, titleId, config);
+      const result = setAttr(newElements[i], data, counter, titleId);
       data = result.data;
       counter = result.counter;
       newKeys.push(result.newKey);
     }
     if (newElements[i].hasAttribute("placeholder")) {
-      const result = setAttr(newElements[i], data, counter, plchldrId, config);
+      const result = setAttr(newElements[i], data, counter, plchldrId);
       data = result.data;
       counter = result.counter;
       newKeys.push(result.newKey);
     }
     if (newElements[i].tagName === "META") {
-      const result = setAttr(newElements[i], data, counter, metaId, config);
+      const result = setAttr(newElements[i], data, counter, metaId);
       data = result.data;
       counter = result.counter;
       newKeys.push(result.newKey);
@@ -51,19 +52,16 @@ export default (data, offset, config) => {
       if (txt_id_arr.length) {
         const txtIdTxt = `[${txt_id_arr}]`;
         newElements[i].setAttribute(txtId, txtIdTxt);
-        log("txtAdded", "info", config, [
-          [...txt_id_arr],
-          newElements[i].tagName,
-        ]);
+        log("txtAdded", "info", [[...txt_id_arr], newElements[i].tagName]);
       }
     }
   }
   data.newKeys.push(...newKeys);
-  log("newElemsDone", "done", config);
+  log("newElemsDone", "done");
   return data;
 };
 
-function setAttr(elem, data, counter, attrId, config) {
+function setAttr(elem, data, counter, attrId) {
   const newKey = counter.toString();
   const name = attrId.split("__").at(-1); // alt, title, meta, placeholder
   let target = name;
@@ -71,7 +69,7 @@ function setAttr(elem, data, counter, attrId, config) {
 
   data.langData[counter] = elem.getAttribute(target);
   elem.setAttribute(attrId, newKey);
-  log("attrAdded", "info", config, [attrId, newKey, elem.tagName]);
+  log("attrAdded", "info", [attrId, newKey, elem.tagName]);
   counter++;
   return { data, counter, newKey };
 }

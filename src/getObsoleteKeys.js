@@ -1,6 +1,7 @@
 import log from "./utils/log/log.js";
+import { config } from "../bin/commander/setConfig.js";
 
-export default (langData, docList, config) => {
+export default (langData, docList) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   const keysInLangData = Object.keys(langData);
   const obsoleteKeys = [];
@@ -22,7 +23,7 @@ export default (langData, docList, config) => {
     }
   });
   if (obsoleteKeys.length) {
-    log("obsoleteKeys", "info", config, [obsoleteKeys]);
+    log("obsoleteKeys", "info", [obsoleteKeys]);
   }
   return obsoleteKeys;
 };

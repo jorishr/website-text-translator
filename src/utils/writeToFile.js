@@ -1,13 +1,13 @@
 import fs from "fs";
 import log from "./log/log.js";
 
-export default async (dest, data, fileName, type, config) => {
-  log("writeFileStart", "info", config, [fileName]);
+export default async (dest, data, fileName, type) => {
+  log("writeFileStart", "info", [fileName]);
   try {
     fs.accessSync(dest);
   } catch (e) {
     fs.mkdirSync(dest, { recursive: true });
-    log("mkdir", "info", config, [dest]);
+    log("mkdir", "info", [dest]);
   }
 
   switch (type) {
@@ -18,14 +18,14 @@ export default async (dest, data, fileName, type, config) => {
           JSON.stringify(data, null, 2)
         );
       } catch (err) {
-        log("jsonFileWriteFail", "error", config, [err]);
+        log("jsonFileWriteFail", "error", [err]);
       }
       break;
     case "html":
       try {
         fs.promises.writeFile(`${fileName}`, data);
       } catch (err) {
-        log("htmlFileWriteFail", "error", config, [err]);
+        log("htmlFileWriteFail", "error", [err]);
       }
       break;
     default:

@@ -3,14 +3,15 @@ import getHtmlData from "./getHtmlData.js";
 import writeFile from "./writeToFile.js";
 import { parse } from "node-html-parser";
 import log from "./log/log.js";
+import { config } from "../../bin/commander/setConfig.js";
 
-export default (config) => {
+export default () => {
   const { src, dest } = config.folders;
-  const htmlFileList = findHtmlFiles(`${src}`, config);
+  const htmlFileList = findHtmlFiles(`${src}`);
   for (let i = 0; i < htmlFileList.length; i++) {
-    log("startStrip", "start2", config, [htmlFileList[i]]);
-    const html = getHtmlData(htmlFileList[i], config);
-    const root = parse(html, config);
+    log("startStrip", "start2", [htmlFileList[i]]);
+    const html = getHtmlData(htmlFileList[i]);
+    const root = parse(html);
     const { txtId, altId, titleId, plchldrId, metaId } = config.id;
     root.querySelectorAll(`[${txtId}]`).forEach((elem) => {
       elem.removeAttribute(txtId);
@@ -28,6 +29,6 @@ export default (config) => {
       elem.removeAttribute(metaId);
     });
     const updatedHtml = root.toString();
-    writeFile(dest, updatedHtml, htmlFileList[i], "html", config);
+    writeFile(dest, updatedHtml, htmlFileList[i], "html");
   }
 };

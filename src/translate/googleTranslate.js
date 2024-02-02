@@ -4,8 +4,8 @@ import chunkArray from "../utils/chunkArray.js";
 const Translate = translateApi.v2.Translate;
 const translate = new Translate();
 
-export default async (data, target, type, config) => {
-  log("fetchTranslation", "info", config, [type, target]);
+export default async (data, target, type) => {
+  log("fetchTranslation", "info", [type, target]);
   //Google Translate API has a limit of 128 strings per request
   if (data.length <= 128) {
     let [translations] = await translate.translate(data, target);

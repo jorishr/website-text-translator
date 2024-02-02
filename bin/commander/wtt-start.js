@@ -2,6 +2,8 @@
 import { Command } from "commander";
 import main from "../../src/index.js";
 import mergeConfig from "./mergeConfig.js";
+import { setConfig } from "./setConfig.js";
+
 const program = new Command();
 
 program
@@ -23,4 +25,5 @@ if (options.translateNo) config.mode.translate = false;
 if (options.backupNo) config.mode.backup = false;
 if (options.infoNo) config.mode.logLevel = "";
 
-main(config);
+setConfig(config);
+main();

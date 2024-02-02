@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import log from "../src/utils/log/log.js";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const configDefault = require("../src/config.default.json");
 
 // show header
-log("infoStart", "header", configDefault);
+log("infoStart", "header");
 
 // commander program
 const program = new Command();

@@ -1,7 +1,8 @@
 import filterElem from "./filter.js";
+import { config } from "../../bin/commander/setConfig.js";
 
-export default (root, config) => {
+export default (root) => {
   return root
     .querySelectorAll(config.elements.selectors)
-    .filter((elem) => filterElem(elem, config));
+    .filter((elem) => filterElem(elem));
 };

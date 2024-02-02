@@ -1,4 +1,6 @@
-export default (elem, config) => {
+import { config } from "../../bin/commander/setConfig.js";
+
+export default (elem) => {
   const { txtId, altId, titleId, plchldrId, metaId } = config.id;
   //custom exclusion filters
   const { classesToExclude, idsToExclude } = config.elements.exclude;
