@@ -1,6 +1,8 @@
 export default {
-  infoStart:
-    "Website-Text-Translator, by liondigits\x1b[0m\nhttps://liondigits.com",
+  title: "Website-Text-Translator",
+  author: "Author: Joris Raymaekers",
+  website: "Visit: https://liondigits.com",
+  github: "Github repo: https://github.com/jorishr/website-text-translator",
   infoEnd: "All done!",
   backupStart: "Safe mode: ON. Starting backup...",
   backupFail: "Backup failed. No HTML and JSON file(s) found in source folder.",

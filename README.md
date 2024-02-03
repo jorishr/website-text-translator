@@ -342,7 +342,7 @@ To add additional elements or exclude HTML elements that are included by default
 ```json
 {
   "elements": {
-    "addSelector": ["div", "customHtmlElement"],
+    "addSelector": ["div", "custom-tag"],
     "exclude": {
       "defaultSelectorToExclude": ["button", "head title", "abbr"],
       "classToExclude": [],

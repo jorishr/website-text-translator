@@ -3,7 +3,7 @@ import getHtmlData from "./getHtmlData.js";
 import writeFile from "./writeToFile.js";
 import { parse } from "node-html-parser";
 import log from "./log/log.js";
-import { config } from "../../bin/commander/setConfig.js";
+import { config } from "../../bin/commander/config/setConfig.js";
 
 export default () => {
   const { src, dest } = config.folders;

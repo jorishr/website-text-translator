@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import { setConfig } from "./setConfig.js";
+import { setConfig } from "./config/setConfig.js";
 import strip from "../../src/utils/strip.js";
 import backup from "../../src/utils/backup.js";
 
