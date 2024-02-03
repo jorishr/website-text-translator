@@ -8,7 +8,9 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "wtt": "node ./bin/index.js"
+    "wtt": "node ./bin/index.js",
+    "wtt-config": "node ./bin/index.js config",
+    "wtt-strip": "node ./bin/index.js strip"
   },
   "repository": {
     "type": "git",

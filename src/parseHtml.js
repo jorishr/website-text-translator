@@ -1,7 +1,7 @@
 import parser from "node-html-parser";
 import findNewElements from "./parseData/getNewElems.js";
 import log from "./utils/log/log.js";
-import { config } from "../bin/commander/setConfig.js";
+import { config } from "../bin/commander/config/setConfig.js";
 const parse = parser.parse;
 
 export default (html) => {

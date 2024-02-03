@@ -19,13 +19,13 @@ Automatically translate the text in html files to multiple languages, store tran
       - [Output after first run](#output-after-first-run)
   - [Workflow and making changes to your HTML files](#workflow-and-making-changes-to-your-html-files)
     - [Nested text elements](#nested-text-elements)
-    - [Strip all txt-id's from existing HTML file(s)](#strip-all-txt-ids-from-existing-html-files)
+    - [Strip all text-id's from existing HTML file(s)](#strip-all-text-ids-from-existing-html-files)
   - [Limitations and issues](#limitations-and-issues)
     - [Translation accuracy by third party services](#translation-accuracy-by-third-party-services)
     - [Whitespace issues](#whitespace-issues)
   - [Using a configuration file](#using-a-configuration-file)
     - [Config file](#config-file)
-    - [Languages](#languages)
+    - [Languages object](#languages-object)
     - [Modes](#modes)
     - [Selectors and exclusions](#selectors-and-exclusions)
     - [Text-id's](#text-ids)
@@ -38,14 +38,20 @@ Automatically translate the text in html files to multiple languages, store tran
 The program will read and parse the HTML file(s) in the source folder. Upon first run unique and sequentially numbered text-id's are added to HTML elements that contain text nodes or elements that have translatable attributes values:
 
 - text elements e.g. `<p>`, `<h1>`, `<span>`, etc.
-- element attributes: `alt`, `title`, `placeholder`
+- element attribute text values: `alt`, `title`, `placeholder`
 - meta tag content: `description`, `keywords`
 
 Thus for each text node or attribute text value a key is generated and stored in the data-attribute of each element, for example:
 
 ```html
 <p data-text_id="[100]">Hello World!</p>
-<a href="#" title="To the homepage" data-text_id__alt="101">Home</a>
+<a
+  href="#"
+  title="To the homepage"
+  data-text_id="[101]"
+  data-text_id__title="102"
+  >Home</a
+>
 ```
 
 Next, the program will generate a base language JSON file containing the key-value pairs for each text node.
@@ -53,7 +59,8 @@ Next, the program will generate a base language JSON file containing the key-val
 ```json
 {
   "100": "Hello World!",
-  "101": "To the homepage"
+  "101": "Home",
+  "102": "To the homepage"
 }
 ```
 
@@ -62,22 +69,24 @@ As a last step, the program will fetch translation strings from the Google Trans
 ```json
 {
   "100": "¡Hola Mundo!",
-  "101": "A la página de inicio"
+  "101": "Inicio",
+  "102": "A la página de inicio"
 }
 ```
 
 ```json
 {
   "100": "Hola món!",
-  "101": "A la pàgina d'inici"
+  "101": "Inici",
+  "102": "A la pàgina d'inici"
 }
 ```
 
 Importing these JSON files in your website project requires a separate discussion, see [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project).
 
-Once your HTML document(s) have been processed for the first time, you can continue your development and incorporate the translation process in your workflow by running the program again after you have added, removed or changed text elements in your documents.
+Once your HTML document(s) have been processed for the first time, you can continue your development work and incorporate the translation process in your workflow by running the program again after you have added, removed or changed text elements in your document(s).
 
-The program will parse the HTML files again and compare the changes your made to the existing key-value pairs in the base language file. Text from elements that have been removed in your HTML document will be deleted from the language file(s). Elements that have been added will get a new text-id. Elements that have been changed will keep their existing text-id but the text value will be updated and a new translation string will be fetched from the Google Translate API.
+The program will parse the HTML files again and compare the changes your made to the existing key-value pairs in the base language file. Text from elements that have been removed in your HTML document will be deleted from the JSON language file(s). Elements that have been added will get a new text-id. Elements that have been changed will keep their existing text-id but the text value will be updated and a new translation string will be fetched from the Google Translate API.
 
 ## Getting started
 
@@ -97,22 +106,22 @@ More advanced configuration options are available, see [Additional configuration
 
 - Google Application Credentials: to fetch translation strings from the Google Translate API you need to setup authentication for Google Cloud Services. Without, you will see an error message for an invalid API key. See [Getting started with Google Cloud Authentication](https://cloud.google.com/docs/authentication/getting-started).
 
-- The program can run without the Google Translate API. Run the command `npx wtt --translate-no` or set the `translate` option in the config file to `false`. In this case the program will only run the first part of the program: add txt-id's to the HTML files and generate the base JSON file. No translation files will be generated.
+- The program can run without the Google Translate API. Run the command `npx wtt --translate-no` or set the `translate` option in the config file to `false`. In this case the program will only run the first part of the program: add txt-id's to the HTML files and generate the base language JSON file. No translation files will be generated.
 
-- The code of the program is modular and could be modified to use different translations services without too much trouble. However, this is not part of the current state of the program. Feel free to experiment and contribute [Github: Website-text-translator](https://github.com/jorishr/website-text-translator).
+- The code of the program is modular and could be modified to use different third party translations services without too much trouble. However, this is not part of the current state of the program. Feel free to experiment and contribute [Github: Website-text-translator](https://github.com/jorishr/website-text-translator).
 
-- If your HTML document does not contain too much text and you don't want to use third party services, you can always manually add your own translations by creating your own JSON language files that follow the same key-value pair structure as the base language JSON file generated by the program.
+- If your HTML document does not contain too much text and you don't want to use third party services, you can always manually add your own translations by creating your own JSON target language files that follow the same key-value pair structure as the base language JSON file generated by the program.
 
 #### Backup
 
-By default the program will create a numbered backup of your HTML (and affected JSON files) in the backup folder. You can disable the backup feature by using the configuration wizard (`npx wtt config`), a command line flag `npx wtt --backup-no` or adding a config file in your app root folder.
+By default the program will create a numbered backup of your HTML (and related JSON files) in the backup folder. You can disable the backup feature by using the configuration wizard (`npx wtt config`), a command line flag `npx wtt --backup-no` or adding a config file in your app root folder.
 
 _Important:_ If you do disable the backup feature, make sure you have a backup of your existing files elsewhere before running the program because they will be overwritten.
 
 #### Folders
 
-- Source folder: this is the base folder used to find HTML files. The program will look for HTML files recursively all sub-folders as well. The default values is `"./"`, the root folder of your project.
-- Destination folder: this is the folder where you JSON translation files will be stored. This folder must be the same as the source folder _or_ a sub-folder of the source folder. For example, if your source folder is `./src` then the destination folder can be `./src` or `./src/translations`.
+- Source folder: this is the base folder used to find HTML files. The program will look for HTML files recursively through all sub-folders. The default value is `"./"`, the root folder of your project.
+- Destination folder: this is the folder where you JSON translation files will be stored. This folder must be the same as the source folder _or_ a sub-folder of the source folder. For example, if your source folder is `./src` then the destination folder can be `./src` or `./src/translations` or similar.
 
 Note that your HTML files will be overwritten by the program because txt-id's need to be added to the original HTML. Hence, the importance of the backup option discussed above.
 
@@ -126,7 +135,7 @@ It is recommended to run the program in 'dry mode' first. In dry-mode no files w
 
 To run the program, use the command: `npx wtt start`.
 
-Now you should see the following files in your destination folder: a base language JSON file and a translation JSON file for each target language. All files are named with a prefix: `txt_data_`. For example, `txt_data_en.json`, `txt_data_nl.json`, `txt_data_fr.json`, etc.
+Now you should see the following files in your destination folder: a base language JSON file and a translation JSON file for each target language. All files are named with a prefix: `text_data_`. For example, `text_data_en.json`, `text_data_nl.json`, `text_data_fr.json`, etc.
 
 Your HTML files will have been updated with txt-id's and each txt-id will have a corresponding translation string in the translation JSON file(s).
 
@@ -134,12 +143,12 @@ Also, a numbered backup folder with copies of your original HTML files will have
 
 ## Workflow and making changes to your HTML files
 
-Once the program has done it's work and you have HTML elements with txt-id's and corresponding key-value paris in JSON translation files you can continue your regular development work. When you're done adding, changing or removing HTML, run the program again. Changes will be detected and dealt with automatically.
+Once the program has done it's work and you have HTML elements with txt-id's and corresponding key-value pairs in JSON translation files you can continue your regular development work. When you're done adding, changing or removing HTML, run the program again. Changes will be detected and dealt with automatically.
 
 However, take into account the consideration and recommendations in this section.
 
 - Keep the backup functionality enabled or at least make sure you have your work stored in a separate Git commit or backed up somewhere else _before_ you run the program.
-- Simple text changes, addition or deletions for an HTML element with an existing text-id can be dealt with automatically, for example:
+- Simple text changes, addition or deletions for an HTML element with an existing text-id can be dealt with automatically by the program, for example:
 
 ```html
 <!-- your original document -->
@@ -162,13 +171,17 @@ In this case the program will have detected the changes automatically: the text 
 
 ### Nested text elements
 
-The simple changes discussed above are not the only changes that might occur and it's impossible to predict all possible permutations for an element with an _existing text-id_. For example, you may decide to add various span elements, an anchor tag and an `<em>` tag to a paragraph element with an existing text-id. All nested elements will be treated as separate text nodes by the program. This is perfectly fine when you run the program for the very first time.
+All nested elements are treated as separate text nodes by the program. This is perfectly fine when you run the program for the very first time.
 
-However, when during your future development you introduce structural changes to an existing element it is highly recommended to _remove the existing text-id_ for that element.
+The simple changes discussed above, however, are not the only changes that might occur and it's impossible to predict all possible permutations for an element with an _existing text-id_. For example, you may decide to add various span elements, an anchor tag and an `<em>` tag to a paragraph element with an existing text-id.
 
-Structural changes are changes that, for example, introduce additional HTML elements inside an existing element. Another example would be when you remove a span element from an existing paragraph. Every change that substantially changes the number or order of existing text nodes inside an element are considered structural changes that require removal of the existing text-id on the affected element(s). By removing the existing text-id the program will generate a new key for each text node in the correct order and the old key-value pairs will be purged.
+If you introduce such structural changes during your future development work it is highly recommended to _remove the existing text-id_ for that element.
 
-In the example below the paragraph has multiple text nodes and a nested ``:
+Structural changes are changes that, for example, introduce additional HTML elements inside an existing element. Another example would be when you remove a span element from an existing paragraph. Every change that substantially changes the number or order of existing text nodes inside an element are considered structural changes that require removal of the existing text-id on the affected element(s).
+
+By removing the existing text-id the program will generate a new key for each text node in the correct order and the old key-value pairs will be purged.
+
+In the example below the paragraph has multiple text nodes and nested elements:
 
 ```html
 <!-- your original html after the first run of the program -->
@@ -221,13 +234,13 @@ The base language JSON file will contain the following key-value pairs:
 ```
 
 - Note that leading and trailing _single_ spaces will be respected by the program.
-- Also note that text nodes that only contain punctuation characters like "." or "!" will be ignored by the program if they are the very last child text node. They are separate text nodes and don't have to be part of the translation process. When loading translation strings into your website project these punctuation text nodes will remain unaffected.
+- Also note that text nodes that _only_ contain punctuation characters like "." or "!" will be ignored by the program if they are the very last child text node. They are separate text nodes and don't have to be part of the translation process. When loading translation strings into your website project these punctuation text nodes will remain unaffected.
 
-### Strip all txt-id's from existing HTML file(s)
+### Strip all text-id's from existing HTML file(s)
 
-The strip command will remove all txt-id's from your HTML file(s). To run the strip program, use the command `npx wtt strip`.
+If you want to start all over with a clean slate, you can use the strip command.
 
-This is useful if you want to start over with a clean slate.
+The strip command will remove all text-id's from your HTML file(s). To run the strip program, use the command `npx wtt strip`.
 
 The strip command will not touch the JSON language files, but the key-value pairs in your JSON language file(s) will no longer be linked to your HTML file(s). You will have to manually remove the JSON language files that are now obsolete.
 
@@ -252,9 +265,9 @@ If none of this suits your needs, open an issue on [GitHub: Website Text Transla
 
 ### Config file
 
-By running the `npx wtt config` command a config file named `wtt.config.json` is created in the root folder of your NPM project. The program will automatically detect and use this file. You can edit this file to manually configure various options.
+By running the `npx wtt config` command a config file named `wtt.config.json` is created in the root folder of your NPM project. The program will automatically detect and use this file. You can edit this file to manually configure various additional options.
 
-### Languages
+### Languages object
 
 Use the `languages` object to specify the base language and the target languages. The base language is the language of the text in your HTML file(s). The target languages are the languages you want to translate to. The program will generate a JSON file for each target language. Example:
 
@@ -284,23 +297,54 @@ By default you will see log messages in the terminal about the progress of the p
 
 ### Selectors and exclusions
 
-The program will ignore HTML elements _unless_ they are included in the `selectors` array in the config file. For example, `<div>` elements are ignored by default as it is considered bad practice to have text lingering inside a container element. Wrap your text in a paragraph or span element.
+The program will ignore HTML elements _unless_ they are included in the `selectors` array in the (default) config file. For example, `<div>` elements are ignored by default as it is considered bad practice to have text lingering inside a container element. Wrap your text in a paragraph or span element.
 
 Other exclusions by default:
 
-- elements with the HTML attribute `translate="no"`
-- elements and textNodes that are empty or contain only whitespace
+- elements with the HTML attribute `translate="no"`,
+- elements and textNodes that are empty or contain only whitespace,
 - elements and textNodes that only contain a single special character like `&,.?!` etc.
 
 Custom exclusions: You can tell the program to ignore HTML elements by class or id. Add the class or id to the respective `exclude` arrays in the config file.
 
-Review the list of selectors and add or remove according to your needs.
+The most common HTML elements are included by default. _No custom config required_. However, do review the list of selectors and add or remove element selectors according to your needs.
+
+The default list of HTML elements that will be processed:
+
+```js
+[
+  "head meta[name=description]",
+  "head meta[name=keywords]",
+  "head title",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "p",
+  "span",
+  "a",
+  "strong",
+  "em",
+  "small",
+  "cite",
+  "abbr",
+  "img",
+  "picture",
+  "input",
+  "button",
+];
+```
+
+To add additional elements or exclude HTML elements that are included by default, use a string value that is a valid selector for the JavaScript `querySelectorAll()` method, see [MDN: Document: querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll):
 
 ```json
 {
   "elements": {
-    "selectors": "head meta[name=description], head meta[name=keywords], head title, h1, h2, h3, h4, h5, h6, p, span, a, img, picture, strong, em, small, cite, abbr, input, button",
+    "addSelector": ["div", "customHtmlElement"],
     "exclude": {
+      "defaultSelectorToExclude": ["button", "head title", "abbr"],
       "classToExclude": [],
       "idToExclude": []
     }

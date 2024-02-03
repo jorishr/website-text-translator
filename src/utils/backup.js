@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import getFileList from "./getFileList.js";
 import log from "./log/log.js";
-import { config } from "../../bin/commander/setConfig.js";
+import { config } from "../../bin/commander/config/setConfig.js";
 
 export default () => {
   log("backupStart", "start2");

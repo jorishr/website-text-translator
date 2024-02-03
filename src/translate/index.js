@@ -2,7 +2,7 @@ import getJsonData from "../utils/getJsonData.js";
 import writeFile from "../utils/writeToFile.js";
 import getTranslations from "./googleTranslate.js";
 import log from "../utils/log/log.js";
-import { config } from "../../bin/commander/setConfig.js";
+import { config } from "../../bin/commander/config/setConfig.js";
 
 export default async (
   langData,

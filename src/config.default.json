@@ -23,10 +23,34 @@
   },
   "keyCountOffset": 100,
   "elements": {
-    "selectors": "head meta[name=description], head meta[name=keywords], head title, h1, h2, h3, h4, h5, h6, p, span, a, img, picture, strong, em, small, cite, abbr, input, button",
-    "attributes": "alt, title, placeholder, meta",
+    "defaultSelectors": [
+      "head meta[name=description]",
+      "head meta[name=keywords]",
+      "head title",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "p",
+      "span",
+      "a",
+      "strong",
+      "em",
+      "small",
+      "cite",
+      "abbr",
+      "img",
+      "picture",
+      "input",
+      "button"
+    ],
+    "defaultAttributes": ["alt", "title", "placeholder", "meta"],
+    "addSelectors": [],
     "exclude": {
-      "classesToExclude": [],
+      "defaultSelectorsToExclude": [],
+      "classToExclude": [],
       "idToExclude": []
     }
   },

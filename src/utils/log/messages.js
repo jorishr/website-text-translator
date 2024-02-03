@@ -52,7 +52,8 @@ export default {
     "Dry run mode: ON.\nNo files will be written.\nNo translations will be fetched from the Google Translate API.",
   jsonRead:
     "The base language JSON file contains ${0} keys with a text value.\n",
-  jsonNotFound: "No base language JSON file found. Continuing without...",
+  jsonNotFound:
+    "No base language JSON file found. A new one will be generated...\n",
   startStrip: "\nStripping text-id's from HTML file: ${0}",
   configReadError: "Error while reading config file:\n ${0}",
   config: {

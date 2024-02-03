@@ -1,5 +1,5 @@
 import log from "./utils/log/log.js";
-import { config } from "../bin/commander/setConfig.js";
+import { config } from "../bin/commander/config/setConfig.js";
 
 export default (langData, docList) => {
   const textNodeId = config.id.textNodeId;

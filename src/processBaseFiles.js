@@ -8,7 +8,7 @@ import setNewElements from "./parseData/setNewElems.js";
 import getObsoleteKeys from "./getObsoleteKeys.js";
 import logResult from "./utils/log/logResult.js";
 import log from "./utils/log/log.js";
-import { config } from "../bin/commander/setConfig.js";
+import { config } from "../bin/commander/config/setConfig.js";
 
 /**
  * Loads the HTML source files to be processed for comparison with the

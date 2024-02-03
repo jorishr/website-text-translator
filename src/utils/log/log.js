@@ -1,5 +1,5 @@
 import messages from "./messages.js";
-import { config } from "../../../bin/commander/setConfig.js";
+import { config } from "../../../bin/commander/config/setConfig.js";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const configDefault = require("../../config.default.json");

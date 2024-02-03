@@ -1,5 +1,5 @@
 import log from "../utils/log/log.js";
-import { config } from "../../bin/commander/setConfig.js";
+import { config } from "../../bin/commander/config/setConfig.js";
 
 /**
  * Updates and modifies the provided data objects based on the attributes and text content of new HTML elements that were identified. It assigns unique keys based a counter that starts at keyCountOffset. For elements with text nodes, the id is an array-like string: "[100,101]" as an element may contain multiple unique text nodes. For elements with only attributes text values, e.g. "title" and or "alt", the id is number-like string: "103".
@@ -13,7 +13,7 @@ import { config } from "../../bin/commander/setConfig.js";
 export default (data, keyCountOffset) => {
   const newElements = data.htmlData.newElems;
   const textNodeId = config.id.textNodeId;
-  const supportedAttributeList = config.elements.attributes.split(", ");
+  const supportedAttributeList = config.elements.defaultAttributes;
   let counter = keyCountOffset;
   const newKeys = [];
   data.newKeys = [];

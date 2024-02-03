@@ -1,5 +1,5 @@
 import log from "../utils/log/log.js";
-import { config } from "../../bin/commander/setConfig.js";
+import { config } from "../../bin/commander/config/setConfig.js";
 
 /**
  * Get the keys of elements that need updates based on changes in the provided target.
@@ -32,7 +32,6 @@ export default (data, target) => {
 
       case "altAttributeElems":
         targetKey = hasChangedAttrText(elem, data, altId);
-
         if (targetKey) keysToUpdate.push(targetKey);
         break;
 

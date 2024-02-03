@@ -2,7 +2,7 @@ import processTranslations from "./translate/index.js";
 import processBaseFiles from "./processBaseFiles.js";
 import backup from "./utils/backup.js";
 import log from "./utils/log/log.js";
-import { config } from "../bin/commander/setConfig.js";
+import { config } from "../bin/commander/config/setConfig.js";
 
 /**
  * Process and translate files based on the provided configuration.

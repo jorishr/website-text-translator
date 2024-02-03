@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import main from "../../src/index.js";
-import mergeConfig from "./mergeConfig.js";
-import { setConfig } from "./setConfig.js";
+import getConfig from "./config/getConfig.js";
+import { setConfig } from "./config/setConfig.js";
 
 const program = new Command();
 
@@ -17,7 +17,7 @@ program
 
 program.parse();
 
-const config = mergeConfig();
+const config = getConfig();
 
 const options = program.opts();
 if (options.dryRun) config.mode.dryRun = true;

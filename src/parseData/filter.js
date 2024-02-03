@@ -1,4 +1,4 @@
-import { config } from "../../bin/commander/setConfig.js";
+import { config } from "../../bin/commander/config/setConfig.js";
 
 export default (elem) => {
   const textNodeId = config.id.textNodeId;

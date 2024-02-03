@@ -1,8 +1,8 @@
 import log from "../utils/log/log.js";
-import { config } from "../../bin/commander/setConfig.js";
+import { config } from "../../bin/commander/config/setConfig.js";
 
 /**
- * Update specified text values or attribute values in the given data based on the target.
+ * Update specified text values or attribute text values in the given data based on the type of target.
  *
  * @param {Array} keys - An array of keys to identify elements in the working data.
  * @param {Object} data - The working data object to be updated.

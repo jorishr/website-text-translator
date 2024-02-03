@@ -1,4 +1,4 @@
-import mergeConfig from "./mergeConfig.js";
+import getConfig from "./getConfig.js";
 
 let config;
 /**
@@ -8,7 +8,7 @@ let config;
  * @param {Object} config - Configuration object which includes modifications from CLI options, e.g. see wtt-start.js
  */
 export function setConfig(useConfig) {
-  config = useConfig || mergeConfig();
+  config = useConfig || getConfig();
 }
 
 export { config };
