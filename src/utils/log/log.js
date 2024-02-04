@@ -28,10 +28,10 @@ function print(msg, type, vals = []) {
       const header = buildHeader();
       console.log(header);
       break;
-    case "start1":
+    case "logStartTask1":
       console.log("\x1b[3m" + getFullMsg(msg) + "\x1b[0m\n");
       break;
-    case "start2":
+    case "logStartTask2":
       if (!vals.length) {
         console.log("\x1b[34m" + getFullMsg(msg) + "\x1b[0m\n");
       } else {

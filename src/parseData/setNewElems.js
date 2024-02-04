@@ -20,7 +20,7 @@ export default (data, keyCountOffset) => {
 
   if (!newElements.length) return data;
 
-  log("newElemsStart", "start1");
+  log("newElemsStart", "logStartTask1");
 
   for (let i = 0; i < newElements.length; i++) {
     const attributeList = Array.from(newElements[i].attributes).map(

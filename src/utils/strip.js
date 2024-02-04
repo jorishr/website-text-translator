@@ -9,7 +9,7 @@ export default () => {
   const { src, dest } = config.folders;
   const htmlFileList = findHtmlFiles(`${src}`);
   for (let i = 0; i < htmlFileList.length; i++) {
-    log("startStrip", "start2", [htmlFileList[i]]);
+    log("startStrip", "logStartTask2", [htmlFileList[i]]);
     const html = getHtmlData(htmlFileList[i]);
     const htmlRoot = parse(html);
     let modifiedHtml;

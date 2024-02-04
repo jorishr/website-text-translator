@@ -14,7 +14,7 @@ export default async (
   const { src, dest } = config.folders;
   const prefix = config.languageFile.prefix;
   const [changedValues, newValues] = getValues(keysToTranslate, langData);
-  log("translateStart", "start2");
+  log("translateStart", "logStartTask2");
   targets.forEach(async (lang) => {
     //Google Translate API returns an array of translations, in the same order as the input array
     let resChangedVals = [];

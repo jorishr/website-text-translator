@@ -5,7 +5,7 @@ import log from "./log/log.js";
 import { config } from "../../bin/commander/config/setConfig.js";
 
 export default () => {
-  log("backupStart", "start2");
+  log("backupStart", "logStartTask2");
   let fileList = filterFiles();
   if (!fileList.length) return;
   if (!fs.existsSync(config.folders.backup)) {

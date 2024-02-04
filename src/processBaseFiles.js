@@ -38,7 +38,7 @@ export default () => {
   let keysToTranslate = { changedKeys: [], newKeys: [] };
 
   for (let i = 0; i < htmlFileList.length; i++) {
-    log("htmlStart", "start2", [htmlFileList[i]]);
+    log("htmlStart", "logStartTask2", [htmlFileList[i]]);
 
     const langData = modifiedLangData.langData || baseLangData;
     const html = getHtmlData(htmlFileList[i]);

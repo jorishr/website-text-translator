@@ -14,7 +14,7 @@ export default () => {
     log("missingLang", "error");
     return;
   }
-  if (config.mode.dryRun) log("dryRunStart", "start2");
+  if (config.mode.dryRun) log("dryRunStart", "logStartTask2");
 
   if (!config.mode.dryRun && config.mode.backup) backup();
 
