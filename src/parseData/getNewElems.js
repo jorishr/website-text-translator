@@ -15,7 +15,6 @@ export default (root) => {
   if (selectorsToAdd.length > 0) {
     selectorsToAdd.forEach((selector) => selectors.push(selector));
   }
-  console.log(selectors.toString());
   return root
     .querySelectorAll(selectors.toString())
     .filter((elem) => filterElem(elem));

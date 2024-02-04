@@ -5,11 +5,11 @@ import { parse } from "node-html-parser";
 import log from "./log/log.js";
 import { config } from "../../bin/commander/config/setConfig.js";
 
-export default () => {
+export default async () => {
   const { src, dest } = config.folders;
   const htmlFileList = findHtmlFiles(`${src}`);
   for (let i = 0; i < htmlFileList.length; i++) {
-    log("startStrip", "logStartTask2", [htmlFileList[i]]);
+    log("stripStart", "logStartTask2", [htmlFileList[i]]);
     const html = getHtmlData(htmlFileList[i]);
     const htmlRoot = parse(html);
     let modifiedHtml;
@@ -18,7 +18,8 @@ export default () => {
 
     modifiedHtml = removeDataAttributes(htmlRoot, dataAttributeIdList);
 
-    writeFile(dest, modifiedHtml, htmlFileList[i], "html");
+    await writeFile(dest, modifiedHtml, htmlFileList[i], "html");
+    log("stripEnd", "done", [htmlFileList[i]]);
   }
 };
 

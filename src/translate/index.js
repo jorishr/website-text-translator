@@ -4,6 +4,15 @@ import getTranslations from "./googleTranslate.js";
 import log from "../utils/log/log.js";
 import { config } from "../../bin/commander/config/setConfig.js";
 
+/**
+ * Translates language data and updates language files based on specified keys and targets.
+ *
+ * @param {Object} langData - The original language data object.
+ * @param {Object} keysToTranslate - Object containing changedKeys and newKeys arrays.
+ * @param {Array} targets - Array of target languages.
+ * @param {Array} keysToDelete - Array of keys to delete from language files.
+ * @param {number} offset - Offset for new values in language files.
+ */
 export default async (
   langData,
   keysToTranslate,
@@ -11,54 +20,58 @@ export default async (
   keysToDelete,
   offset
 ) => {
-  const { src, dest } = config.folders;
+  const { dest } = config.folders;
   const prefix = config.languageFile.prefix;
-  const [changedValues, newValues] = getValues(keysToTranslate, langData);
+  const { changedKeys, newKeys } = keysToTranslate;
+  const changedValues = changedKeys.map((key) => langData[key]);
+  const newValues = newKeys.map((key) => langData[key]);
+
   log("translateStart", "logStartTask2");
-  targets.forEach(async (lang) => {
-    //Google Translate API returns an array of translations, in the same order as the input array
+
+  const translatePromises = targets.map(async (targetLang) => {
+    /*
+      Google Translate API returns an array of translations, in the same order as the input array. Store the result in resChangedVals and resNewVals.
+    */
     let resChangedVals = [];
-    if (changedValues.length) {
-      resChangedVals = await getTranslations(changedValues, lang, "updated");
+    if (changedKeys.length) {
+      resChangedVals = await getTranslations(
+        changedValues,
+        targetLang,
+        "updated"
+      );
     }
     let resNewVals = [];
-    if (newValues.length) {
-      resNewVals = await getTranslations(newValues, lang, "new");
+    if (newKeys.length) {
+      resNewVals = await getTranslations(newValues, targetLang, "new");
     }
-    //read the existing translation file for the language
-    let jsonData = getJsonData(dest, `${prefix}${lang}.json`) || {};
-    if (Object.keys(jsonData).length) {
-      log("langFileExists", "info", [lang]);
+    // read the existing translation file for the language
+    let jsonLangData = getJsonData(dest, `${prefix}${targetLang}.json`) || {};
+    if (Object.keys(jsonLangData).length) {
+      log("langFileExists", "info", [targetLang]);
       keysToDelete.forEach((key) => {
-        delete jsonData[key];
+        delete jsonLangData[key];
       });
-      //new values are appended to the end of the file
+      //new values are appended to the end of the file using offset
       for (let i = 0; i < resNewVals.length; i++) {
-        jsonData[offset + i] = resNewVals[i];
+        jsonLangData[offset + i] = resNewVals[i];
       }
-      //changed values are updated in the file at their respective keys
+      // changed values are updated in the file at their respective keys
       for (let i = 0; i < resChangedVals.length; i++) {
-        jsonData[keysToTranslate.changedKeys[i]] = resChangedVals[i];
+        jsonLangData[changedKeys[i]] = resChangedVals[i];
       }
     } else {
-      log("langFileNew", "info", [lang]);
-      //in this case, there should be no changed keys, only new keys to append to the end of the file
+      /*
+        In this case, there should be no changed keys, only new keys to append to the end of the file
+      */
+      log("langFileNew", "info", [targetLang]);
+
       for (let i = 0; i < resNewVals.length; i++) {
-        jsonData[offset + i] = resNewVals[i];
+        jsonLangData[offset + i] = resNewVals[i];
       }
     }
-    writeFile(dest, jsonData, `${prefix}${lang}.json`, "json");
+    await writeFile(dest, jsonLangData, `${prefix}${targetLang}.json`, "json");
+    log("langFileDone", "done", [targetLang]);
   });
+  await Promise.all(translatePromises);
+  log("translateEnd", "done");
 };
-
-function getValues(keys, langData) {
-  const changedValues = [];
-  const newValues = [];
-  keys.changedKeys.forEach((key) => {
-    changedValues.push(langData[key]);
-  });
-  keys.newKeys.forEach((key) => {
-    newValues.push(langData[key]);
-  });
-  return [changedValues, newValues];
-}

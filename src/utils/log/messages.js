@@ -30,13 +30,15 @@ export default {
   missingLang:
     "No base or target languages set. Run the config command or add a config file. See documentation for more info.",
   translateStart: "Start processing translation file(s)...",
+  translateEnd: "Done processing translations.",
   translateDisabled: "Processing translation files is disabled.\n",
   translateNoKeys:
-    "No changes found in base files. No translation changes needed.",
+    "No changes found in base files. Skipping translation tasks.\n",
   langFileExists:
     "Found existing translation file for language: ${0}. Applying updates...",
   langFileNew:
     "No existing translation data found for language: ${0}. Creating new file...",
+  langFileDone: "Done processing translation file for language: ${0}",
   fetchTranslation:
     "Fetching translations for ${0} text strings from the Google Translate API for language: ${1}...`",
   textUpdateException:
@@ -56,7 +58,8 @@ export default {
     "The base language JSON file contains ${0} keys with a text value.\n",
   jsonNotFound:
     "No base language JSON file found. A new one will be generated...\n",
-  startStrip: "\nStripping text-id's from HTML file: ${0}",
+  stripStart: "\nStripping text-id's from HTML file: ${0}",
+  stripEnd: "Done stripping text-id's from HTML file: ${0}",
   configReadError: "Error while reading config file:\n ${0}",
   config: {
     welcome: "Welcome to the Website-Text-Translator configuration wizard.",

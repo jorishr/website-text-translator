@@ -8,7 +8,7 @@ import { config } from "../bin/commander/config/setConfig.js";
  * Process and translate files based on the provided configuration.
  *
  */
-export default () => {
+export default async () => {
   const { base, targets } = config.languages;
   if (!base || !targets.length) {
     log("missingLang", "error");
@@ -37,12 +37,13 @@ export default () => {
     log("translateNoKeys", "info");
     log("infoEnd", "success");
   } else {
-    processTranslations(
+    await processTranslations(
       modifiedLangData,
       keysToTranslate,
       targets,
       keysToDelete,
       keyCountOffset
     );
+    log("infoEnd", "success");
   }
 };
