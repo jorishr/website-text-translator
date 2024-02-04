@@ -19,6 +19,7 @@ Automatically translate the text in html files to multiple languages, store tran
       - [Output after first run](#output-after-first-run)
   - [Workflow and making changes to your HTML files](#workflow-and-making-changes-to-your-html-files)
     - [Nested text elements](#nested-text-elements)
+    - [Adding and removing target languages](#adding-and-removing-target-languages)
     - [Strip all text-id's from existing HTML file(s)](#strip-all-text-ids-from-existing-html-files)
   - [Limitations and issues](#limitations-and-issues)
     - [Translation accuracy by third party services](#translation-accuracy-by-third-party-services)
@@ -235,6 +236,12 @@ The base language JSON file will contain the following key-value pairs:
 
 - Note that leading and trailing _single_ spaces will be respected by the program.
 - Also note that text nodes that _only_ contain punctuation characters like "." or "!" will be ignored by the program if they are the very last child text node. They are separate text nodes and don't have to be part of the translation process. When loading translation strings into your website project these punctuation text nodes will remain unaffected.
+
+### Adding and removing target languages
+
+On each run the program will compare the existing target languages files with the array of languages in your configuration file. If a new target language is detected, the program will fetch additional translation strings and generate an additional language JSON file.
+
+If you removed a target language from your configuration file and still have the corresponding JSON language file in the destination folder, the program will prompt you in the CLI to remove that file.
 
 ### Strip all text-id's from existing HTML file(s)
 

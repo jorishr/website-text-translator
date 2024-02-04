@@ -10,7 +10,8 @@
   "scripts": {
     "wtt": "node ./bin/index.js",
     "wtt-config": "node ./bin/index.js config",
-    "wtt-strip": "node ./bin/index.js strip"
+    "wtt-strip": "node ./bin/index.js strip",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "repository": {
     "type": "git",
@@ -38,5 +39,9 @@
   },
   "engines": {
     "node": ">=18.13.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0"
   }
 }

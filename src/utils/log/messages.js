@@ -34,6 +34,8 @@ export default {
   translateDisabled: "Processing translation files is disabled.\n",
   translateNoKeys:
     "No changes found in base files. Skipping translation tasks.\n",
+  translateError1: "Translation error while processing ${0} for language ${1}.",
+  translateError2: "Google Translate API error.\n\n\t${0}",
   langFileExists:
     "Found existing translation file for language: ${0}. Applying updates...",
   langFileNew:
