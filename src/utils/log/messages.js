@@ -29,6 +29,8 @@ export default {
   backupWriteFail: "Unexpected error while writing to backup file:\n\n\t${0}",
   missingLang:
     "No base or target languages set. Run the config command or add a config file. See documentation for more info.",
+  baseLangFileError:
+    "The base language file could not be read or is missing. Check the destination folder. Did you delete the file? Is the file corrupted? Try restoring the base language JSON file from your backup folder. If this was intentional, strip the text-id's from the html files using the wtt-strip command and start clean.",
   translateStart: "Start processing translation file(s)...",
   translateEnd: "Done processing translations.",
   translateDisabled: "Processing translation files is disabled.\n",
@@ -61,7 +63,7 @@ export default {
   jsonRead:
     "The base language JSON file contains ${0} keys with a text value.\n",
   jsonNotFound:
-    "No base language JSON file found. A new one will be generated...\n",
+    "No base language JSON file found (${0}). A new one will be generated...\n",
   stripStart: "\nStripping text-id's from HTML file: ${0}",
   stripEnd: "Done stripping text-id's from HTML file: ${0}",
   configReadError: "Error while reading config file:\n ${0}",

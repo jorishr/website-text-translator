@@ -15,8 +15,16 @@ export default async (targets) => {
   const prefix = config.languageFile.prefix;
   const baseLang = config.languages.base;
   const baseLangData = getJsonData(dest, `${prefix}${baseLang}.json`);
-  const baseLangKeys = Object.keys(baseLangData);
-  const baseLangValues = Object.values(baseLangData);
+  let baseLangKeys;
+  let baseLangValues;
+
+  if (baseLangData) {
+    baseLangKeys = Object.keys(baseLangData);
+    baseLangValues = Object.values(baseLangData);
+  } else {
+    log("baseLangFileError", "error");
+    process.exit(1);
+  }
 
   const translationTaskPromises = targets.map(async (targetLang) => {
     log("addLangTargetsStart", "logStartTask2", [targetLang]);
