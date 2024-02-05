@@ -39,5 +39,6 @@ export default async (data, target, type) => {
   } catch (e) {
     log("translateError1", "error", [type, target]);
     log("translateError2", "error", [e.message]);
+    process.exit(1);
   }
 };

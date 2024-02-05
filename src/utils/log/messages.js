@@ -3,7 +3,7 @@ export default {
   author: "Author: Joris Raymaekers",
   website: "Visit: https://liondigits.com",
   github: "Github repo: https://github.com/jorishr/website-text-translator",
-  infoEnd: "All done!",
+  programEnd: "All done!",
   backupStart: "Safe mode: ON. Starting backup...",
   backupFail: "Backup failed. No HTML and JSON file(s) found in source folder.",
   backupDone: "Backup completed.",
@@ -41,6 +41,8 @@ export default {
   langFileNew:
     "No existing translation data found for language: ${0}. Creating new file...",
   langFileDone: "Done processing translation file for language: ${0}",
+  addLangTargetsStart: "Start adding translation JSON file for language: ${0}.",
+  addLangTargetsDone: "Done adding new target language(s): ${0}.",
   fetchTranslation:
     "Fetching translations for ${0} text strings from the Google Translate API for language: ${1}...`",
   textUpdateException:

@@ -70,7 +70,12 @@ function writeMsg(msg, vals) {
   let str = base;
   for (let i = 0; i < vals.length; i++) {
     const id = "${" + i + "}";
-    str = str.replace(id, vals[i]);
+    if (str.includes(id)) {
+      str = str.replace(id, vals[i]);
+    } else {
+      str = str.replace(/\.$/, "");
+      str += `, ${vals[i]}`;
+    }
   }
   return str;
 }

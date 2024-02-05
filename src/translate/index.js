@@ -28,7 +28,7 @@ export default async (
 
   log("translateStart", "logStartTask2");
 
-  const translatePromises = targets.map(async (targetLang) => {
+  const translationTaskPromises = targets.map(async (targetLang) => {
     /*
       Google Translate API returns an array of translations, in the same order as the input array. Store the result in resChangedVals and resNewVals.
     */
@@ -72,6 +72,6 @@ export default async (
     await writeFile(dest, jsonLangData, `${prefix}${targetLang}.json`, "json");
     log("langFileDone", "done", [targetLang]);
   });
-  await Promise.all(translatePromises);
+  await Promise.all(translationTaskPromises);
   log("translateEnd", "done");
 };
