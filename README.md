@@ -4,7 +4,7 @@
 ![GitHub](https://img.shields.io/github/license/jorishr/website-text-translator?style=flat-square)
 ![node-current](https://img.shields.io/node/v/website-text-translator?style=flat-square)
 
-Automatically translate the text in html files to multiple languages, store translations in JSON files and detect changes.
+Easy command line interface to automatically translate the text in your HTML file(s) to multiple languages and store the translation data in JSON files. Auto-detect changes and straightforward integration into your workflow. Documentation includes code snippets to integrate the translation data into your website project using vanilla JavaScript. Usage of a third party translation services, e.g. Google Translate API, is recommended but optional.
 
 - [Website-Text-Translator](#website-text-translator)
   - [What this program does](#what-this-program-does)
@@ -19,12 +19,13 @@ Automatically translate the text in html files to multiple languages, store tran
       - [Output after first run](#output-after-first-run)
   - [Workflow and making changes to your HTML files](#workflow-and-making-changes-to-your-html-files)
     - [Nested text elements](#nested-text-elements)
+      - [Example](#example)
     - [Adding and removing target languages](#adding-and-removing-target-languages)
     - [Strip all text-id's from existing HTML file(s)](#strip-all-text-ids-from-existing-html-files)
   - [Limitations and issues](#limitations-and-issues)
     - [Translation accuracy by third party services](#translation-accuracy-by-third-party-services)
     - [Whitespace issues](#whitespace-issues)
-  - [Using a configuration file](#using-a-configuration-file)
+  - [Using the configuration file](#using-the-configuration-file)
     - [Config file](#config-file)
     - [Languages object](#languages-object)
     - [Modes](#modes)
@@ -55,7 +56,9 @@ Thus for each text node or attribute text value a key is generated and stored in
 >
 ```
 
-Next, the program will generate a base language JSON file containing the key-value pairs for each text node.
+Next, the program will generate a base language JSON file containing the key-value pair for each text node found in your HTML. This file does not contain any translation. It is the reference file that stores all the text-id keys and the corresponding text values found in your HTML document(s).
+
+For example, if your base language is English, the file `text_data_en.json` is going to be your base language file and it will look like this:
 
 ```json
 {
@@ -65,7 +68,9 @@ Next, the program will generate a base language JSON file containing the key-val
 }
 ```
 
-As a last step, the program will fetch translation strings from the Google Translate API and store them in a separate JSON language file for each target language.
+As a last step — and if enabled, the program will fetch translation strings from the Google Translate API and store them in a separate JSON language file for each target language.
+
+For example, for Spanish you get `text_data_es.json`:
 
 ```json
 {
@@ -75,6 +80,8 @@ As a last step, the program will fetch translation strings from the Google Trans
 }
 ```
 
+For example, for Catalan you get `text_data_ca.json`:
+
 ```json
 {
   "100": "Hola món!",
@@ -83,7 +90,9 @@ As a last step, the program will fetch translation strings from the Google Trans
 }
 ```
 
-Importing these JSON files in your website project requires a separate discussion, see [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project).
+If you don't want to use the Google Translate API, you will have to generate these translations files yourself or use a different service.
+
+Importing the JSON language data files in your website project requires a separate discussion, see [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project).
 
 Once your HTML document(s) have been processed for the first time, you can continue your development work and incorporate the translation process in your workflow by running the program again after you have added, removed or changed text elements in your document(s).
 
@@ -107,15 +116,15 @@ More advanced configuration options are available, see [Additional configuration
 
 - Google Application Credentials: to fetch translation strings from the Google Translate API you need to setup authentication for Google Cloud Services. Without, you will see an error message for an invalid API key. See [Getting started with Google Cloud Authentication](https://cloud.google.com/docs/authentication/getting-started).
 
-- The program can run without the Google Translate API. Run the command `npx wtt --translate-no` or set the `translate` option in the config file to `false`. In this case the program will only run the first part of the program: add txt-id's to the HTML files and generate the base language JSON file. No translation files will be generated.
+- The program can run without the Google Translate API. Run the command `npx wtt --translate-no` or set the `translate` option in the config file to `false`. In this case the program will only run the first part of the program: add text-id's to the HTML files and generate the base language JSON file. No target language translation files will be generated.
 
-- The code of the program is modular and could be modified to use different third party translations services without too much trouble. However, this is not part of the current state of the program. Feel free to experiment and contribute [Github: Website-text-translator](https://github.com/jorishr/website-text-translator).
+- The code of the program is modular and could be modified to use different third party translations services without too much trouble. However, this is not part of the current state of the program. Feel free to experiment and contribute [Github: Website-text-translator](https://github.com/jorishr/website-text-translator). The only two modules that would need to change are `src/translate/index.js` and `src/translate/googleTranslate.js`.
 
-- If your HTML document does not contain too much text and you don't want to use third party services, you can always manually add your own translations by creating your own JSON target language files that follow the same key-value pair structure as the base language JSON file generated by the program.
+- If your HTML document does not contain too much text and you don't want to use third party services, you can always manually add your own translations by creating your own JSON target language files that follow the same key-value pair structure as the base language JSON file generated by the program. Note that after each run of the program the base language reference file will always be up to date with the state of the HTML document(s). However, without a third party translation service enabled, you will need to manually update the translation data for each target language file.
 
 #### Backup
 
-By default the program will create a numbered backup of your HTML (and related JSON files) in the backup folder. You can disable the backup feature by using the configuration wizard (`npx wtt config`), a command line flag `npx wtt --backup-no` or adding a config file in your app root folder.
+By default the program will create a numbered backup of your HTML (and related JSON files) in the backup folder. You can disable the backup feature by using the configuration wizard (`npx wtt config`), a command line flag `npx wtt --backup-no` or by setting `backup: false` in the configuration file.
 
 _Important:_ If you do disable the backup feature, make sure you have a backup of your existing files elsewhere before running the program because they will be overwritten.
 
@@ -124,7 +133,7 @@ _Important:_ If you do disable the backup feature, make sure you have a backup o
 - Source folder: this is the base folder used to find HTML files. The program will look for HTML files recursively through all sub-folders. The default value is `"./"`, the root folder of your project.
 - Destination folder: this is the folder where you JSON translation files will be stored. This folder must be the same as the source folder _or_ a sub-folder of the source folder. For example, if your source folder is `./src` then the destination folder can be `./src` or `./src/translations` or similar.
 
-Note that your HTML files will be overwritten by the program because txt-id's need to be added to the original HTML. Hence, the importance of the backup option discussed above.
+Note that your HTML file(s) will be overwritten by the program because text-id's need to be added to the original HTML. Hence, the importance of the backup option discussed above.
 
 ### First run
 
@@ -138,9 +147,9 @@ To run the program, use the command: `npx wtt start`.
 
 Now you should see the following files in your destination folder: a base language JSON file and a translation JSON file for each target language. All files are named with a prefix: `text_data_`. For example, `text_data_en.json`, `text_data_nl.json`, `text_data_fr.json`, etc.
 
-Your HTML files will have been updated with txt-id's and each txt-id will have a corresponding translation string in the translation JSON file(s).
+The text node in your HTML file(s) will have been updated with text-id's and each text-id will have a corresponding translation string in the translation JSON file(s).
 
-Also, a numbered backup folder with copies of your original HTML files will have been created.
+Also, a numbered backup folder with copies of your original HTML file(s) will have been created.
 
 ## Workflow and making changes to your HTML files
 
@@ -176,11 +185,15 @@ All nested elements are treated as separate text nodes by the program. This is p
 
 The simple changes discussed above, however, are not the only changes that might occur and it's impossible to predict all possible permutations for an element with an _existing text-id_. For example, you may decide to add various span elements, an anchor tag and an `<em>` tag to a paragraph element with an existing text-id.
 
-If you introduce such structural changes during your future development work it is highly recommended to _remove the existing text-id_ for that element.
+If you introduce such structural changes during your future development work it is highly recommended to _remove the existing text-id_ for that element in your HTML.
 
-Structural changes are changes that, for example, introduce additional HTML elements inside an existing element. Another example would be when you remove a span element from an existing paragraph. Every change that substantially changes the number or order of existing text nodes inside an element are considered structural changes that require removal of the existing text-id on the affected element(s).
+Structural changes are changes that, for example, introduce additional HTML elements inside an existing element. Another example would be when you remove a span element from an existing paragraph. Every change that substantially changes the number or order of existing text nodes inside an element are considered structural changes that require removal of the existing text-id on the affected element(s) inside your HTML document.
 
-By removing the existing text-id the program will generate a new key for each text node in the correct order and the old key-value pairs will be purged.
+By removing the existing text-id from the HTML the program will generate a new key for each text node in the correct order and the old key-value pairs will be purged.
+
+_Note_: you don't have to do anything to the text-id's or text values in the JSON file(s). This will be handled by the program. Just make sure that your structurally changed HTML element(s) no longer has any lingering text-id's.
+
+#### Example
 
 In the example below the paragraph has multiple text nodes and nested elements:
 
@@ -239,23 +252,23 @@ The base language JSON file will contain the following key-value pairs:
 
 ### Adding and removing target languages
 
-On each run the program will compare the existing target languages files with the array of languages in your configuration file. If a new target language is detected, the program will fetch additional translation strings and generate an additional language JSON file.
+On each run the program will compare the existing target language files with the array of target languages in your configuration file. If a new target language is detected, the program will fetch additional translation strings and generate an additional language JSON file.
 
-If you removed a target language from your configuration file and still have the corresponding JSON language file in the destination folder, the program will prompt you in the CLI to remove that file.
+Removing a target language is a two-step manual process. First, remove the target language identifier string from target language array in the configuration file. Then, delete the corresponding translation JSON file from your destination directory.
 
 ### Strip all text-id's from existing HTML file(s)
 
 If you want to start all over with a clean slate, you can use the strip command.
 
-The strip command will remove all text-id's from your HTML file(s). To run the strip program, use the command `npx wtt strip`.
+The strip command will remove all text-id's from the text elements in your HTML file(s). To run the strip program, use the command `npx wtt strip`.
 
-The strip command will not touch the JSON language files, but the key-value pairs in your JSON language file(s) will no longer be linked to your HTML file(s). You will have to manually remove the JSON language files that are now obsolete.
+Note that running this command will make all your JSON language files, including the base lanuage reference file, obsolete. The keys in those files will no longer be linked to the corresponding elements in your HTML file(s). There is no way to undo this action. Therefore you will be prompted for a backup. Also, once the your HTML file(s) are successfully cleaned up, you will be prompted to delete the now obsolete JSON language files.
 
 ## Limitations and issues
 
 ### Translation accuracy by third party services
 
-Note that translations by the Google Translate API or any other service are not perfect. You should still manually review the translation strings and correct them if necessary. Make your corrections in the respective JSON language file(s) that are generated by the program.
+Note that translations by the Google Translate API or any other service are not perfect. You should still manually review the translation strings and correct them if necessary. You should make your corrections directly in the respective JSON target language file(s) that are generated by the program. Your manual corrections in the JSON target language file(s) will be preserved, unless you make changes to the corresponding element in the HTML file.
 
 ### Whitespace issues
 
@@ -268,7 +281,7 @@ If you do encounter issues with leading or trailing whitespace you have two opti
 
 If none of this suits your needs, open an issue on [GitHub: Website Text Translator](https://github.com/jorishr/website-text-translator/issues).
 
-## Using a configuration file
+## Using the configuration file
 
 ### Config file
 
@@ -276,7 +289,7 @@ By running the `npx wtt config` command a config file named `wtt.config.json` is
 
 ### Languages object
 
-Use the `languages` object to specify the base language and the target languages. The base language is the language of the text in your HTML file(s). The target languages are the languages you want to translate to. The program will generate a JSON file for each target language. Example:
+Use the `languages` object to specify the base language and the target languages. The base language is the language of the text in your HTML file(s). The target languages are the languages you want to translate to. The program will generate a JSON file for each target language. Only two-letter language codes are supported. Example:
 
 ```json
 {
@@ -309,8 +322,8 @@ The program will ignore HTML elements _unless_ they are included in the `selecto
 Other exclusions by default:
 
 - elements with the HTML attribute `translate="no"`,
-- elements and textNodes that are empty or contain only whitespace,
-- elements and textNodes that only contain a single special character like `&,.?!` etc.
+- elements and text nodes that are empty or contain only whitespace,
+- elements and text nodes that only contain a single special character like `&,.?!` etc.
 
 Custom exclusions: You can tell the program to ignore HTML elements by class or id. Add the class or id to the respective `exclude` arrays in the config file.
 
@@ -352,8 +365,8 @@ To add additional elements or exclude HTML elements that are included by default
     "addSelector": ["div", "custom-tag"],
     "exclude": {
       "defaultSelectorToExclude": ["button", "head title", "abbr"],
-      "classToExclude": [],
-      "idToExclude": []
+      "classToExclude": ["yourClass"],
+      "idToExclude": ["yourId"]
     }
   }
 }
@@ -379,7 +392,7 @@ By default the point of reference is the text content of the HTML file. This mea
 
 If you change the textUpdateDirection value to `jsonToHtml`, the update direction is reversed. This means that you should make the text changes in the JSON language file first. When you run the program, the HTML text content will be updated with the changes you made in the corresponding key-value pair in the JSON base language file.
 
-This feature may be useful for simple and quick text updates. _However, this is experimental.Use with caution._
+This feature may be useful for simple and quick text updates. _However, this is experimental.Use with caution. Make sure you have a backup._
 
 ```json
 {
@@ -389,53 +402,101 @@ This feature may be useful for simple and quick text updates. _However, this is 
 
 ## How to load the translation files in your project
 
-Your project will need a script that loads the translation strings from the respective JSON translation files. There are many ways to do this and explaining how to detect the user's language preferences or changes to the language settings is beyond the scope of this document.
+Your project will need a script that loads the translation strings from the respective JSON translation files. There are many ways to do this but the code snippets below cover the basics.
 
-Here are the things you need to know and do, with some (pseudo code) examples.
+Create a separate module or simply copy the following module code in your project's main script, e.g. app.js.
 
 ```js
-// import language data as data object from one of the JSON files
-// example: if language === nl then import nl data
-const data = require("./txt_data_nl.json");
+// import language data, adjust the path to your folder structure
+import txt_data_en from "../data/txt_data_en.json";
+import txt_data_nl from "../data/txt_data_nl.json";
+import txt_data_es from "../data/txt_data_es.json";
+import txt_data_ca from "../data/txt_data_ca.json";
 
-function setElementTxt(data) {
-  /* 
-   Get the elements with the txt_id attribute
-   The data-txt_id value is an array of numbers inside a string
-   e.g. data-txt_id="[100, 101, 102]" when there are 3 text nodes inside the element
-   e.g. data-txt_id="[100]" when there is only one text node inside the element
-  */
-  const txtElems = document.querySelectorAll("[data-txt_id]");
-  txtElems.forEach((elem) => {
-    const idArr = eval(elem.dataset.txt_id);
+const languageData = {
+  nl: txt_data_nl,
+  en: txt_data_en,
+  es: txt_data_es,
+  ca: txt_data_ca,
+};
+
+/*
+  You will need a separate function to detect the browser language, user preference set in cookies or localStorage or code that handles click events in a language selection menu. This is beyond the scope of this tutorial. However, at the bottom you will find a simple drop-down menu you can use to for testing purposes.
+
+  Your handler functions should return a string value that corresponds to the languages you chose to support. In this example: "en", "nl", "es", "ca".
+
+  You pass that value to the setTextContent function below.
+*/
+function setTextContent(currentLanguage) {
+  const currentLangData = languageData[currentLanguage];
+  const textElems = document.querySelectorAll("[data-txt_id]");
+  setTextElems(textElems, currentLangData);
+  setAttributeTxt(currentLangData, "title");
+  setAttributeTxt(currentLangData, "alt");
+  setAttributeTxt(currentLangData, "placeholder");
+  setAttributeTxt(currentLangData, "meta");
+}
+
+function setTextElems(textElems, langData) {
+  textElems.forEach((elem) => {
+    const idArr = JSON.parse(elem.dataset.txt_id);
     if (elem.childNodes.length === 0) {
-      elem.textContent = data[idArr[0]];
+      elem.textContent = langData[idArr[0]];
     } else {
       const textNodes = Array.from(elem.childNodes).filter(
         (node) => node.nodeType === 3 && node.textContent.trim().length
       );
       for (let i = 0; i < idArr.length; i++) {
-        textNodes[i].textContent = data[idArr[i]];
+        textNodes[i].textContent = langData[idArr[i]];
       }
     }
   });
 }
 
-// attribute target can be "title", "alt", "placeholder", "meta"
-// attribute id values: e.g. data-txt_id__title="100", data-txt_id__alt="101"
-function setAttributeTxt(data, target) {
+function setAttributeTxt(langData, target) {
   const elems = document.querySelectorAll(`[data-txt_id__${target}]`);
   let name = target;
   if (target === "meta") name = "content";
   elems.forEach((elem) => {
-    elem.setAttribute(name, data[elem.dataset[`txt_id__${target}`]]);
+    elem.setAttribute(name, langData[elem.dataset[`txt_id__${target}`]]);
   });
 }
-setElementTxt(data);
-setAttributeTxt(data, "title");
-setAttributeTxt(data, "alt");
-setAttributeTxt(data, "placeholder");
-setAttributeTxt(data, "meta");
-```
 
-There are other things to consider, like changing the language attribute of the HTML document itself. The code above does the job for the elements that are targeted with the default configuration.
+// example of simple language menu
+function addLanguageMenu() {
+  const languages = {
+    nl: "Dutch",
+    en: "English",
+    es: "Spanish",
+    ca: "Catalan",
+  };
+
+  // create language menu
+  const labelElement = document.createElement("label");
+  labelElement.textContent = "Select Language: ";
+  labelElement.htmlFor = "selectLanguage";
+
+  const selectElement = document.createElement("select");
+  selectElement.id = "selectLanguage";
+
+  for (const langCode in languages) {
+    const optionElement = document.createElement("option");
+    optionElement.value = langCode;
+    optionElement.text = languages[langCode];
+    selectElement.appendChild(optionElement);
+  }
+
+  // Add event listener to handle language selection
+  selectElement.addEventListener("change", function (event) {
+    const selectedLanguage = event.target.value;
+    setTextContent(selectedLanguage);
+  });
+
+  document.body.appendChild(labelElement);
+  document.body.appendChild(selectElement);
+}
+
+// on page load default language is "nl", language menu for changing between languages
+setTextContent("nl");
+addLanguageMenu();
+```
