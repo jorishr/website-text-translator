@@ -60,10 +60,15 @@ export default {
   dryRun: "Translations are disabled in dry run mode.",
   dryRunStart:
     "Dry run mode: ON.\nNo files will be written.\nNo translations will be fetched from the Google Translate API.",
-  jsonRead:
+  baseLangDataRead:
     "The base language JSON file contains ${0} keys with a text value.\n",
-  jsonNotFound:
+  baseLangDataNotFound:
     "No base language JSON file found (${0}). A new one will be generated...\n",
+  jsonLangFilesFound: "The following language file(s) will be deleted: ${0}",
+  jsonLangFilesNotFound:
+    "No JSON files found to delete in folder: ${0}. Did you delete them manually?",
+  jsonLangFileDel: "${0} Deleted.",
+  jsonLangFileDelError: "Error deleting file: ${0}.\n\n${1}",
   stripStart: "\nStripping text-id's from HTML file: ${0}",
   stripEnd: "Done stripping text-id's from HTML file: ${0}",
   configReadError: "Error while reading config file:\n ${0}",

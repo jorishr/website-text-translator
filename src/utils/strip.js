@@ -13,9 +13,10 @@ import { config } from "../../bin/commander/config/setConfig.js";
 export default async () => {
   const { src, dest } = config.folders;
   const htmlFileList = findHtmlFiles(`${src}`);
-  for (let i = 0; i < htmlFileList.length; i++) {
-    log("stripStart", "logStartTask2", [htmlFileList[i]]);
-    const html = getHtmlData(htmlFileList[i]);
+
+  const processHtmlFile = async (htmlFile) => {
+    log("stripStart", "logStartTask2", [htmlFile]);
+    const html = getHtmlData(htmlFile);
     const htmlRoot = parse(html);
     let modifiedHtml;
     const dataAttributeIdList = Object.values(config.id.attributeTextId);
@@ -23,9 +24,10 @@ export default async () => {
 
     modifiedHtml = removeDataAttributes(htmlRoot, dataAttributeIdList);
 
-    await writeFile(dest, modifiedHtml, htmlFileList[i], "html");
-    log("stripEnd", "done", [htmlFileList[i]]);
-  }
+    await writeFile(dest, modifiedHtml, htmlFile, "html");
+    log("stripEnd", "done", [htmlFile]);
+  };
+  await Promise.all(htmlFileList.map(processHtmlFile));
 };
 
 function removeDataAttributes(htmlRoot, dataAttributeIdList) {

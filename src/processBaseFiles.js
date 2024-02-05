@@ -27,7 +27,7 @@ export default () => {
   const baseLangData = getJsonData(dest, jsonFile) || {};
   const keysInBaseLangData = Object.keys(baseLangData);
 
-  logResult(keysInBaseLangData, "jsonRead", "jsonNotFound", [
+  logResult(keysInBaseLangData, "baseLangDataRead", "baseLangDataNotFound", [
     keysInBaseLangData.length,
   ]);
 
