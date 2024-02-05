@@ -1,5 +1,12 @@
 import { config } from "../../bin/commander/config/setConfig.js";
 
+/**
+ * Processes an HTML element to determine whether it should be included for further processing, based on specified criteria and configuration.
+ *
+ * @param {Element} elem - The HTML element to be processed.
+ * @returns {boolean} - Returns true if the element should be included, otherwise false.
+ *
+ */
 export default (elem) => {
   const textNodeId = config.id.textNodeId;
   const { altId, titleId, placeholderId, metaId } = config.id.attributeTextId;
@@ -40,9 +47,9 @@ export default (elem) => {
   }
 
   //exclude elements with no text, unless
-  const hasTextNodes = checkTextNodes(elem);
+  const hasValidTextNodes = validateTextNodes(elem);
   if (
-    !hasTextNodes &&
+    !hasValidTextNodes &&
     !elem.hasAttribute("alt") &&
     !elem.hasAttribute("title") &&
     !elem.hasAttribute("placeholder") &&
@@ -52,7 +59,15 @@ export default (elem) => {
   return true;
 };
 
-function exclude(elem, type, arr) {
+/**
+ * Checks whether an element should be excluded based on exclusion type and an array of exclusion values.
+ *
+ * @param {Element} elem - The HTML element to be checked.
+ * @param {string} type - The type of exclusion to perform. Possible values: 'class' or 'id'.
+ * @param {string[]} arr - An array of values to check against for exclusion.
+ * @returns {boolean} - Returns true if the element should be excluded, otherwise false.
+ */
+export function exclude(elem, type, arr) {
   switch (type) {
     case "class":
       let res = false;
@@ -69,7 +84,14 @@ function exclude(elem, type, arr) {
   }
 }
 
-function checkTextNodes(elem) {
+/**
+ * Validates text nodes within an HTML element, checking at least one has valid text text.
+ *
+ * @param {Element} elem - The HTML element
+ * @returns {boolean} - Returns true if at least one valid text node is found, otherwise false.
+ *
+ */
+export function validateTextNodes(elem) {
   const textNodes = elem.childNodes.filter((elem) => elem.nodeType === 3);
   for (let i = 0; i < textNodes.length; i++) {
     const text = textNodes[i].textContent.trim();
@@ -82,8 +104,14 @@ function checkTextNodes(elem) {
   return false;
 }
 
-function isLetter(str) {
-  //regex to exclude characters that are not translatable
+/**
+ * Checks if a given string consists of only letters. Main purpose is to exclude non-translatable text like symbols or numbers.
+ *
+ * @param {string} str - The string to be checked for containing only letters.
+ * @returns {boolean} - Returns true if the string contains only letters, otherwise false.
+ */
+export function isLetter(str) {
+  // regex to exclude characters that are not translatable
   const regex = new RegExp(/^[a-zA-Z]+$/);
   return regex.test(str);
 }
