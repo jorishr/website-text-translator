@@ -7,7 +7,8 @@ import detectNewTargetLangs from "./utils/detectNewTargetLangs.js";
 import addTargetLangs from "./translate/addTargetLangs.js";
 
 /**
- * Process and translate files based on the provided configuration.
+ * Process HTML files, identify elements with (changed) text nodes and
+ * send the relevant data to a third party translation API service.
  *
  */
 export default async () => {

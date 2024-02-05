@@ -5,6 +5,11 @@ import { parse } from "node-html-parser";
 import log from "./log/log.js";
 import { config } from "../../bin/commander/config/setConfig.js";
 
+/**
+ * Processes the existing HTML files and removes the text-id's from elements
+ * with text nodes and elements with translatable attribute text values.
+ *
+ */
 export default async () => {
   const { src, dest } = config.folders;
   const htmlFileList = findHtmlFiles(`${src}`);

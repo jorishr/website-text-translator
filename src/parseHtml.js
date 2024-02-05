@@ -4,6 +4,13 @@ import log from "./utils/log/log.js";
 import { config } from "../bin/commander/config/setConfig.js";
 const parse = parser.parse;
 
+/**
+ * Parses an HTML string, extracts specified elements, and finds new elements based on configuration.
+ *
+ * @param {string} html - The HTML string to be parsed.
+ * @returns {Object} - An object containing parsed and extracted HTML elements.
+ *
+ */
 export default (html) => {
   const htmlRoot = parse(html);
   const textNodeId = config.id.textNodeId;

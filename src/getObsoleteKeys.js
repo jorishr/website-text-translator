@@ -1,6 +1,14 @@
 import log from "./utils/log/log.js";
 import { config } from "../bin/commander/config/setConfig.js";
 
+/**
+ * Identifies obsolete keys in the language data based on a list of documents.
+ *
+ * @param {Object} langData - The language data object containing key-value pairs.
+ * @param {Element[]} docList - An array of HTML documents to search for language keys.
+ * @returns {string[]} - An array of obsolete keys found in the language data.
+ *
+ */
 export default (langData, docList) => {
   const textNodeId = config.id.textNodeId;
   const { altId, titleId, placeholderId, metaId } = config.id.attributeTextId;
@@ -9,7 +17,7 @@ export default (langData, docList) => {
   keysInLangData.forEach((key) => {
     let res = true;
     for (let i = 0; i < docList.length; i++) {
-      const textElems = checkTextElems(docList[i], textNodeId, key);
+      const textElems = getTextElems(docList[i], textNodeId, key);
       const otherElems = docList[i].querySelectorAll(
         `[${altId}=${key}], [${titleId}=${key}], [${placeholderId}=${key}], [${metaId}=${key}]`
       );
@@ -29,7 +37,7 @@ export default (langData, docList) => {
   return obsoleteKeys;
 };
 
-function checkTextElems(docList, textNodeId, key) {
+function getTextElems(docList, textNodeId, key) {
   //should only return elements that don't have the key in their textNodeId
   const textElems = docList.querySelectorAll(`[${textNodeId}]`);
   const res = textElems.filter((elem) => {

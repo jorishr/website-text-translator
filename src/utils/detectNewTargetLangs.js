@@ -2,6 +2,15 @@ import path from "path";
 import { config } from "../../bin/commander/config/setConfig.js";
 import getFileList from "./getFileList.js";
 
+/**
+ * Retrieves a list of target languages that are have missing language JSON
+ * files based on the existing files in the destination folder and the target
+ * language array set in the configuration.
+ *
+ * @returns {string[]} - An array of target language IDs that do not have
+ * corresponding language files.
+ *
+ */
 export default () => {
   const targetLangs = config.languages.targets;
   const dest = config.folders.dest;
