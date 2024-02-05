@@ -1,4 +1,4 @@
-import { exclude } from "../src/parseData/filter.js";
+import { exclude } from "../src/parseElements/filter.js";
 import parser from "node-html-parser";
 
 const parse = parser.parse;

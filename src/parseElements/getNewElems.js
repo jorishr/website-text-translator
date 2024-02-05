@@ -1,6 +1,13 @@
 import filterElem from "./filter.js";
 import { config } from "../../bin/commander/config/setConfig.js";
 
+/**
+ * Module for selecting and processing HTML elements within a root element based on configuration options and filters.
+ *
+ * @param {Element} root - The root HTML element from which to start the selection.
+ * @returns {Element[]} - An array of selected HTML elements that meet the specified criteria.
+ *
+ */
 export default (root) => {
   const defaultSelectors = config.elements.defaultSelectors;
   const selectorsToExclude = config.elements.exclude.defaultSelectorsToExclude;

@@ -1,4 +1,4 @@
-import { isLetter } from "../src/parseData/filter.js";
+import { isLetter } from "../src/parseElements/filter.js";
 
 describe("isLetter function", () => {
   const letterStrings = ["a", "A", "z", "Z", "ab"];

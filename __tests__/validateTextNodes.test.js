@@ -1,4 +1,4 @@
-import { validateTextNodes } from "../src/parseData/filter.js";
+import { validateTextNodes } from "../src/parseElements/filter.js";
 import parser from "node-html-parser";
 
 const parse = parser.parse;

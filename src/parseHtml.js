@@ -1,5 +1,5 @@
 import parser from "node-html-parser";
-import findNewElements from "./parseData/getNewElems.js";
+import findNewElements from "./parseElements/getNewElems.js";
 import log from "./utils/log/log.js";
 import { config } from "../bin/commander/config/setConfig.js";
 const parse = parser.parse;
