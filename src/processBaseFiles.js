@@ -3,64 +3,100 @@ import getJsonData from "./utils/getJsonData.js";
 import getHtmlData from "./utils/getHtmlData.js";
 import writeFile from "./utils/writeToFile.js";
 import parseHtml from "./parseHtml.js";
-import processUpdates from "./elemsUpdate/index.js";
-import setNewElements from "./elemsAdd/setNewElems.js";
+import parseWorkingData from "./parseElements/index.js";
+import setNewElements from "./parseElements/setNewElems.js";
 import getObsoleteKeys from "./getObsoleteKeys.js";
 import logResult from "./utils/log/logResult.js";
 import log from "./utils/log/log.js";
+import { config } from "../bin/commander/config/setConfig.js";
 
-export default (config) => {
+/**
+ * Loads the HTML source files to be processed for comparison with the
+ * base language data file.
+ *
+ * @returns {Array} An array containing processed data:
+ *   [0] - modifiedLangData: The modified language data object.
+ *   [1] - keysToTranslate: An object with changedKeys and newKeys arrays.
+ *   [2] - keysToDeleteInJson: An array of keys to delete from the JSON file.
+ *   [3] - keyCountOffset: The key count offset.
+ */
+export default () => {
   const { src, dest } = config.folders;
-  const htmlFileList = findHtmlFiles(`${src}`, config);
-  //load existing language data json
-  const jsonFile = config.fileNames.prefix + config.languages.base + ".json";
-  const srcLangData = getJsonData(dest, jsonFile) || {};
-  const keysInLangData = Object.keys(srcLangData);
-  logResult(keysInLangData, "jsonRead", "jsonNotFound", config, [
-    keysInLangData.length,
+  const htmlFileList = findHtmlFiles(`${src}`);
+  const jsonFile = config.languageFile.prefix + config.languages.base + ".json";
+  const baseLangData = getJsonData(dest, jsonFile) || {};
+  const keysInBaseLangData = Object.keys(baseLangData);
+  const keyCountOffset =
+    Number(keysInBaseLangData.at(-1)) + 1 || config.keyCountOffset;
+
+  logResult(keysInBaseLangData, "baseLangDataRead", "baseLangDataNotFound", [
+    keysInBaseLangData.length,
   ]);
-  //persist data over iterations
-  const offset = Number(keysInLangData.at(-1)) + 1 || config.offset;
-  let updatedData = {};
-  let documents = [];
+
+  let modifiedLangData = {};
+  let modifiedHtmlDocs = [];
+  let counter = keyCountOffset;
   let keysToTranslate = { changedKeys: [], newKeys: [] };
+
   for (let i = 0; i < htmlFileList.length; i++) {
-    log("htmlStart", "start2", config, [htmlFileList[i]]);
-    const langData = updatedData.langData || srcLangData;
-    const html = getHtmlData(htmlFileList[i], config);
-    const htmlData = parseHtml(html, config);
-    let data = Object.assign({}, { htmlData }, { langData });
-    //updates require a base JSON file to compare against
-    if (Object.keys(langData).length) {
-      const [dataUpdates, changedKeys] = processUpdates(data, config);
-      data = dataUpdates;
+    log("htmlStart", "logStartTask2", [htmlFileList[i]]);
+
+    const langData = modifiedLangData.langData || baseLangData;
+    const html = getHtmlData(htmlFileList[i]);
+    const htmlData = parseHtml(html);
+    let workingData = Object.assign({}, { htmlData }, { langData });
+    workingData.counter = counter;
+    let updatedHtml;
+    let changedKeys = [];
+    let workingDataUpdates;
+
+    if (Object.keys(langData).length > 0) {
+      [workingDataUpdates, changedKeys] = parseWorkingData(workingData);
+      workingData = workingDataUpdates;
       keysToTranslate.changedKeys.push(...changedKeys);
     }
-    data = setNewElements(data, offset, config);
-    keysToTranslate.newKeys.push(...data.newKeys);
-    const updatedHtml = data.htmlData.root.toString();
-    const hasChanged =
-      keysToTranslate.changedKeys.length || keysToTranslate.newKeys.length;
-    if (hasChanged && !config.mode.dryRun) {
-      writeFile(dest, updatedHtml, htmlFileList[i], "html", config);
+
+    workingData = setNewElements(workingData);
+    updatedHtml = workingData.htmlData.htmlRoot.toString();
+
+    keysToTranslate.newKeys.push(...workingData.newKeys);
+
+    if (
+      (changedKeys.length > 0 || workingData.newKeys.length > 0) &&
+      !config.mode.dryRun
+    ) {
+      writeFile(dest, updatedHtml, htmlFileList[i], "html");
     }
-    //persist data over iterations
-    documents.push(data.htmlData.root);
-    updatedData = data;
-    log("htmlDone", "done", config, [htmlFileList[i]]);
+
+    modifiedHtmlDocs.push(workingData.htmlData.htmlRoot);
+    modifiedLangData = workingData.langData;
+    counter = workingData.counter;
+
+    log("htmlDone", "done", [htmlFileList[i]]);
   }
-  const keysToDelete = getObsoleteKeys(updatedData, documents, config);
-  keysToDelete.forEach((key) => {
-    delete updatedData.langData[key];
+
+  const keysToDeleteInJson = getObsoleteKeys(
+    modifiedLangData,
+    modifiedHtmlDocs
+  );
+  keysToDeleteInJson.forEach((key) => {
+    delete modifiedLangData[key];
   });
-  const hasChanged =
-    keysToDelete.length ||
+
+  const jsonHasChangedKeys =
+    keysToDeleteInJson.length ||
     keysToTranslate.changedKeys.length ||
     keysToTranslate.newKeys.length;
-  if (hasChanged && !config.mode.dryRun) {
-    const fileName = config.fileNames.prefix + config.languages.base + ".json";
-    writeFile(dest, updatedData.langData, fileName, "json", config);
+  if (jsonHasChangedKeys && !config.mode.dryRun) {
+    writeFile(dest, modifiedLangData, jsonFile, "json");
   }
-  log("htmlEnd", "done", config);
-  return [updatedData, keysToTranslate, keysToDelete, offset];
+
+  log("htmlEnd", "done");
+
+  return [
+    modifiedLangData,
+    keysToTranslate,
+    keysToDeleteInJson,
+    keyCountOffset,
+  ];
 };

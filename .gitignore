@@ -1,5 +1,7 @@
 wtt.config.json
 backup
+.prettierignore
+demo
 
 # Logs
 logs
