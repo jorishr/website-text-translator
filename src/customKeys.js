@@ -4,6 +4,12 @@ import log from "./utils/log/log.js";
 import getTranslations from "./translate/googleTranslate.js";
 import writeFile from "./utils/writeToFile.js";
 
+/**
+ * Processes custom keys according to configuration and adds translations to
+ * target language files.
+ *
+ * @returns {Promise<void>} - A promise that resolves when the processing is complete.
+ */
 export default async () => {
   const dest = config.folders.dest;
   const targetLangs = config.languages.targets;

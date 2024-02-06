@@ -421,7 +421,7 @@ The text-id's are numbered in sequence. The default offset is `100`, thus the fi
 
 Your website project may contain JavaScript modules that append elements to the DOM dynamically. These elements cannot be accessed by this program because they are not part of the HTML markup. However, you can include them in the automated translation process by adding custom keys to the configuration file and inside the base language JSON file. This is a three step process:
 
-In your JavaScript module that creates the HTML element, add data attribute(s) with the name of the relevant text-id's:
+In your JavaScript module that creates the HTML element, add data attribute(s) with the name of the relevant text-id's. Example usage:
 
 ```js
 const anchor = document.createElement("a");
@@ -453,11 +453,13 @@ The last step is to add these keys to the customKeys array in the configuration 
 
 ```json
 {
-  "customKey": ["110", "111"]
+  "customKeys": ["110", "111"]
 }
 ```
 
-On the next run of the program these custom keys will be picked up by translation strings will fetched from the third party translation API and stored in the respective target language JSON file(s).
+On the next run of the program these custom keys will be picked up by the program and translation strings will be fetched from the third party translation API and stored in the respective target language JSON file(s).
+
+To remove a custom key, simply remove the key string from the configuration file array and run the program again. The program will detect the key as being obsolete and all corresponding key-value pairs in your base language JSON file and all target language JSON files will be purged.
 
 ### Change text update direction --experimental
 

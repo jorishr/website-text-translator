@@ -22,7 +22,7 @@
     }
   },
   "keyCountOffset": 100,
-  "customKeys": ["702"],
+  "customKeys": [],
   "elements": {
     "defaultSelectors": [
       "head meta[name=description]",
