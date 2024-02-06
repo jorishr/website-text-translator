@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2024-02-06
+
+- Minor release with hot fix for issue TG-21.
+
 ## [1.0.0] - 2024-02-06
 
 Major new release that introduces breaking changes:

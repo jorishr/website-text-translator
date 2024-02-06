@@ -18,7 +18,6 @@ export default (keys, data, target) => {
   if (!keys.length) return data;
 
   keys.forEach((key) => {
-    console.log(target);
     switch (target) {
       case "textNodeElems":
         result = setText(data, target, key, textNodeId);
