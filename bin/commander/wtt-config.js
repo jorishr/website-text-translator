@@ -3,6 +3,7 @@ import { stdin as input, stdout as output } from "node:process";
 import messages from "../../src/utils/log/messages.js";
 import writeTofile from "../../src/utils/writeToFile.js";
 import { createRequire } from "module";
+
 const require = createRequire(import.meta.url);
 const configDefault = require("../../src/config.default.json");
 const merge = require("deepmerge");
@@ -11,6 +12,7 @@ export default async function config() {
   const msg = messages.config;
   const rl = readline.createInterface({ input, output });
   console.log(msg.welcome + "\n");
+
   const [langBase, langTargets] = await getInput(msg, rl, "languages");
   const [src, dest] = await getInput(msg, rl, "folders");
   const [backup, backupDir] = await getInput(msg, rl, "backup");
@@ -19,7 +21,9 @@ export default async function config() {
   const backupFolder = backupDir || configDefault.folders.backup;
   const targets = langTargets.replace(/ /g, "").split(",");
   let backupMode = configDefault.mode.backup;
+
   if (backup) backupMode = setBackupMode(backup);
+
   const config = merge(configDefault, {
     languages: { base: langBase, targets: targets },
     folders: { src: source, dest: destination, backup: backupFolder },
@@ -27,8 +31,11 @@ export default async function config() {
       backup: backupMode,
     },
   });
+
   writeTofile("./", config, "wtt.config.json", "json", config);
+
   console.log(msg.end + "\n");
+
   rl.close();
 }
 
@@ -41,6 +48,7 @@ async function getInput(msg, rl, target) {
   console.log("\n" + msg[target].info2 + "\n");
   const data2 = await rl.question(msg[target].prompt2);
   let isValid = false;
+
   if (target === "languages") isValid = validateLang(data1, data2);
   if (target === "folders") isValid = validatePath(data1, data2);
   //no need to validate backup data1, it'll be validated in setBackupMode

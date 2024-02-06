@@ -2,12 +2,12 @@ import fs from "fs";
 import path from "path";
 import log from "./log/log.js";
 
-export default (src, config) => {
+export default (src) => {
   try {
     const result = getFiles(src);
     return result;
   } catch (err) {
-    log("getFilesFail", "error", config, [err]);
+    log("getFilesFail", "error", [err]);
     return null;
   }
 };
