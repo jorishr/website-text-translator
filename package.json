@@ -1,7 +1,7 @@
 {
   "name": "website-text-translator",
   "version": "1.0.0",
-  "description": "Automatically translate HTML files to multiple languages with Google Translate API, detect changes and store translations in JSON files.",
+  "description": "Easy command line interface to automatically translate the text in your HTML file(s) to multiple languages and store the translation data in JSON files. Auto-detect changes and straightforward integration into your workflow. Documentation includes code snippets to integrate the translation data into your website project using vanilla JavaScript. Usage of a third party translation services, e.g. Google Translate API, is recommended but optional.",
   "bin": {
     "wtt": "bin/index.js"
   },
@@ -25,7 +25,11 @@
     "language",
     "website"
   ],
-  "author": "Joris Raymaekers <joris@liondigits.com> (https://liondigits.com)",
+  "author": {
+    "name": "Joris Raymaekers",
+    "email": "joris@liondigits.com",
+    "url": "https://liondigits.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jorishr/website-text-translator/issues"

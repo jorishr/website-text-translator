@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 Major new release that introduces breaking changes:
 
 - Includes a thorough code review of all important modules;
-- Includes revised configuration options;
+- Includes revised and extended configuration options;
 - Adds JSDoc comments to all major functions;
 - Improved error handling and info messages;
 - Improved handling of nested text elements;

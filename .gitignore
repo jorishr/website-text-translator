@@ -2,6 +2,7 @@ wtt.config.json
 backup
 .prettierignore
 demo
+*.tgz
 
 # Logs
 logs
