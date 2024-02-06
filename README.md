@@ -31,7 +31,7 @@ Easy command line interface to automatically translate the text in your HTML fil
     - [Modes](#modes)
     - [Selectors and exclusions](#selectors-and-exclusions)
     - [Text-id's](#text-ids)
-    - [keyCounterOffset](#keycounteroffset)
+    - [keyCountOffset](#keycountoffset)
     - [Change text update direction --experimental](#change-text-update-direction---experimental)
   - [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project)
 
@@ -262,7 +262,7 @@ If you want to start all over with a clean slate, you can use the strip command.
 
 The strip command will remove all text-id's from the text elements in your HTML file(s). To run the strip program, use the command `npx wtt strip`.
 
-Note that running this command will make all your JSON language files, including the base lanuage reference file, obsolete. The keys in those files will no longer be linked to the corresponding elements in your HTML file(s). There is no way to undo this action. Therefore you will be prompted for a backup. Also, once the your HTML file(s) are successfully cleaned up, you will be prompted to delete the now obsolete JSON language files.
+Note that running this command will make all your JSON language files, including the base language reference file, obsolete. The keys in those files will no longer be linked to the corresponding elements in your HTML file(s). There is no way to undo this action. Therefore you will be prompted for a backup. Also, once the your HTML file(s) are successfully cleaned up, you will be prompted to delete the now obsolete JSON language files.
 
 ## Limitations and issues
 
@@ -376,13 +376,13 @@ To add additional elements or exclude HTML elements that are included by default
 
 The default text-id is for text nodes is `data-txt_id`. Modifiers are used for attribute text values: `data-txt_id__alt`, `data-txt__title`, `data-txt__placeholder`, etc. You can change these values in the config file. However, be careful: the `data` prefix is required for the text-id to be part of the HTML dataset attribute and the `__` modifiers are used in the program to identify the type of text. If you change the _structure_ of these identifiers, the program may no longer work as expected or throw an error that you will have to debug yourself.
 
-### keyCounterOffset
+### keyCountOffset
 
-The text-id's are numbered in sequence. The default offset is `100`, thus the first key will start at "100". If you want to start counting at a different value, set the `keyCounterOffset` value in the config file:
+The text-id's are numbered in sequence. The default offset is `100`, thus the first key will start at "100". If you want to start counting at a different value, set the `keyCountOffset` value in the config file:
 
 ```json
 {
-  "keyCounterOffset": 100
+  "keyCountOffset": 100
 }
 ```
 
