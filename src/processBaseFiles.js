@@ -26,15 +26,16 @@ export default () => {
   const jsonFile = config.languageFile.prefix + config.languages.base + ".json";
   const baseLangData = getJsonData(dest, jsonFile) || {};
   const keysInBaseLangData = Object.keys(baseLangData);
+  const keyCountOffset =
+    Number(keysInBaseLangData.at(-1)) + 1 || config.keyCountOffset;
 
   logResult(keysInBaseLangData, "baseLangDataRead", "baseLangDataNotFound", [
     keysInBaseLangData.length,
   ]);
 
-  const keyCountOffset =
-    Number(keysInBaseLangData.at(-1)) + 1 || config.keyCountOffset;
   let modifiedLangData = {};
   let modifiedHtmlDocs = [];
+  let counter = keyCountOffset;
   let keysToTranslate = { changedKeys: [], newKeys: [] };
 
   for (let i = 0; i < htmlFileList.length; i++) {
@@ -44,21 +45,24 @@ export default () => {
     const html = getHtmlData(htmlFileList[i]);
     const htmlData = parseHtml(html);
     let workingData = Object.assign({}, { htmlData }, { langData });
+    workingData.counter = counter;
     let updatedHtml;
+    let changedKeys = [];
+    let workingDataUpdates;
 
-    if (Object.keys(langData).length) {
-      const [workingDataUpdates, changedKeys] = parseWorkingData(workingData);
+    if (Object.keys(langData).length > 0) {
+      [workingDataUpdates, changedKeys] = parseWorkingData(workingData);
       workingData = workingDataUpdates;
       keysToTranslate.changedKeys.push(...changedKeys);
     }
 
-    workingData = setNewElements(workingData, keyCountOffset);
+    workingData = setNewElements(workingData);
     updatedHtml = workingData.htmlData.htmlRoot.toString();
 
     keysToTranslate.newKeys.push(...workingData.newKeys);
 
     if (
-      (keysToTranslate.changedKeys.length || keysToTranslate.newKeys.length) &&
+      (changedKeys.length > 0 || workingData.newKeys.length > 0) &&
       !config.mode.dryRun
     ) {
       writeFile(dest, updatedHtml, htmlFileList[i], "html");
@@ -66,6 +70,7 @@ export default () => {
 
     modifiedHtmlDocs.push(workingData.htmlData.htmlRoot);
     modifiedLangData = workingData.langData;
+    counter = workingData.counter;
 
     log("htmlDone", "done", [htmlFileList[i]]);
   }

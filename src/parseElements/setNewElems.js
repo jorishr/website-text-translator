@@ -10,11 +10,11 @@ import { config } from "../../bin/commander/config/setConfig.js";
  * @param {number} keyCountOffset - The starting value for the counter used to assign keys.
  * @returns {Object} The modified data object.
  */
-export default (data, keyCountOffset) => {
+export default (data) => {
   const newElements = data.htmlData.newElems;
   const textNodeId = config.id.textNodeId;
   const supportedAttributeList = config.elements.defaultAttributes;
-  let counter = keyCountOffset;
+  let counter = data.counter;
   const newKeys = [];
   data.newKeys = [];
 
@@ -58,6 +58,7 @@ export default (data, keyCountOffset) => {
   }
 
   data.newKeys.push(...newKeys);
+  data.counter = counter;
 
   log("newElemsDone", "done");
 
