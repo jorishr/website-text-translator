@@ -9,7 +9,7 @@ export default {
   backupDone: "Backup completed.",
   htmlStart: "Start processing HTML file: ${0}",
   htmlRead: "Parsed HTML file: ${0}",
-  htmlList: "Found HTML file(s) to process:\n${0}\n",
+  htmlList: "Found HTML file(s) to process:\n${0}",
   htmlReadFail: "Unable to load HTML data from folder:\n\n\t${0}",
   htmlNotFound:
     "Program terminated. No HTML file(s) found in folder\n\nHint:\n\tMake sure you have at least one HTML file in the source folder: ${0}\n\tYou can change the default folder path by running the config command.",
@@ -61,7 +61,7 @@ export default {
   dryRunStart:
     "Dry run mode: ON.\nNo files will be written.\nNo translations will be fetched from the Google Translate API.",
   baseLangDataRead:
-    "The base language JSON file contains ${0} keys with a text value.\n",
+    "\nThe base language JSON file contains ${0} keys with a text value.\n",
   baseLangDataNotFound:
     "No base language JSON file found (${0}). A new one will be generated...\n",
   jsonLangFilesFound: "The following language file(s) will be deleted: ${0}",
@@ -80,10 +80,10 @@ export default {
         "1. Please enter the base language of your project.\n\nThis is the language that you used to write the text in your HTML files. Use two-letter language codes, e.g. 'en' for English, 'de' for German, 'fr' for French, etc.",
       prompt1: "\x1b[3mBase language:\x1b[0m ",
       info2:
-        "2. Please enter the target languages to translate to.\n\nYou can specify multiple languages by separating them with a comma. Use two-letter language codes, e.g. 'en, de, fr' for English, German and French.",
+        "2. Please enter the target languages to translate to.\n\nYou can specify multiple languages by separating them with a comma. Use two-letter language codes, e.g. en, de, fr for English, German and French.",
       prompt2: "\x1b[3mTarget language(s):\x1b[0m ",
       inValid:
-        "Invalid input. Please try again. Use two-letter language codes: e.g. 'en' for English, 'de' for German, 'fr' for French, etc. Target languages can be separated by a comma, e.g. 'en, de, fr' for English, German and French.",
+        "Invalid input. Please try again. Use two-letter language codes: e.g. 'en' for English, 'de' for German, 'fr' for French, etc. Target languages can be separated by a comma, e.g. en, de, fr for English, German and French.",
       inValidEqual: "Base and target languages can't be the same.",
     },
     folders: {

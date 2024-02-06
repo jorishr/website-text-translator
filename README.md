@@ -20,6 +20,7 @@ Easy command line interface to automatically translate the text in your HTML fil
   - [Workflow and making changes to your HTML files](#workflow-and-making-changes-to-your-html-files)
     - [Nested text elements](#nested-text-elements)
       - [Example](#example)
+      - [Re-using text-id's](#re-using-text-ids)
     - [Adding and removing target languages](#adding-and-removing-target-languages)
     - [Strip all text-id's from existing HTML file(s)](#strip-all-text-ids-from-existing-html-files)
   - [Limitations and issues](#limitations-and-issues)
@@ -116,7 +117,7 @@ More advanced configuration options are available, see [Additional configuration
 
 - Google Application Credentials: to fetch translation strings from the Google Translate API you need to setup authentication for Google Cloud Services. Without, you will see an error message for an invalid API key. See [Getting started with Google Cloud Authentication](https://cloud.google.com/docs/authentication/getting-started).
 
-- The program can run without the Google Translate API. Run the command `npx wtt --translate-no` or set the `translate` option in the config file to `false`. In this case the program will only run the first part of the program: add text-id's to the HTML files and generate the base language JSON file. No target language translation files will be generated.
+- The program can run without the Google Translate API. Run the command `npx wtt start --translate-no` or set the `translate` option in the config file to `false`. In this case the program will only run the first part of the program: add text-id's to the HTML files and generate the base language JSON file. No target language translation files will be generated.
 
 - The code of the program is modular and could be modified to use different third party translations services without too much trouble. However, this is not part of the current state of the program. Feel free to experiment and contribute [Github: Website-text-translator](https://github.com/jorishr/website-text-translator). The only two modules that would need to change are `src/translate/index.js` and `src/translate/googleTranslate.js`.
 
@@ -124,7 +125,7 @@ More advanced configuration options are available, see [Additional configuration
 
 #### Backup
 
-By default the program will create a numbered backup of your HTML (and related JSON files) in the backup folder. You can disable the backup feature by using the configuration wizard (`npx wtt config`), a command line flag `npx wtt --backup-no` or by setting `backup: false` in the configuration file.
+By default the program will create a numbered backup of your HTML (and related JSON files) in the backup folder. You can disable the backup feature by using the configuration wizard (`npx wtt config`), a command line flag `npx wtt start --backup-no` or by setting `backup: false` in the configuration file.
 
 _Important:_ If you do disable the backup feature, make sure you have a backup of your existing files elsewhere before running the program because they will be overwritten.
 
@@ -139,7 +140,7 @@ Note that your HTML file(s) will be overwritten by the program because text-id's
 
 #### Dry run first
 
-It is recommended to run the program in 'dry mode' first. In dry-mode no files will be generated or overwritten. In the terminal you will get to see a list of all the HTML elements that are detected by the program. This will give you an idea of how many elements will be processed and how many text-id's will be added to the HTML files. If you have multiple HTML documents or lots of text, you may want to limit the terminal log output: run `npx wtt start --dry-run` or `npx wtt --dry-run --info-no`.
+It is recommended to run the program in 'dry mode' first. In dry-mode no files will be generated or overwritten. In the terminal you will get to see a list of all the HTML elements that are detected by the program. This will give you an idea of how many elements will be processed and how many text-id's will be added to the HTML files. If you have multiple HTML documents or lots of text, you may want to limit the terminal log output: run `npx wtt start --dry-run` or `npx wtt start --dry-run --info-no`.
 
 #### Output after first run
 
@@ -250,6 +251,35 @@ The base language JSON file will contain the following key-value pairs:
 - Note that leading and trailing _single_ spaces will be respected by the program.
 - Also note that text nodes that _only_ contain punctuation characters like "." or "!" will be ignored by the program if they are the very last child text node. They are separate text nodes and don't have to be part of the translation process. When loading translation strings into your website project these punctuation text nodes will remain unaffected.
 
+#### Re-using text-id's
+
+During your development work you may encounter a scenario whereby you want to duplicate an existing element that already has one or more text-id's. For example:
+
+```html
+<!-- in header -->
+<a
+  href="/"
+  title="To the homepage"
+  data-text_id="[100]"
+  data-text_id__title="101"
+  >Home</a
+>
+<!-- duplicate in footer -->
+<a
+  href="/"
+  title="To the homepage"
+  data-text_id="[100]"
+  data-text_id__title="101"
+  >Home</a
+>
+```
+
+This perfectly acceptable. It also means that less translations strings have to be fetched from the third party translation service. If you have lots of duplicate text content you may want to share text-id's between elements.
+
+However, be mindful because in future versions of your project you might make text changes to one element and forget about the fact that other elements share the same text-id, possibly leading to unexpected results.
+
+Therefore, it is not recommended to share text-id's between elements. If you copy-paste an element, remove the text-id on the newly created element and let the program generate a new text-id for each additional element. You may have duplicate translation strings in your JSON language files but this way future changes in one element will not affect other elements.
+
 ### Adding and removing target languages
 
 On each run the program will compare the existing target language files with the array of target languages in your configuration file. If a new target language is detected, the program will fetch additional translation strings and generate an additional language JSON file.
@@ -302,7 +332,7 @@ Use the `languages` object to specify the base language and the target languages
 
 ### Modes
 
-The program can be run with optional command line flags that change the behavior of the program. You can disable backups `npx wtt start --backup-no`; disable the third party translation service `npx wtt start --translate-no`; and run the program in dry-run mode `npx wtt --dry-run`. In dry mode no files are written.
+The program can be run with optional command line flags that change the behavior of the program. You can disable backups `npx wtt start --backup-no`; disable the third party translation service `npx wtt start --translate-no`; and run the program in dry-run mode `npx wtt start --dry-run`. In dry mode no files are written.
 
 By default you will see log messages in the terminal about the progress of the program. If you want to see less log messages in the terminal, use the flag `npx wtt start --info-no` or set the `logLevel` key to an empty string `""` in the config file.
 

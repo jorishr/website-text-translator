@@ -18,20 +18,21 @@ export default (keys, data, target) => {
   if (!keys.length) return data;
 
   keys.forEach((key) => {
+    console.log(target);
     switch (target) {
-      case "textNodes":
+      case "textNodeElems":
         result = setText(data, target, key, textNodeId);
         break;
-      case "altAttributes":
+      case "altAttributeElems":
         result = setAttr(data, target, key, altId);
         break;
-      case "titleAttributes":
+      case "titleAttributeElems":
         result = setAttr(data, target, key, titleId);
         break;
-      case "placeholderAttributes":
+      case "placeholderAttributeElems":
         result = setAttr(data, target, key, placeholderId);
         break;
-      case "metaAttributes":
+      case "metaAttributeElems":
         result = setAttr(data, target, key, metaId);
         break;
       default:

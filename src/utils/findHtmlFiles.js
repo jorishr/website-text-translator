@@ -11,6 +11,6 @@ export default (src) => {
     log("htmlNotFound", "error", [src]);
     process.exit();
   }
-  log("htmlList", "info", [htmlFileList]);
+  log("htmlList", "info", [...htmlFileList]);
   return htmlFileList;
 };

@@ -1,6 +1,6 @@
 {
   "name": "website-text-translator",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Automatically translate HTML files to multiple languages with Google Translate API, detect changes and store translations in JSON files.",
   "bin": {
     "wtt": "bin/index.js"
