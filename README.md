@@ -20,7 +20,7 @@ Easy command line interface to automatically translate the text in your HTML fil
   - [Workflow and making changes to your HTML files](#workflow-and-making-changes-to-your-html-files)
     - [Nested text elements](#nested-text-elements)
       - [Example](#example)
-      - [Re-using text-id's](#re-using-text-ids)
+    - [Re-using text-id's](#re-using-text-ids)
     - [Adding and removing target languages](#adding-and-removing-target-languages)
     - [Strip all text-id's from existing HTML file(s)](#strip-all-text-ids-from-existing-html-files)
   - [Limitations and issues](#limitations-and-issues)
@@ -33,6 +33,7 @@ Easy command line interface to automatically translate the text in your HTML fil
     - [Selectors and exclusions](#selectors-and-exclusions)
     - [Text-id's](#text-ids)
     - [keyCountOffset](#keycountoffset)
+    - [Custom keys](#custom-keys)
     - [Change text update direction --experimental](#change-text-update-direction---experimental)
   - [How to load the translation files in your project](#how-to-load-the-translation-files-in-your-project)
 
@@ -251,7 +252,7 @@ The base language JSON file will contain the following key-value pairs:
 - Note that leading and trailing _single_ spaces will be respected by the program.
 - Also note that text nodes that _only_ contain punctuation characters like "." or "!" will be ignored by the program if they are the very last child text node. They are separate text nodes and don't have to be part of the translation process. When loading translation strings into your website project these punctuation text nodes will remain unaffected.
 
-#### Re-using text-id's
+### Re-using text-id's
 
 During your development work you may encounter a scenario whereby you want to duplicate an existing element that already has one or more text-id's. For example:
 
@@ -415,6 +416,48 @@ The text-id's are numbered in sequence. The default offset is `100`, thus the fi
   "keyCountOffset": 100
 }
 ```
+
+### Custom keys
+
+Your website project may contain JavaScript modules that append elements to the DOM dynamically. These elements cannot be accessed by this program because they are not part of the HTML markup. However, you can include them in the automated translation process by adding custom keys to the configuration file and inside the base language JSON file. This is a three step process:
+
+In your JavaScript module that creates the HTML element, add data attribute(s) with the name of the relevant text-id's:
+
+```js
+const anchor = document.createElement("a");
+
+anchor.href = "#";
+anchor.textContent = "Next section";
+anchor.dataset.text_id = "[110]"; // [<number>]
+anchor.title = "Go to the next page section";
+anchor.dataset.text_id__title = "111"; // "<number>"
+
+document.body.appendChild(anchor);
+```
+
+Next, go to your base language JSON file. If your base language is set to 'en', this will be 'text_data_en' in the destination folder. In this example the last existing key-value pair has a key number of "109". Add your custom key-value pair(s) after that:
+
+```json
+{
+  "100": "Hello world",
+  ...
+  ...
+  "109": "Last sentence.",
+  "110": "Next section",
+  "111": "Go to the next page section",
+
+}
+```
+
+The last step is to add these keys to the customKeys array in the configuration file:
+
+```json
+{
+  "customKey": ["110", "111"]
+}
+```
+
+On the next run of the program these custom keys will be picked up by translation strings will fetched from the third party translation API and stored in the respective target language JSON file(s).
 
 ### Change text update direction --experimental
 

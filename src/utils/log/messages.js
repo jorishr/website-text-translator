@@ -19,8 +19,10 @@ export default {
     "Found a total of ${0} HTML elements with an existing data-id.\n\n${1} new HTML elements were found.\n",
   newElemsStart: "Start processing new HTML elements...",
   newElemsDone: "Done processing new HTML elements!",
-  obsoleteKeys:
-    "The following keys are obsolete and will be removed from the base JSON file: ${0}",
+  obsoleteKeysStart: "Checking for obsolete keys to be removed...",
+  obsoleteKeysFound:
+    "The following keys are obsolete and will be removed from the base language JSON file and target language file(s): ${0}",
+  obsoleteKeysNoneFound: "No obsolete keys were detected.",
   writeFileStart: "Start writing to file ${0}...",
   mkdir: "Directory ${0} does not exist. Creating...",
   getFilesFail: "Unexpected error while reading folder content:\n\n\t${0}",
@@ -69,6 +71,12 @@ export default {
     "No JSON files found to delete in folder: ${0}. Did you delete them manually?",
   jsonLangFileDel: "${0} Deleted.",
   jsonLangFileDelError: "Error deleting file: ${0}.\n\n${1}",
+  customKeysStart: "Checking custom key(s): ${0}.",
+  customKeysNotFound:
+    "[WARNING] Custom key not found in base language JSON file: Missing key: ${0}.\nThis key will be ignored. Check documentation for more details.",
+  customKeysAdded: "Updated JSON language file ${0} with key(s): ${1}.",
+  customKeysNoChanges: "No new custom keys detected.\n",
+  customKeysDone: "Done processing custom keys.",
   stripStart: "\nStripping text-id's from HTML file: ${0}",
   stripEnd: "Done stripping text-id's from HTML file: ${0}",
   configReadError: "Error while reading config file:\n ${0}",

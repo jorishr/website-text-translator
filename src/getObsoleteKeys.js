@@ -10,10 +10,14 @@ import { config } from "../bin/commander/config/setConfig.js";
  *
  */
 export default (langData, docList) => {
+  const customKeys = config.customKeys;
   const textNodeId = config.id.textNodeId;
   const { altId, titleId, placeholderId, metaId } = config.id.attributeTextId;
   const keysInLangData = Object.keys(langData);
   const obsoleteKeys = [];
+
+  log("obsoleteKeysStart", "logStartTask2");
+
   keysInLangData.forEach((key) => {
     let res = true;
     for (let i = 0; i < docList.length; i++) {
@@ -21,6 +25,10 @@ export default (langData, docList) => {
       const otherElems = docList[i].querySelectorAll(
         `[${altId}=${key}], [${titleId}=${key}], [${placeholderId}=${key}], [${metaId}=${key}]`
       );
+      if (customKeys.length > 0 && customKeys.includes(key)) {
+        res = false;
+        break;
+      }
       if (textElems.length || otherElems.length) {
         res = false;
         break;
@@ -31,9 +39,9 @@ export default (langData, docList) => {
       obsoleteKeys.push(key);
     }
   });
-  if (obsoleteKeys.length) {
-    log("obsoleteKeys", "info", [obsoleteKeys]);
-  }
+  if (obsoleteKeys.length > 0) {
+    log("obsoleteKeysFound", "info", [...obsoleteKeys]);
+  } else log("obsoleteKeysNoneFound", "done");
   return obsoleteKeys;
 };
 

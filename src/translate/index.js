@@ -37,12 +37,12 @@ export default async (
       resChangedVals = await getTranslations(
         changedValues,
         targetLang,
-        "updated"
+        "changed keys"
       );
     }
     let resNewVals = [];
     if (newKeys.length) {
-      resNewVals = await getTranslations(newValues, targetLang, "new");
+      resNewVals = await getTranslations(newValues, targetLang, "new keys");
     }
     // read the existing translation file for the language
     let jsonLangData = getJsonData(dest, `${prefix}${targetLang}.json`) || {};

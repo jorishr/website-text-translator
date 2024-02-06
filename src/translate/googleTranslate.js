@@ -11,7 +11,7 @@ const translate = new Translate();
  *
  * @param {string[]} data - Array of strings to be translated.
  * @param {string} target - Target language code for translation.
- * @param {string} type - Origin type of strings to translate: "updated" for existing values, "new" for new text values). For log purposes only.
+ * @param {string} type - Origin type of strings to translate: "changed keys" for existing values, "new keys" for new text values). For log purposes only.
  * @returns {Promise<string[]>} - A promise that resolves to an array of translated strings.
  */
 export default async (data, target, type) => {

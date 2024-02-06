@@ -5,6 +5,7 @@ import log from "./utils/log/log.js";
 import { config } from "../bin/commander/config/setConfig.js";
 import detectNewTargetLangs from "./utils/detectNewTargetLangs.js";
 import addTargetLangs from "./translate/addTargetLangs.js";
+import processCustomKeys from "./customKeys.js";
 
 /**
  * Process HTML files, identify elements with (changed) text nodes and
@@ -40,9 +41,11 @@ export default async () => {
     const newTargetLangs = detectNewTargetLangs();
     if (newTargetLangs.length > 0) {
       await addTargetLangs(newTargetLangs);
+      //await processCustomKeys();
       log("programEnd", "success");
     } else {
       log("translateNoKeys", "info");
+      await processCustomKeys();
       log("programEnd", "success");
     }
   } else {
@@ -53,6 +56,7 @@ export default async () => {
       keysToDelete,
       keyCountOffset
     );
+    await processCustomKeys();
     log("programEnd", "success");
   }
 };

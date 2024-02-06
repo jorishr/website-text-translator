@@ -13,7 +13,7 @@ export default async (dest, data, fileName, type) => {
   switch (type) {
     case "json":
       try {
-        fs.promises.writeFile(
+        await fs.promises.writeFile(
           `${dest}/${fileName}`,
           JSON.stringify(data, null, 2)
         );
@@ -23,7 +23,7 @@ export default async (dest, data, fileName, type) => {
       break;
     case "html":
       try {
-        fs.promises.writeFile(`${fileName}`, data);
+        await fs.promises.writeFile(`${fileName}`, data);
       } catch (err) {
         log("htmlFileWriteFail", "error", [err]);
       }
